@@ -66,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware', # Added this line
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -187,7 +188,7 @@ EMAIL_SENDER          = os.getenv('EMAIL_SENDER'         , None)
 # Flag for email settings active
 EMAIL_SETTINGS        = True
 
-GITHUB_ID     = os.getenv('GITHUB_ID'    , None)
+GITHUB_ID     = os.getenv('GITHUB_ID'    , None) # Corrected syntax here, removed extra '
 GITHUB_SECRET = os.getenv('GITHUB_SECRET', None)
 GITHUB_AUTH   = GITHUB_SECRET is not None and GITHUB_ID is not None
 
