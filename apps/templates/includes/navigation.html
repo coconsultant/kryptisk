@@ -337,7 +337,7 @@
                       <a href="/privacy.html" class="dropdown-item border-radius-md">
                         Privacy
                       </a>
-                      <div class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center mt-3 px-0">
+                      <div class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center px-0 mt-3">
                         <div class="d-inline-block">
                           <div class="icon icon-shape icon-xs border-radius-md bg-gradient-primary text-center me-2 d-flex align-items-center justify-content-center ps-0">
                             <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -1179,7 +1179,7 @@
               <ul class="navbar-nav d-lg-block d-none">
                 {% if request.user.is_authenticated %}
                   <li class="nav-item">
-                    <a href="{% url 'profile' %}" class="btn btn-sm  bg-gradient-primary  btn-round mb-0 me-1">My Profile</a>
+                    <a href="{% url 'profile' %}" class="btn btn-sm  bg-gradient-primary  btn-round mb-0 me-1">{{ request.user.username }}</a>
                   </li>
                 {% else %}
                   <li class="nav-item">
@@ -1194,4 +1194,4 @@
       </div>
     </div>
   </div>
-  
+  ````
