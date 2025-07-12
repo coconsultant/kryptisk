@@ -1,0 +1,262 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Blog Author {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+    <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+{% endblock %}
+
+{% block body_class %} blog-author bg-gray-100 {% endblock %}
+
+{% block content %}
+
+  {% include 'includes/navigation-light.html' %}
+
+  <!-- START Testimonials w/ user image & text & info -->
+  <section class="py-sm-7 py-5 position-relative">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 mx-auto">
+          <div class="row py-lg-7 py-5">
+            <div class="col-lg-3 col-md-5 position-relative my-auto">
+              <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2" src="{% static 'assets/img/bruce-mars.jpg' %}" alt="bruce">
+            </div>
+            <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4 class="mb-0">
+                  
+                  {% if request.user.socialaccount_set.first %}
+                    ({% if request.user.socialaccount_set.first.provider == 'github' %}
+                    gh
+                    {% elif request.user.socialaccount_set.first.provider == 'twitter' %}
+                    tw
+                    {% endif %})
+                  {% endif %}
+
+                  {% if requset.user.email %}
+                    {{ request.user.email }}
+                  {% else %}
+                    {{ request.user.username }}
+                  {% endif %}
+
+                </h4>
+                <div class="d-flex gap-2">
+                    
+                    <div><a href="{% url 'logout' %}" class="btn btn-sm btn-outline-info text-nowrap mb-0">Logout</a></div>
+                    
+                    <div>
+                        <button class="btn btn-outline p-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                          <i class='fa fa-trash text-danger' ></i>
+                        </button>
+                    </div>
+
+                </div>
+              </div>
+              <div class="row mb-4 px-md-2 ">
+
+                {% if request.user.email %}
+                  {{ request.user.email }}
+                {% else %}
+                  
+                  {% if request.user.socialaccount_set.first.provider == 'github' %}
+                    Authenticated with Github
+                  {% endif %}
+
+                  {% if request.user.socialaccount_set.first.provider == 'Twitter' %}
+                    Authenticated with Twitter
+                  {% endif %}
+
+                {% endif %}
+
+              </div>
+              <div id="bio">
+                  <p class="text-lg mb-0">
+                    {{ bio | safe }}
+                 <br><span id="edit-btn" class="cursor-pointer text-info icon-move-right">Edit
+                  <i class="fas fa-arrow-right text-sm ms-1"></i>
+                </span>
+              </p>
+              </div>
+                <div class="row quill-container d-none">
+                    <div id="toolbar-container">
+                      <span class="ql-formats">
+                        <select class="ql-size"></select>
+                      </span>
+                      <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                      </span>
+                      <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                      </span>
+                      <span class="ql-formats">
+                        <button class="ql-clean"></button>
+                      </span>
+                    </div>
+                    <div id="editor-container">
+                        {{ bio | safe }}
+                    </div>
+                      <form id="edit-bio">{% csrf_token %}
+                      <input type="submit" class="btn btn-dark mt-3" value="Save">
+                      </form>
+                  </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END Testimonials w/ user image & text & info -->
+
+  <section class="py-lg-7">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="card overflow-hidden mb-5">
+            <div class="row">
+              <div class="col-lg-7">
+                <form class="p-3" id="contact-form" method="post">
+                    {% csrf_token %}
+                    <input name="action" value="contact_us" type="hidden" />
+                  <div class="card-header px-4 py-sm-5 py-3">
+                    <h2>Say Hi!</h2>
+                    <p class="lead"> 
+                      Contact US using this form.
+                    </p>
+                      <p id="message" class="fw-light fs-5 "></p>
+                  </div>
+                  <div class="card-body pt-1">
+                    <div class="row">
+                      <div class="col-md-12 pe-2 mb-3">
+                        <label>My name is</label>
+                        <input class="form-control" name="name" placeholder="Full Name" type="text">
+                      </div>
+                      <div class="col-md-12 pe-2 mb-3">
+                        <label>I'm looking for</label>
+                        <input class="form-control" name="subject" placeholder="What you love" type="text">
+                      </div>
+                      <div class="col-md-12 pe-2 mb-3">
+                        <div class="form-group mb-0">
+                          <label>Your message</label>
+                          <textarea name="message" class="form-control" id="message" rows="6" placeholder="I want to say that..."></textarea>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 text-end ms-auto">
+                        <button type="submit" id="submit-btn" class="btn btn-round bg-gradient-info mb-0">Send Message</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="col-lg-5 position-relative bg-cover px-0" style="background-image: url('{% static 'assets/img/curved-images/curved5.jpg' %}')">
+                <div class="position-absolute z-index-2 w-100 h-100 top-0 start-0 d-lg-block d-none">
+                  <img src="{% static 'assets/img/wave-1.svg' %}" class="h-100 ms-n2" alt="vertical-wave">
+                </div>
+                <div class="z-index-2 text-center d-flex h-100 w-100 d-flex m-auto justify-content-center">
+                  <div class="mask bg-gradient-info opacity-9"></div>
+                  <div class="p-5 ps-sm-8 position-relative text-start my-auto z-index-2">
+                    <h3 class="text-white">Contact Information</h3>
+                    <p class="text-white opacity-8 mb-4">Fill up the form and our Team will get back to you within 24 hours.</p>
+                        {% if contact_us_info.phone %}
+                    <div class="d-flex p-2 text-white">
+                      <div>
+                        <i class="fas fa-phone text-sm"></i>
+                      </div>
+                      <div class="ps-3">
+                        <span class="text-sm opacity-8">{{ contact_us_info.phone }}</span>
+                      </div>
+                    </div>
+                        {% endif %}
+                        {% if contact_us_info.email %}
+                    <div class="d-flex p-2 text-white">
+                      <div>
+                        <i class="fas fa-envelope text-sm"></i>
+                      </div>
+                      <div class="ps-3">
+                        <span class="text-sm opacity-8">{{ contact_us_info.email }}</span>
+                      </div>
+                    </div>
+                        {% endif %}
+                        {% if contact_us_info.address %}
+                    <div class="d-flex p-2 text-white">
+                      <div>
+                        <i class="fas fa-map-marker-alt text-sm"></i>
+                      </div>
+                      <div class="ps-3">
+                        <span class="text-sm opacity-8">{{ contact_us_info.address }}</span>
+                      </div>
+                    </div>
+                        {% endif %}
+                    <div class="mt-4">
+                      {% if contact_us_info.facebook %}
+                            <a href="{{ contact_us_info.facebook }}">
+                              <button type="submit" class="btn btn-icon-only btn-link text-white btn-lg mb-0" data-toggle="tooltip" data-placement="bottom" data-original-title="Log in with Facebook">
+                                <i class="fab fa-facebook"></i>
+                              </button>
+                            </a>
+                        {% endif %}
+                        {% if contact_us_info.twitter %}
+                            <a href="{{ contact_us_info.twitter }}">
+                              <button type="button" class="btn btn-icon-only btn-link text-white btn-lg mb-0" data-toggle="tooltip" data-placement="bottom" data-original-title="Log in with Twitter">
+                                <i class="fab fa-twitter"></i>
+                              </button>
+                            </a>
+                        {% endif %}
+                        {% if contact_us_info.instagram %}
+                            <a href="{{ contact_us_info.instagram }}">
+                              <button type="button" class="btn btn-icon-only btn-link text-white btn-lg mb-0" data-toggle="tooltip" data-placement="bottom" data-original-title="Log in with Instagram">
+                                <i class="fab fa-instagram"></i>
+                              </button>
+                            </a>
+                        {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Delete Account</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      Are you sure?
+      <p id="alert" class="text-danger mt-4 mb-0 fw-bold"></p>
+    </div>
+    <div class="modal-footer justify-content-end">
+      <button type="button" class="btn bg-gradient-dark mb-0" data-bs-dismiss="modal">Close</button>
+        <form id="delete-account">
+            <input type="submit" class="btn bg-gradient-danger mb-0" value="Confirm">
+        </form>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+  {% include 'includes/footer-5.html' %}
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+        <script src="{% static 'assets/js/user-profile.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Coming Soon {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock %}
+
+{% block body_class %} bg-gray-100 {% endblock %}
+
+{% block content %} 
+
+  {% include 'includes/navigation.html' %} 
+
+  <section>
+    <div class="container-fluid overflow-hidden vh-100">
+      <div class="row">
+        <div class="col-lg-6 order-2 order-md-2 order-lg-1">
+          <div class="container ml-n7 mt-n8 transform-rotate">
+            <div class="row">
+              <div class="col-lg-3 col-md-3 col-3">
+                <img class="w-100 mt-5 mt-md-10 mb-4 fadeIn2 fadeInBottom" src="{% static 'assets/img/illustrations/iphone-2.png' %}" alt="iPhone-2">
+                <img class="w-100 mb-4" src="{% static 'assets/img/illustrations/iphone-3.png' %}" alt="iPhone-3">
+                <img class="w-100" src="{% static 'assets/img/illustrations/iphone-1.png' %}" alt="iPhone-1">
+              </div>
+              <div class="col-lg-3 col-md-3 col-3">
+                <img class="w-100 mb-4 mt-3 mt-md-8" src="{% static 'assets/img/illustrations/iphone-1.png' %}" alt="iPhone-1">
+                <img class="w-100 mb-4" src="{% static 'assets/img/illustrations/iphone-4.png' %}" alt="iPhone-4">
+                <img class="w-100 fadeIn3 fadeInBottom" src="{% static 'assets/img/illustrations/iphone-2.png' %}" alt="iPhone-2">
+              </div>
+              <div class="col-lg-3 col-md-3 col-3">
+                <img class="w-100 mb-4 mt-0 mt-md-n9 mt-lg-7 fadeIn3 fadeInBottom" src="{% static 'assets/img/illustrations/iphone-1.png' %}" alt="iPhone-1">
+                <img class="w-100 mb-4" src="{% static 'assets/img/illustrations/iphone-2.png' %}" alt="iPhone-2">
+                <img class="w-100" src="{% static 'assets/img/illustrations/iphone-3.png' %}" alt="iPhone-3">
+              </div>
+              <div class="col-lg-3 col-md-3 col-3">
+                <img class="w-100 mb-4 mt-n10" src="{% static 'assets/img/illustrations/iphone-1.png' %}" alt="iPhone-1">
+                <img class="w-100 mb-4 fadeIn1 fadeInBottom" src="{% static 'assets/img/illustrations/iphone-1.png' %}" alt="iPhone-1">
+                <img class="w-100" src="{% static 'assets/img/illustrations/iphone-4.png' %}" alt="iPhone-4">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="height-200 d-lg-none d-block"></div>
+        <div class="col-lg-4 col-md-8 my-auto ml-lg-7 order-1 order-md-1 order-lg-1 pl-3 pl-md-5 pl-lg-0 z-index-2">
+          <h1 class="text-gradient text-primary">Your Work With</h1>
+          <h1 class="mb-4">Soft Design System</h1>
+          <p class="lead">The time is now for it be okay to be great. Subscribe now and get notified when it's launched!</p>
+          <div class="row">
+            <div class="col-sm-8">
+              <input type="text" class="form-control mb-sm-0 mb-2" placeholder="Email Here...">
+            </div>
+            <div class="col-sm-4 pl-0">
+              <button type="button" class="btn bg-gradient-dark mb-0 h-100 position-relative z-index-2">Subscribe</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% include 'includes/footer.html' %}
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock %}

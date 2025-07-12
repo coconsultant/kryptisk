@@ -1,0 +1,38 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Error 500 {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock %}
+
+{% block body_class %}{% endblock %}
+
+{% block content %} 
+
+  <div>
+
+    {% include 'includes/navigation.html' %}
+
+    <section class="min-vh-100 d-flex align-items-center">
+      <div class="container">
+        <div class="row mt-lg-0 mt-8">
+          <div class="col-lg-5 my-auto">
+            <h1 class="display-1 text-bolder text-gradient text-warning fadeIn1 fadeInBottom mt-5">Error 500</h1>
+            <h2 class="fadeIn3 fadeInBottom opacity-8">Something went wrong</h2>
+            <p class="lead opacity-6 fadeIn2 fadeInBottom">We suggest you to go to the homepage while we solve this issue.</p>
+            <button type="button" class="btn bg-gradient-warning mt-4 fadeIn2 fadeInBottom">Go to Homepage</button>
+          </div>
+          <div class="col-lg-7 my-auto">
+            <img class="w-100 fadeIn1 fadeInBottom" src="{% static 'assets/img/illustrations/error-500.png' %}" alt="500-page-page-error">
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock %}

@@ -1,0 +1,652 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} UI Logos {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock %}
+
+{% block body_class %} logo-areas-sections {% endblock %}
+
+{% block content %}
+
+  {% include 'includes/navigation-light.html' %} 
+
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-lg-12 mx-auto">
+        <div class="mb-4 w-25">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Page Sections</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Logo Areas</li>
+            </ol>
+          </nav>
+          <h3>Logo Areas</h3>
+        </div>
+        <!-- Else bootstrap marketplace -->
+        <div class="position-relative border-radius-xl overflow-hidden shadow-lg mb-7">
+          <div class="container border-bottom">
+            <div class="row justify-space-between py-2">
+              <div class="col-lg-3 me-auto">
+                <p class="lead text-dark pt-1 mb-0">Header Logo</p>
+              </div>
+              <div class="col-lg-3">
+                <div class="nav-wrapper position-relative end-0">
+                  <ul class="nav nav-pills nav-fill flex-row p-1" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link mb-0 px-0 py-1 active" data-bs-toggle="tab" href="#preview-logo-1" role="tab" aria-selected="true">
+                        <i class="fas fa-desktop text-sm me-2"></i> Preview
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link mb-0 px-0 py-1" data-bs-toggle="tab" href="#code-logo-1" role="tab" aria-selected="false">
+                        <i class="fas fa-code text-sm me-2"></i> Code
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-content tab-space">
+            <div class="tab-pane active" id="preview-logo-1">
+              <iframe class="w-100 height-600" srcdoc='<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+        <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+        <!-- Nucleo Icons -->
+        <link href="{% static 'assets/css/nucleo-icons.css' %}" rel="stylesheet" />
+        <link href="{% static 'assets/css/nucleo-svg.css' %}" rel="stylesheet" />
+        <link id="pagestyle" href="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/css/soft-design-system-pro.min.css?v=1.0.6" rel="stylesheet" />
+        <!-- -------- START HEADER 8 w/ card over right bg image ------- -->
+<header>
+  <div class="page-header min-vh-85">
+    <div>
+      <img class="position-absolute fixed-top ms-auto w-50 h-100 z-index-0 d-none d-sm-none d-md-block border-radius-section border-top-end-radius-0 border-top-start-radius-0 border-bottom-end-radius-0" src="{% static 'assets/img/curved-images/curved6.jpg' %}" alt="image">
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-7 d-flex">
+          <div class="card card-body blur text-md-start text-center px-sm-5 shadow-lg mt-sm-5 py-sm-5">
+            <h2 class="text-gradient text-primary mb-0">Soft Design System.</h2>
+            <h2 class="text-dark mb-4">Choose the best</h2>
+
+            <p class="lead text-dark pe-md-5 me-md-5">
+              Find the story of Creative Tim&#39;s most complex design system and
+              all the work that make this design available.
+            </p>
+            <div class="buttons">
+              <button type="button" class="btn btn-rounded bg-gradient-primary mt-4">Contact Us</button>
+              <button type="button" class="btn btn-rounded btn-outline-secondary mt-4 ms-2">Read More</button>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-3 col-6 p-0">
+                <img class="w-100" src="{% static 'assets/img/logos/gray-logos/logo-pinterest.svg' %}" alt="logo">
+              </div>
+              <div class="col-md-3 col-6 p-0">
+                <img class="w-100" src="{% static 'assets/img/logos/gray-logos/logo-netflix.svg' %}" alt="logo">
+              </div>
+              <div class="col-md-3 col-6 p-0">
+                <img class="w-100" src="{% static 'assets/img/logos/gray-logos/logo-coinbase.svg' %}" alt="logo">
+              </div>
+              <div class="col-md-3 col-6 p-0">
+                <img class="w-100" src="{% static 'assets/img/logos/gray-logos/logo-nasa.svg' %}" alt="logo">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- -------- END HEADER 8 w/ card over right bg image ------- -->
+
+        '></iframe>
+            </div>
+            <div class="tab-pane" id="code-logo-1">
+              <div class="position-relative p-4 pb-2">
+                <a class="btn btn-sm bg-gradient-dark position-absolute end-4 mt-3" onclick="copyCode(this);" href="javascript:;"><i class="fas fa-copy text-sm me-1"></i> Copy</a>
+                <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="c">&lt;!-- -------- START HEADER 8 w/ card over right bg image ------- --&gt;</span>
+<span class="nt">&lt;header&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"page-header min-vh-85"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div&gt;</span>
+      <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"position-absolute fixed-top ms-auto w-50 h-100 z-index-0 d-none d-sm-none d-md-block border-radius-section border-top-end-radius-0 border-top-start-radius-0 border-bottom-end-radius-0"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/curved-images/curved6.jpg' %}"</span> <span class="na">alt=</span><span class="s">"image"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-7 d-flex"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"card card-body blur text-md-start text-center px-sm-5 shadow-lg mt-sm-5 py-sm-5"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;h2</span> <span class="na">class=</span><span class="s">"text-gradient text-primary mb-0"</span><span class="nt">&gt;</span>Soft Design System.<span class="nt">&lt;/h2&gt;</span>
+            <span class="nt">&lt;h2</span> <span class="na">class=</span><span class="s">"text-dark mb-4"</span><span class="nt">&gt;</span>Choose the best<span class="nt">&lt;/h2&gt;</span>
+
+            <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"lead text-dark pe-md-5 me-md-5"</span><span class="nt">&gt;</span>
+              Find the story of Creative Tim<span class="ni">&amp;#39;</span>s most complex design system and
+              all the work that make this design available.
+            <span class="nt">&lt;/p&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"buttons"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">class=</span><span class="s">"btn btn-rounded bg-gradient-primary mt-4"</span><span class="nt">&gt;</span>Contact Us<span class="nt">&lt;/button&gt;</span>
+              <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">class=</span><span class="s">"btn btn-rounded btn-outline-secondary mt-4 ms-2"</span><span class="nt">&gt;</span>Read More<span class="nt">&lt;/button&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row mt-2"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-md-3 col-6 p-0"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-pinterest.svg' %}"</span> <span class="na">alt=</span><span class="s">"logo"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;/div&gt;</span>
+              <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-md-3 col-6 p-0"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-netflix.svg' %}"</span> <span class="na">alt=</span><span class="s">"logo"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;/div&gt;</span>
+              <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-md-3 col-6 p-0"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-coinbase.svg' %}"</span> <span class="na">alt=</span><span class="s">"logo"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;/div&gt;</span>
+              <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-md-3 col-6 p-0"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-nasa.svg' %}"</span> <span class="na">alt=</span><span class="s">"logo"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+          <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/header&gt;</span>
+<span class="c">&lt;!-- -------- END HEADER 8 w/ card over right bg image ------- --&gt;</span></code></pre>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="position-relative border-radius-xl overflow-hidden shadow-lg mb-7">
+          <div class="container border-bottom">
+            <div class="row justify-space-between py-2">
+              <div class="col-lg-3 me-auto">
+                <p class="lead text-dark pt-1 mb-0">Logo Area</p>
+              </div>
+              <div class="col-lg-3">
+                <div class="nav-wrapper position-relative end-0">
+                  <ul class="nav nav-pills nav-fill flex-row p-1" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link mb-0 px-0 py-1 active" data-bs-toggle="tab" href="#preview-logo-2" role="tab" aria-selected="true">
+                        <i class="fas fa-desktop text-sm me-2"></i> Preview
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link mb-0 px-0 py-1" data-bs-toggle="tab" href="#code-logo-2" role="tab" aria-selected="false">
+                        <i class="fas fa-code text-sm me-2"></i> Code
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-content tab-space">
+            <div class="tab-pane active" id="preview-logo-2">
+              <iframe class="w-100 height-600" srcdoc='<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+        <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+        <!-- Nucleo Icons -->
+        <link href="{% static 'assets/css/nucleo-icons.css' %}" rel="stylesheet" />
+        <link href="{% static 'assets/css/nucleo-svg.css' %}" rel="stylesheet" />
+        <link id="pagestyle" href="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/css/soft-design-system-pro.min.css?v=1.0.6" rel="stylesheet" />
+        <!-- -------   START PRE-FOOTER 6 - title & description and input    -------- -->
+<div class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-8 mx-auto text-center">
+        <h6 class="opacity-5"> More than 50+ brands trust Soft</h6>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-lg-2 col-md-4 col-6 mb-4">
+        <img class="w-100 opacity-9" src="{% static 'assets/img/logos/gray-logos/logo-coinbase.svg' %}" alt="logo">
+      </div>
+      <div class="col-lg-2 col-md-4 col-6 mb-4">
+        <img class="w-100 opacity-9" src="{% static 'assets/img/logos/gray-logos/logo-nasa.svg' %}" alt="logo">
+      </div>
+      <div class="col-lg-2 col-md-4 col-6 mb-4">
+        <img class="w-100 opacity-9" src="{% static 'assets/img/logos/gray-logos/logo-netflix.svg' %}" alt="logo">
+      </div>
+      <div class="col-lg-2 col-md-4 col-6 mb-4">
+        <img class="w-100 opacity-9" src="{% static 'assets/img/logos/gray-logos/logo-pinterest.svg' %}" alt="logo">
+      </div>
+      <div class="col-lg-2 col-md-4 col-6 mb-4">
+        <img class="w-100 opacity-9" src="{% static 'assets/img/logos/gray-logos/logo-spotify.svg' %}" alt="logo">
+      </div>
+      <div class="col-lg-2 col-md-4 col-6 mb-4">
+        <img class="w-100 opacity-9" src="{% static 'assets/img/logos/gray-logos/logo-vodafone.svg' %}" alt="logo">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- -------   END PRE-FOOTER 6 - title & description and input    -------- -->
+
+        '></iframe>
+            </div>
+            <div class="tab-pane" id="code-logo-2">
+              <div class="position-relative p-4 pb-2">
+                <a class="btn btn-sm bg-gradient-dark position-absolute end-4 mt-3" onclick="copyCode(this);" href="javascript:;"><i class="fas fa-copy text-sm me-1"></i> Copy</a>
+                <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="c">&lt;!-- -------   START PRE-FOOTER 6 - title &amp; description and input    -------- --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"py-5"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-8 mx-auto text-center"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;h6</span> <span class="na">class=</span><span class="s">"opacity-5"</span><span class="nt">&gt;</span> More than 50+ brands trust Soft<span class="nt">&lt;/h6&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row mt-4"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-md-4 col-6 mb-4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-9"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-coinbase.svg' %}"</span> <span class="na">alt=</span><span class="s">"logo"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-md-4 col-6 mb-4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-9"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-nasa.svg' %}"</span> <span class="na">alt=</span><span class="s">"logo"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-md-4 col-6 mb-4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-9"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-netflix.svg' %}"</span> <span class="na">alt=</span><span class="s">"logo"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-md-4 col-6 mb-4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-9"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-pinterest.svg' %}"</span> <span class="na">alt=</span><span class="s">"logo"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-md-4 col-6 mb-4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-9"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-spotify.svg' %}"</span> <span class="na">alt=</span><span class="s">"logo"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-md-4 col-6 mb-4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-9"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-vodafone.svg' %}"</span> <span class="na">alt=</span><span class="s">"logo"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="c">&lt;!-- -------   END PRE-FOOTER 6 - title &amp; description and input    -------- --&gt;</span></code></pre>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="position-relative border-radius-xl overflow-hidden shadow-lg mb-7">
+          <div class="container border-bottom">
+            <div class="row justify-space-between py-2">
+              <div class="col-lg-3 me-auto">
+                <p class="lead text-dark pt-1 mb-0">Logos</p>
+              </div>
+              <div class="col-lg-3">
+                <div class="nav-wrapper position-relative end-0">
+                  <ul class="nav nav-pills nav-fill flex-row p-1" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link mb-0 px-0 py-1 active" data-bs-toggle="tab" href="#preview-logo-3" role="tab" aria-selected="true">
+                        <i class="fas fa-desktop text-sm me-2"></i> Preview
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link mb-0 px-0 py-1" data-bs-toggle="tab" href="#code-logo-3" role="tab" aria-selected="false">
+                        <i class="fas fa-code text-sm me-2"></i> Code
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-content tab-space">
+            <div class="tab-pane active" id="preview-logo-3">
+              <iframe class="w-100 height-600" srcdoc='<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+        <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+        <!-- Nucleo Icons -->
+        <link href="{% static 'assets/css/nucleo-icons.css' %}" rel="stylesheet" />
+        <link href="{% static 'assets/css/nucleo-svg.css' %}" rel="stylesheet" />
+        <link id="pagestyle" href="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/css/soft-design-system-pro.min.css?v=1.0.6" rel="stylesheet" />
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 mx-auto text-center">
+        <h2 class="text-gradient text-primary mb-0">What random people</h2>
+        <h2 class="mb-3">Think about us</h2>
+        <p>That’s the main thing people are controlled by! Thoughts- their perception of themselves! </p>
+      </div>
+    </div>
+    <div class="row mt-6">
+      <div class="col-lg-4 col-md-8">
+        <div class="card card-plain">
+          <div class="card-body">
+            <div class="author">
+              <img src="{% static 'assets/img/team-3.jpg' %}" alt="..." class="avatar shadow">
+              <div class="name ps-2">
+                <span>Mathew Glock</span>
+                <div class="stats">
+                  <small><i class="far fa-clock"></i> 5 min read</small>
+                </div>
+              </div>
+            </div>
+            <p class="mt-4">"If you have the opportunity to play this game of life you need to appreciate every moment."</p>
+            <div class="rating mt-3">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="far fa-star"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-8 ms-md-auto">
+        <div class="card bg-gradient-primary">
+          <div class="card-body">
+            <div class="author align-items-center">
+              <img src="{% static 'assets/img/marie.jpg' %}" alt="..." class="avatar shadow">
+              <div class="name ps-2">
+                <span class="text-white">Mathew Glock</span>
+                <div class="stats">
+                  <small class="text-white">Posted on 28 February</small>
+                </div>
+              </div>
+            </div>
+            <p class="mt-4 text-white">"If you have the opportunity to play this game of life you need to appreciate every moment."</p>
+            <div class="rating mt-3">
+              <i class="fas fa-star text-white"></i>
+              <i class="fas fa-star text-white"></i>
+              <i class="fas fa-star text-white"></i>
+              <i class="far fa-star text-white"></i>
+              <i class="far fa-star text-white"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-8">
+        <div class="card card-plain">
+          <div class="card-body">
+            <div class="author">
+              <img src="{% static 'assets/img/team-2.jpg' %}" alt="..." class="avatar shadow">
+              <div class="name ps-2">
+                <span>Mathew Glock</span>
+                <div class="stats">
+                  <small><i class="far fa-clock"></i> 5 min read</small>
+                </div>
+              </div>
+            </div>
+            <p class="mt-4">"If you have the opportunity to play this game of life you need to appreciate every moment."</p>
+            <div class="rating mt-3">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="horizontal dark my-5">
+    <div class="row">
+      <div class="col-lg-2 col-6">
+        <img class="w-100 opacity-6" src="{% static 'assets/img/logos/gray-logos/logo-apple.svg' %}" alt="Logo">
+      </div>
+      <div class="col-lg-2 col-6">
+        <img class="w-100 opacity-6" src="{% static 'assets/img/logos/gray-logos/logo-facebook.svg' %}" alt="Logo">
+      </div>
+      <div class="col-lg-2 col-6">
+        <img class="w-100 opacity-6" src="{% static 'assets/img/logos/gray-logos/logo-behance.svg' %}" alt="Logo">
+      </div>
+      <div class="col-lg-2 col-6">
+        <img class="w-100 opacity-6" src="{% static 'assets/img/logos/gray-logos/logo-spotify.svg' %}" alt="Logo">
+      </div>
+      <div class="col-lg-2 col-6">
+        <img class="w-100 opacity-6" src="{% static 'assets/img/logos/gray-logos/logo-coinbase.svg' %}" alt="Logo">
+      </div>
+      <div class="col-lg-2 col-6">
+        <img class="w-100 opacity-6" src="{% static 'assets/img/logos/gray-logos/logo-pinterest.svg' %}" alt="Logo">
+      </div>
+    </div>
+  </div>
+</section>
+
+        '></iframe>
+            </div>
+            <div class="tab-pane" id="code-logo-3">
+              <div class="position-relative p-4 pb-2">
+                <a class="btn btn-sm bg-gradient-dark position-absolute end-4 mt-3" onclick="copyCode(this);" href="javascript:;"><i class="fas fa-copy text-sm me-1"></i> Copy</a>
+                <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;section</span> <span class="na">class=</span><span class="s">"py-5"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-6 mx-auto text-center"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;h2</span> <span class="na">class=</span><span class="s">"text-gradient text-primary mb-0"</span><span class="nt">&gt;</span>What random people<span class="nt">&lt;/h2&gt;</span>
+        <span class="nt">&lt;h2</span> <span class="na">class=</span><span class="s">"mb-3"</span><span class="nt">&gt;</span>Think about us<span class="nt">&lt;/h2&gt;</span>
+        <span class="nt">&lt;p&gt;</span>That’s the main thing people are controlled by! Thoughts- their perception of themselves! <span class="nt">&lt;/p&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row mt-6"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-4 col-md-8"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"card card-plain"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"card-body"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"author"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/team-3.jpg' %}"</span> <span class="na">alt=</span><span class="s">"..."</span> <span class="na">class=</span><span class="s">"avatar shadow"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"name ps-2"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;span&gt;</span>Mathew Glock<span class="nt">&lt;/span&gt;</span>
+                <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"stats"</span><span class="nt">&gt;</span>
+                  <span class="nt">&lt;small&gt;&lt;i</span> <span class="na">class=</span><span class="s">"far fa-clock"</span><span class="nt">&gt;&lt;/i&gt;</span> 5 min read<span class="nt">&lt;/small&gt;</span>
+                <span class="nt">&lt;/div&gt;</span>
+              <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"mt-4"</span><span class="nt">&gt;</span>"If you have the opportunity to play this game of life you need to appreciate every moment."<span class="nt">&lt;/p&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"rating mt-3"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-star"</span><span class="nt">&gt;&lt;/i&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-star"</span><span class="nt">&gt;&lt;/i&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-star"</span><span class="nt">&gt;&lt;/i&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-star"</span><span class="nt">&gt;&lt;/i&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"far fa-star"</span><span class="nt">&gt;&lt;/i&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+          <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-4 col-md-8 ms-md-auto"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"card bg-gradient-primary"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"card-body"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"author align-items-center"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/marie.jpg' %}"</span> <span class="na">alt=</span><span class="s">"..."</span> <span class="na">class=</span><span class="s">"avatar shadow"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"name ps-2"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"text-white"</span><span class="nt">&gt;</span>Mathew Glock<span class="nt">&lt;/span&gt;</span>
+                <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"stats"</span><span class="nt">&gt;</span>
+                  <span class="nt">&lt;small</span> <span class="na">class=</span><span class="s">"text-white"</span><span class="nt">&gt;</span>Posted on 28 February<span class="nt">&lt;/small&gt;</span>
+                <span class="nt">&lt;/div&gt;</span>
+              <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"mt-4 text-white"</span><span class="nt">&gt;</span>"If you have the opportunity to play this game of life you need to appreciate every moment."<span class="nt">&lt;/p&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"rating mt-3"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-star text-white"</span><span class="nt">&gt;&lt;/i&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-star text-white"</span><span class="nt">&gt;&lt;/i&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-star text-white"</span><span class="nt">&gt;&lt;/i&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"far fa-star text-white"</span><span class="nt">&gt;&lt;/i&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"far fa-star text-white"</span><span class="nt">&gt;&lt;/i&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+          <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-4 col-md-8"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"card card-plain"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"card-body"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"author"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/team-2.jpg' %}"</span> <span class="na">alt=</span><span class="s">"..."</span> <span class="na">class=</span><span class="s">"avatar shadow"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"name ps-2"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;span&gt;</span>Mathew Glock<span class="nt">&lt;/span&gt;</span>
+                <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"stats"</span><span class="nt">&gt;</span>
+                  <span class="nt">&lt;small&gt;&lt;i</span> <span class="na">class=</span><span class="s">"far fa-clock"</span><span class="nt">&gt;&lt;/i&gt;</span> 5 min read<span class="nt">&lt;/small&gt;</span>
+                <span class="nt">&lt;/div&gt;</span>
+              <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"mt-4"</span><span class="nt">&gt;</span>"If you have the opportunity to play this game of life you need to appreciate every moment."<span class="nt">&lt;/p&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"rating mt-3"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-star"</span><span class="nt">&gt;&lt;/i&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-star"</span><span class="nt">&gt;&lt;/i&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-star"</span><span class="nt">&gt;&lt;/i&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-star"</span><span class="nt">&gt;&lt;/i&gt;</span>
+              <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-star"</span><span class="nt">&gt;&lt;/i&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+          <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;hr</span> <span class="na">class=</span><span class="s">"horizontal dark my-5"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-6"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-6"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-apple.svg' %}"</span> <span class="na">alt=</span><span class="s">"Logo"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-6"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-6"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-facebook.svg' %}"</span> <span class="na">alt=</span><span class="s">"Logo"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-6"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-6"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-behance.svg' %}"</span> <span class="na">alt=</span><span class="s">"Logo"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-6"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-6"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-spotify.svg' %}"</span> <span class="na">alt=</span><span class="s">"Logo"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-6"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-6"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-coinbase.svg' %}"</span> <span class="na">alt=</span><span class="s">"Logo"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-6"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-6"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/gray-logos/logo-pinterest.svg' %}"</span> <span class="na">alt=</span><span class="s">"Logo"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/section&gt;</span></code></pre>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="position-relative border-radius-xl overflow-hidden shadow-lg mb-7">
+          <div class="container border-bottom">
+            <div class="row justify-space-between py-2">
+              <div class="col-lg-3 me-auto">
+                <p class="lead text-dark pt-1 mb-0">Logo Section</p>
+              </div>
+              <div class="col-lg-3">
+                <div class="nav-wrapper position-relative end-0">
+                  <ul class="nav nav-pills nav-fill flex-row p-1" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link mb-0 px-0 py-1 active" data-bs-toggle="tab" href="#preview-logo-4" role="tab" aria-selected="true">
+                        <i class="fas fa-desktop text-sm me-2"></i> Preview
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link mb-0 px-0 py-1" data-bs-toggle="tab" href="#code-logo-4" role="tab" aria-selected="false">
+                        <i class="fas fa-code text-sm me-2"></i> Code
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-content tab-space">
+            <div class="tab-pane active" id="preview-logo-4">
+              <iframe class="w-100 height-600" srcdoc='<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+        <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+        <!-- Nucleo Icons -->
+        <link href="{% static 'assets/css/nucleo-icons.css' %}" rel="stylesheet" />
+        <link href="{% static 'assets/css/nucleo-svg.css' %}" rel="stylesheet" />
+        <link id="pagestyle" href="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/css/soft-design-system-pro.min.css?v=1.0.6" rel="stylesheet" />
+        <!-- -------   START PRE-FOOTER 6 - title & description and input    -------- -->
+<div class="py-8">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 mx-auto text-center">
+        <h3>Our products are built on top</h3>
+        <p class="lead">Very nice logos here on this page, you can check more on our social profiles.</p>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-lg-2 col-md-4 col-6 mb-4 ms-auto">
+        <img class="w-100 opacity-7" src="{% static 'assets/img/logos/medium-logos/logo-apple.svg' %}">
+      </div>
+      <div class="col-lg-2 col-md-4 col-6 mb-4">
+        <img class="w-100 opacity-7" src="{% static 'assets/img/logos/medium-logos/logo-mailchimp.svg' %}">
+      </div>
+      <div class="col-lg-2 col-md-4 col-6 mb-4">
+        <img class="w-100 opacity-7" src="{% static 'assets/img/logos/medium-logos/logo-behance.svg' %}">
+      </div>
+      <div class="col-lg-2 col-md-4 col-6 mb-4">
+        <img class="w-100 opacity-7" src="{% static 'assets/img/logos/medium-logos/logo-mailchimp.svg' %}">
+      </div>
+      <div class="col-lg-2 col-md-4 col-6 mb-4 me-auto">
+        <img class="w-100 opacity-7" src="{% static 'assets/img/logos/medium-logos/logo-nasa.svg' %}">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- -------   END PRE-FOOTER 6 - title & description and input    -------- -->
+
+        '></iframe>
+            </div>
+            <div class="tab-pane" id="code-logo-4">
+              <div class="position-relative p-4 pb-2">
+                <a class="btn btn-sm bg-gradient-dark position-absolute end-4 mt-3" onclick="copyCode(this);" href="javascript:;"><i class="fas fa-copy text-sm me-1"></i> Copy</a>
+                <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="c">&lt;!-- -------   START PRE-FOOTER 6 - title &amp; description and input    -------- --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"py-8"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-6 mx-auto text-center"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;h3&gt;</span>Our products are built on top<span class="nt">&lt;/h3&gt;</span>
+        <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"lead"</span><span class="nt">&gt;</span>Very nice logos here on this page, you can check more on our social profiles.<span class="nt">&lt;/p&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row mt-5"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-md-4 col-6 mb-4 ms-auto"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-7"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/medium-logos/logo-apple.svg' %}"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-md-4 col-6 mb-4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-7"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/medium-logos/logo-mailchimp.svg' %}"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-md-4 col-6 mb-4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-7"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/medium-logos/logo-behance.svg' %}"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-md-4 col-6 mb-4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-7"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/medium-logos/logo-mailchimp.svg' %}"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-lg-2 col-md-4 col-6 mb-4 me-auto"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"w-100 opacity-7"</span> <span class="na">src=</span><span class="s">"{% static 'assets/img/logos/medium-logos/logo-nasa.svg' %}"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="c">&lt;!-- -------   END PRE-FOOTER 6 - title &amp; description and input    -------- --&gt;</span></code></pre>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End bootstrap marketplace -->
+      </div>
+    </div>
+  </div>
+  
+  {% include 'includes/footer.html' %}
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock %}

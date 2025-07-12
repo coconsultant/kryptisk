@@ -1,0 +1,34 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Error 404 {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock %}
+
+{% block body_class %}{% endblock %}
+
+{% block content %}
+
+  {% include 'includes/navigation.html' %}
+
+  <section class="my-10">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 my-auto">
+          <h1 class="display-1 text-bolder text-gradient text-danger">Error 404</h1>
+          <h2>Page not found</h2>
+          <p class="lead">We suggest you to go to the homepage while we solve this issue.</p>
+          <button type="button" class="btn bg-gradient-dark mt-4">Go to Homepage</button>
+        </div>
+        <div class="col-lg-6 my-auto position-relative">
+          <img class="w-100 position-relative" src="{% static 'assets/img/illustrations/error-404.png' %}" alt="404-page-page-error">
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock %}
