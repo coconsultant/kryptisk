@@ -7,7 +7,7 @@
             <a class="navbar-brand font-weight-bolder ms-sm-3" href="/" rel="tooltip" title="Designed and Coded by Creative Tim" data-placement="bottom">
               Soft UI PRO
             </a>
-            <a target="_blank" href="https://docs.appseed.us/products/django-apps/soft-ui-design-pro" class="btn btn-sm  bg-gradient-primary  btn-round mb-0 ms-auto d-lg-none d-block">Docs</a>
+            <a target="_blank" href="https://docs.appseed.us/products/django-apps/soft-ui-design-pro" class="btn btn-sm btn-primary w-auto me-2 mb-0 ms-auto d-lg-none d-block">Docs</a>
             <button class="navbar-toggler shadow-none ms-md-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon mt-2">
                 <span class="navbar-toggler-bar bar1"></span>
@@ -1179,11 +1179,11 @@
               <ul class="navbar-nav d-lg-block d-none">
                 {% if request.user.is_authenticated %}
                   <li class="nav-item">
-                    <a href="{% url 'profile' %}" class="btn btn-sm  bg-gradient-primary  btn-round mb-0 me-1">{{ request.user.username }}</a>
+                    <a href="{% url 'profile' %}" class="btn btn-sm btn-primary w-auto mb-0 me-2">{{ request.user.username }}</a>
                   </li>
                 {% else %}
                   <li class="nav-item">
-                    <a href="{% url 'login' %}" class="btn btn-sm  bg-gradient-primary  btn-round mb-0 me-1">Sign IN</a>
+                    <a href="{% url 'login' %}" class="btn btn-sm btn-primary w-auto mb-0 me-2">Sign IN</a>
                   </li>
                 {% endif %}
               </ul>
