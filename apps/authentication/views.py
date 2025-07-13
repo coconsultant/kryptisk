@@ -90,10 +90,13 @@ def profile(request):
         })
 
     # POST request handler
-    try:
-        body = json.loads(request.body)
-    except Exception as _:
+    if 'multipart/form-data' in request.content_type:
         body = request.POST
+    else:
+        try:
+            body = json.loads(request.body)
+        except Exception:
+            body = request.POST
 
     action = body.get('action')
 
