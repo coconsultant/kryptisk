@@ -80,9 +80,14 @@ def profile(request):
         cache_buster = None
         if request.user.avatar:
             try:
+                # Try to get the file modification time
                 cache_buster = int(os.path.getmtime(request.user.avatar.path))
-            except (FileNotFoundError, OSError):
+            except (FileNotFoundError, OSError, AttributeError):
+                # If file doesn't exist or path is not accessible, use current timestamp
                 cache_buster = int(time.time())
+        else:
+            # For users without avatars, we don't need a cache buster
+            cache_buster = None
 
         return render(request, "accounts/user-profile.html", context={
             'bio': request.user.bio,
@@ -176,7 +181,11 @@ def profile(request):
             # This ensures that when the page is re-rendered after redirect,
             # request.user.avatar.url contains the latest value.
             User = get_user_model()
-            request.user = User.objects.get(pk=request.user.pk)
+            updated_user = User.objects.get(pk=request.user.pk)
+            
+            # Update the request.user with the fresh data
+            for attr in ['avatar', 'bio', 'social_twitter', 'social_facebook', 'social_instagram']:
+                setattr(request.user, attr, getattr(updated_user, attr))
 
             # Redirect to the profile page after successful update
             return HttpResponseRedirect(request.path)
