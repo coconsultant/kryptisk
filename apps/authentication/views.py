@@ -6,6 +6,10 @@ Copyright (c) 2019 - present AppSeed.us
 # Create your views here.
 import json
 from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.base import ContentFile
+from django.contrib.auth import get_user_model # Import for explicitly refreshing user object
 
 from django.core.mail import send_mail
 from django.http import JsonResponse, HttpResponseRedirect
@@ -68,7 +72,8 @@ def profile(request):
     # GET request handler
     if request.method == 'GET':
         # Safely get avatar URL, providing a default if no avatar is set
-        avatar_url = request.user.avatar.url if request.user.avatar else f"{ASSETS_ROOT}/img/default-avatar.png"
+        # This avatar_url is passed to context, though the template directly uses request.user.avatar.url
+        avatar_url = request.user.avatar.url if request.user.avatar else f"{ASSETS_ROOT}/img/added-images/default.png"
 
         return render(request, "accounts/user-profile.html", context={
             'bio': request.user.bio,
@@ -117,22 +122,48 @@ def profile(request):
         form = ProfileForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
-            user_profile = form.save(commit=False)
+            user_profile = form.save(commit=False) # Get instance without saving to DB yet
 
-            if 'avatar' in request.FILES:
-                avatar = request.FILES['avatar']
-                img = Image.open(avatar)
+            if 'avatar' in request.FILES and request.FILES['avatar']: # Check if avatar file was actually uploaded
+                avatar_file = request.FILES['avatar']
+                img = Image.open(avatar_file)
 
                 # Resize image if larger than 800x800
                 max_size = (800, 800)
                 if img.width > max_size[0] or img.height > max_size[1]:
                     img.thumbnail(max_size, Image.LANCZOS)
-                    img.save(user_profile.avatar.path)
 
+                # Determine image format for saving
+                img_format = img.format if img.format else 'PNG'
+                if img_format not in ['JPEG', 'PNG', 'GIF', 'BMP', 'TIFF', 'WEBP']:
+                    img_format = 'PNG' # Fallback to a common format
 
-            user_profile.save()
+                # Convert to RGB if saving as JPEG from a transparent format
+                if img_format == 'JPEG' and img.mode in ('RGBA', 'P'):
+                    img = img.convert('RGB')
+                
+                output = BytesIO()
+                # Save the processed image to a BytesIO object
+                img.save(output, format=img_format, quality=85) # Add quality for JPEG
+                output.seek(0)
+
+                # Assign the processed image content to the avatar field
+                # This replaces the original uploaded file content with the processed one.
+                user_profile.avatar.save(
+                    avatar_file.name, # Use original filename as a base
+                    ContentFile(output.read()), # Pass the bytes from BytesIO
+                    save=False # Do not save the model instance yet
+                )
+
+            user_profile.save() # Finally save the model instance and the avatar file (which has been updated)
+
+            # Explicitly refresh the request.user object from the database
+            # This ensures that when the page is re-rendered after redirect,
+            # request.user.avatar.url contains the latest value.
+            User = get_user_model()
+            request.user = User.objects.get(pk=request.user.pk)
+
             # Redirect to the profile page after successful update
-            # This causes a page reload, showing the updated avatar.
             return HttpResponseRedirect(request.path)
 
         # If form is not valid, return JSON response with errors
