@@ -1179,11 +1179,11 @@
               <ul class="navbar-nav d-lg-block d-none">
                 {% if request.user.is_authenticated %}
                   <li class="nav-item">
-                    <a href="{% url 'profile' %}" class="btn btn-sm btn-primary w-auto mb-0 me-2">{{ request.user.username }}</a>
+                    <a href="{% url 'profile' %}" class="btn btn-sm btn-success w-auto mb-0 me-2">{{ request.user.username }}</a>
                   </li>
                 {% else %}
                   <li class="nav-item">
-                    <a href="{% url 'login' %}" class="btn btn-sm btn-primary w-auto mb-0 me-2">Sign IN</a>
+                    <a href="{% url 'login' %}" class="btn btn-sm btn-secondary w-auto mb-0 me-2">Sign IN</a>
                   </li>
                 {% endif %}
               </ul>
