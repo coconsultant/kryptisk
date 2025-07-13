@@ -33,11 +33,7 @@
                   <input type="file" id="avatar-upload" name="avatar" class="d-none" accept="image/*" />
               </form>
               {# Reset Avatar Button (Always visible now for testing) #}
-                <form id="reset-avatar-form" method="post" action="">
-                  {% csrf_token %}
-                  <input type="hidden" name="action" value="reset_avatar" />
-                  <button type="submit" class="btn btn-sm btn-outline-danger text-nowrap mb-0 mt-2" onclick="return confirm('Are you sure you want to reset your avatar to default? This cannot be undone.');">Reset Avatar to Default</button>
-                </form>
+                <button type="button" class="btn btn-sm btn-outline-danger text-nowrap mb-0 mt-2" data-bs-toggle="modal" data-bs-target="#resetAvatarModal">Reset Avatar to Default</button>
             </div>
             <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
               <div class="d-flex justify-content-between align-items-center mb-2">
@@ -249,7 +245,7 @@
   </section>
 
 
-<!-- Modal -->
+<!-- Delete Account Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog">
   <div class="modal-content">
@@ -265,6 +261,29 @@
       <button type="button" class="btn bg-gradient-dark mb-0" data-bs-dismiss="modal">Close</button>
         <form id="delete-account">
             <input type="submit" class="btn bg-gradient-danger mb-0" value="Confirm">
+        </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Reset Avatar Modal -->
+<div class="modal fade" id="resetAvatarModal" tabindex="-1" aria-labelledby="resetAvatarModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="resetAvatarModalLabel">Reset Avatar</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      Are you sure you want to reset your avatar to default? This cannot be undone.
+    </div>
+    <div class="modal-footer justify-content-end">
+      <button type="button" class="btn bg-gradient-dark mb-0" data-bs-dismiss="modal">Close</button>
+        <form id="reset-avatar-form" method="post" action="">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="reset_avatar" />
+          <input type="submit" class="btn bg-gradient-danger mb-0" value="Confirm">
         </form>
     </div>
   </div>
