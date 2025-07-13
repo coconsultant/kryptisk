@@ -59,3 +59,4 @@ pyrepomix_report.md
 db.sqlite3
 uv.lock
 *.og
+media/**
