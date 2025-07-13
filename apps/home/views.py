@@ -20,6 +20,18 @@ def index(request):
 @login_required(login_url="/login/")
 def pages(request):
     context = {}
+    
+    # Handle avatar upload
+    if request.method == 'POST' and request.POST.get('action') == 'upload_avatar':
+        if 'avatar' in request.FILES:
+            request.user.avatar = request.FILES['avatar']
+            request.user.save()
+            return HttpResponseRedirect(request.path)
+    
+    # Add bio to context
+    if request.user.is_authenticated:
+        context['bio'] = request.user.bio
+    
     # All resource paths end in .html.
     # Pick out the html file name from the url. And load that template.
     try:
