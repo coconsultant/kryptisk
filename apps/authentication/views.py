@@ -7,6 +7,8 @@ Copyright (c) 2019 - present AppSeed.us
 import json
 import os
 import time
+import hashlib
+import requests
 from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -159,6 +161,53 @@ def profile(request):
         return JsonResponse({
             'message': form.errors
         }, status=400)
+
+    if action == 'use_gravatar':
+        if not request.user.email:
+            return JsonResponse({'message': 'No email associated with your account to fetch Gravatar. Please add an email address to use this feature.'}, status=400)
+
+        email_hash = hashlib.md5(request.user.email.lower().strip().encode('utf-8')).hexdigest()
+        # requesting size 800 to ensure good quality if resized
+        gravatar_url = f"https://www.gravatar.com/avatar/{email_hash}?d=identicon&s=800"
+
+        try:
+            response = requests.get(gravatar_url, stream=True)
+            response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
+
+            img = Image.open(BytesIO(response.content))
+
+            max_size = (800, 800)
+            if img.width > max_size[0] or img.height > max_size[1]:
+                img.thumbnail(max_size, Image.LANCZOS)
+
+            img_format = img.format if img.format else 'PNG'
+            if img_format.upper() not in ['JPEG', 'PNG', 'GIF', 'BMP', 'TIFF', 'WEBP']:
+                img_format = 'PNG'
+
+            if img_format.upper() == 'JPEG' and img.mode in ('RGBA', 'P'):
+                img = img.convert('RGB')
+
+            output = BytesIO()
+            img.save(output, format=img_format, quality=85)
+            output.seek(0)
+
+            gravatar_filename = f"gravatar_{request.user.username}.{img_format.lower()}"
+            request.user.avatar = InMemoryUploadedFile(
+                output,
+                'ImageField',
+                gravatar_filename,
+                f'image/{img_format.lower()}',
+                output.getbuffer().nbytes,
+                None
+            )
+            request.user.save()
+
+            return HttpResponseRedirect(request.path)
+
+        except requests.exceptions.RequestException as e:
+            return JsonResponse({'message': f'Error fetching Gravatar: {e}'}, status=500)
+        except Exception as e:
+            return JsonResponse({'message': f'Error processing Gravatar image: {e}'}, status=500)
 
     if action == 'reset_avatar':
         if request.user.avatar:
