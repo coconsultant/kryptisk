@@ -26,19 +26,25 @@
           <div class="row py-lg-7 py-5">
             <div class="col-lg-3 col-md-5 position-relative my-auto">
               <img id="user-avatar-img" class="img border-radius-lg max-width-200 w-100 position-relative z-index-2" src="{% if request.user.avatar %}{{ request.user.avatar.url }}?v={% now "YmdHis.f" %}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
-              <form id="upload-avatar-form" method="post" action="" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="upload_avatar" />
-                  <label for="avatar-upload" class="btn btn-sm btn-outline-info text-nowrap mb-0 mt-2">Upload Avatar</label>
-                  <input type="file" id="avatar-upload" name="avatar" class="d-none" accept="image/*" />
-              </form>
-              <form id="use-gravatar-form" method="post" action="">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="use_gravatar" />
-                <button type="submit" class="btn btn-sm btn-outline-info text-nowrap mb-0 mt-2" {% if not request.user.email %}disabled title="Please add an email address to your profile to use Gravatar."{% endif %}>Use Gravatar</button>
-              </form>
-              {# Reset Avatar Button (Always visible now for testing) #}
-                <button type="button" class="btn btn-sm btn-outline-danger text-nowrap mb-0 mt-2" data-bs-toggle="modal" data-bs-target="#resetAvatarModal">Reset Avatar to Default</button>
+              <div class="mt-2">
+                <form id="upload-avatar-form" method="post" action="" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="upload_avatar" />
+                    <label for="avatar-upload" class="btn btn-sm btn-outline-info text-nowrap w-100">Upload Avatar</label>
+                    <input type="file" id="avatar-upload" name="avatar" class="d-none" accept="image/*" />
+                </form>
+              </div>
+              <div class="mt-2">
+                <form id="use-gravatar-form" method="post" action="">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="use_gravatar" />
+                  <button type="submit" class="btn btn-sm btn-outline-info text-nowrap w-100" {% if not request.user.email %}disabled title="Please add an email address to your profile to use Gravatar."{% endif %}>Use Gravatar</button>
+                </form>
+              </div>
+              <div class="mt-2">
+                {# Reset Avatar Button (Always visible now for testing) #}
+                  <button type="button" class="btn btn-sm btn-outline-danger text-nowrap w-100" data-bs-toggle="modal" data-bs-target="#resetAvatarModal">Reset Avatar to Default</button>
+              </div>
             </div>
             <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
               <div class="d-flex justify-content-between align-items-center mb-2">
