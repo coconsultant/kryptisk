@@ -2,14 +2,12 @@
 {% load static %}
 {% load tz %}
 
-{% block title %} Blog Author {% endblock %}
+{% block title %} User Profile {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
     <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
-
     <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.bubble.css" rel="stylesheet">
-
 {% endblock %}
 
 {% block body_class %} blog-author bg-gray-100 {% endblock %}
@@ -18,129 +16,140 @@
 
   {% include 'includes/navigation.html' %}
 
-  <!-- START Testimonials w/ user image & text & info -->
-  <section class="py-sm-7 py-5 position-relative">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 mx-auto">
-          <div class="row py-lg-7 py-5">
-            <div class="col-lg-3 col-md-5 position-relative my-auto">
-              <img id="user-avatar-img" class="img border-radius-lg max-width-200 w-100 position-relative z-index-2" src="{% if request.user.avatar %}{{ request.user.avatar.url }}?v={{ cache_buster }}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
-              <div class="mt-2">
-                <form id="upload-avatar-form" method="post" action="" enctype="multipart/form-data">
-                  {% csrf_token %}
-                  <input type="hidden" name="action" value="upload_avatar" />
-                    <label for="avatar-upload" class="btn btn-sm btn-outline-info text-nowrap w-70">Upload Avatar</label>
-                    <input type="file" id="avatar-upload" name="avatar" class="d-none" accept="image/*" />
-                </form>
-              </div>
-              <div class="mt-2">
-                <form id="use-gravatar-form" method="post" action="">
-                  {% csrf_token %}
-                  <input type="hidden" name="action" value="use_gravatar" />
-                  <button type="submit" class="btn btn-sm btn-outline-info text-nowrap w-70" {% if not request.user.email %}disabled title="Please add an email address to your profile to use Gravatar."{% endif %}>Use Gravatar</button>
-                </form>
-              </div>
-              <div class="mt-2">
-                {# Reset Avatar Button (Always visible now for testing) #}
-                  <button type="button" class="btn btn-sm btn-outline-danger text-nowrap w-70" data-bs-toggle="modal" data-bs-target="#resetAvatarModal">Reset Avatar to Default</button>
-              </div>
-            </div>
-            <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <h4 class="mb-0">
-
-                  {% if request.user.socialaccount_set.first %}
-                    ({% if request.user.socialaccount_set.first.provider == 'github' %}
-                    gh
-                    {% elif request.user.socialaccount_set.first.provider == 'twitter' %}
-                    tw
-                    {% endif %})
-                  {% endif %}
-
-                  {% if request.user.email %}
-                    {{ request.user.email }}
-                  {% else %}
-                    {{ request.user.username }}
-                  {% endif %}
-
-                </h4>
-                <div class="d-flex flex-column gap-2">
-
-                    <div>
-                        <form action="{% url 'logout' %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="btn bg-gradient-danger w-auto me-2 text-nowrap mb-0">Logout</button>
-                        </form>
+  <!-- START User Profile Section -->
+  <header class="header-2">
+    <div class="page-header min-vh-75 relative" style="background-image:url('{% static 'assets/img/added-images/analytics.png' %}')">
+      <span class="mask bg-gradient-dark"></span>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-8 col-lg-10 col-md-11 mx-auto">
+            <div class="card mt-8 bg-white shadow-lg">
+              <div class="card-body p-4">
+                <div class="row">
+                  <div class="col-lg-4 col-md-5 position-relative my-auto py-2">
+                    <img id="user-avatar-img" class="img border-radius-lg w-100 position-relative z-index-2 max-width-200" src="{% if request.user.avatar %}{{ request.user.avatar.url }}?v={{ cache_buster }}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
+                    <div class="mt-2">
+                      <form id="upload-avatar-form" method="post" action="" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="upload_avatar" />
+                          <label for="avatar-upload" class="btn btn-sm btn-outline-info text-nowrap w-70">Upload Avatar</label>
+                          <input type="file" id="avatar-upload" name="avatar" class="d-none" accept="image/*" />
+                      </form>
                     </div>
-
-                    <div>
-                        <button class="btn bg-gradient-danger w-auto me-2 text-nowrap mb-0" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                          <i class='fa fa-trash me-1'></i>Delete Account
-                        </button>
+                    <div class="mt-2">
+                      <form id="use-gravatar-form" method="post" action="">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="use_gravatar" />
+                        <button type="submit" class="btn btn-sm btn-outline-info text-nowrap w-70" {% if not request.user.email %}disabled title="Please add an email address to your profile to use Gravatar."{% endif %}>Use Gravatar</button>
+                      </form>
                     </div>
+                    <div class="mt-2">
+                      {# Reset Avatar Button #}
+                        <button type="button" class="btn btn-sm btn-outline-danger text-nowrap w-70" data-bs-toggle="modal" data-bs-target="#resetAvatarModal">Reset Avatar to Default</button>
+                    </div>
+                  </div>
+                  <div class="col-lg-8 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 py-2">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h4 class="mb-0">
+                        {% if request.user.socialaccount_set.first %}
+                          ({% if request.user.socialaccount_set.first.provider == 'github' %}
+                          gh
+                          {% elif request.user.socialaccount_set.first.provider == 'twitter' %}
+                          tw
+                          {% endif %})
+                        {% endif %}
 
+                        {% if request.user.email %}
+                          {{ request.user.email }}
+                        {% else %}
+                          {{ request.user.username }}
+                        {% endif %}
+                      </h4>
+                      <div class="d-flex flex-column gap-2">
+                          <div>
+                              <form action="{% url 'logout' %}" method="post">
+                                  {% csrf_token %}
+                                  <button type="submit" class="btn bg-gradient-danger w-auto me-2 text-nowrap mb-0">Logout</button>
+                              </form>
+                          </div>
+                          <div>
+                              <button class="btn bg-gradient-danger w-auto me-2 text-nowrap mb-0" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <i class='fa fa-trash me-1'></i>Delete Account
+                              </button>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="row mb-4 px-md-2 ">
+                      {% if request.user.email %}
+                        {{ request.user.email }}
+                      {% else %}
+                        {% if request.user.socialaccount_set.first.provider == 'github' %}
+                          Authenticated with Github
+                        {% endif %}
+                        {% if request.user.socialaccount_set.first.provider == 'Twitter' %}
+                          Authenticated with Twitter
+                        {% endif %}
+                      {% endif %}
+                    </div>
+                    <div id="bio">
+                        <p class="text-lg mb-0">
+                          {{ bio | safe }}
+                       <br><span id="edit-btn" class="cursor-pointer text-info icon-move-right">Edit
+                        <i class="fas fa-arrow-right text-sm ms-1"></i>
+                      </span>
+                    </p>
+                    </div>
+                      <div class="row quill-container d-none">
+                          <div id="toolbar-container">
+                            <span class="ql-formats">
+                              <select class="ql-size"></select>
+                            </span>
+                            <span class="ql-formats">
+                              <button class="ql-bold"></button>
+                              <button class="ql-italic"></button>
+                              <button class="ql-underline"></button>
+                              <button class="ql-strike"></button>
+                            </span>
+                            <span class="ql-formats">
+                              <button class="ql-list" value="ordered"></button>
+                              <button class="ql-list" value="bullet"></button>
+                            </span>
+                            <span class="ql-formats">
+                              <button class="ql-clean"></button>
+                            </span>
+                          </div>
+                          <div id="editor-container">
+                              {{ bio | safe }}
+                          </div>
+                            <form id="edit-bio">{% csrf_token %}
+                            <input type="submit" class="btn btn-dark mt-3" value="Save">
+                            </form>
+                        </div>
+                  </div>
                 </div>
               </div>
-              <div class="row mb-4 px-md-2 ">
-
-                {% if request.user.email %}
-                  {{ request.user.email }}
-                {% else %}
-
-                  {% if request.user.socialaccount_set.first.provider == 'github' %}
-                    Authenticated with Github
-                  {% endif %}
-
-                  {% if request.user.socialaccount_set.first.provider == 'Twitter' %}
-                    Authenticated with Twitter
-                  {% endif %}
-
-                {% endif %}
-
-              </div>
-              <div id="bio">
-                  <p class="text-lg mb-0">
-                    {{ bio | safe }}
-                 <br><span id="edit-btn" class="cursor-pointer text-info icon-move-right">Edit
-                  <i class="fas fa-arrow-right text-sm ms-1"></i>
-                </span>
-              </p>
-              </div>
-                <div class="row quill-container d-none">
-                    <div id="toolbar-container">
-                      <span class="ql-formats">
-                        <select class="ql-size"></select>
-                      </span>
-                      <span class="ql-formats">
-                        <button class="ql-bold"></button>
-                        <button class="ql-italic"></button>
-                        <button class="ql-underline"></button>
-                        <button class="ql-strike"></button>
-                      </span>
-                      <span class="ql-formats">
-                        <button class="ql-list" value="ordered"></button>
-                        <button class="ql-list" value="bullet"></button>
-                      </span>
-                      <span class="ql-formats">
-                        <button class="ql-clean"></button>
-                      </span>
-                    </div>
-                    <div id="editor-container">
-                        {{ bio | safe }}
-                    </div>
-                      <form id="edit-bio">{% csrf_token %}
-                      <input type="submit" class="btn btn-dark mt-3" value="Save">
-                      </form>
-                  </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="position-absolute w-100 z-index-1 bottom-0">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+          <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+          </defs>
+          <g class="moving-waves">
+            <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.40" />
+            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.35)" />
+            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.25)" />
+            <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.20)" />
+            <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)" />
+            <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0.95" />
+          </g>
+        </svg>
+      </div>
     </div>
-  </section>
-  <!-- END Testimonials w/ user image & text & info -->
-
+  </header>
+  <!-- END User Profile Section -->
 
 <!-- Delete Account Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
