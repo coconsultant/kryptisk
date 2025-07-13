@@ -156,11 +156,8 @@ def profile(request):
 
             user_profile.save()
 
-            User = get_user_model()
-            updated_user = User.objects.get(pk=request.user.pk)
-            
-            for attr in ['avatar', 'bio', 'social_twitter', 'social_facebook', 'social_instagram']:
-                setattr(request.user, attr, getattr(updated_user, attr))
+            # Refresh the user object from the database
+            request.user.refresh_from_db()
 
             return HttpResponseRedirect(request.path)
 
@@ -177,10 +174,8 @@ def profile(request):
             request.user.avatar = None
             request.user.save()
 
-            # Explicitly refresh the request.user object from the database
-            User = get_user_model()
-            updated_user = User.objects.get(pk=request.user.pk)
-            setattr(request.user, 'avatar', getattr(updated_user, 'avatar'))
+            # Refresh the user object from the database
+            request.user.refresh_from_db()
             
         return HttpResponseRedirect(request.path)
 
