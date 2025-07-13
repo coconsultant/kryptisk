@@ -5,6 +5,8 @@ Copyright (c) 2019 - present AppSeed.us
 
 # Create your views here.
 import json
+import os
+import time
 from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -75,6 +77,13 @@ def profile(request):
         # This avatar_url is passed to context, though the template directly uses request.user.avatar.url
         avatar_url = request.user.avatar.url if request.user.avatar else f"{ASSETS_ROOT}/img/added-images/default.png"
 
+        cache_buster = None
+        if request.user.avatar:
+            try:
+                cache_buster = int(os.path.getmtime(request.user.avatar.path))
+            except (FileNotFoundError, OSError):
+                cache_buster = int(time.time())
+
         return render(request, "accounts/user-profile.html", context={
             'bio': request.user.bio,
             'registered_at': request.user.registered_at,
@@ -87,6 +96,7 @@ def profile(request):
                 'instagram': SITE_OWNER_INSTAGRAM,
             },
             'avatar_url': avatar_url,
+            'cache_buster': cache_buster,
         })
 
     # POST request handler
