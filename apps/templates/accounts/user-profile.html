@@ -22,7 +22,19 @@
         <div class="col-12 mx-auto">
           <div class="row py-lg-7 py-5">
             <div class="col-lg-3 col-md-5 position-relative my-auto">
-              <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2" src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% if cache_buster %}?v={{ cache_buster }}{% endif %}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
+              <img id="user-avatar-img" class="img border-radius-lg max-width-200 w-100 position-relative z-index-2" src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
+              {# Debugging info starts here #}
+              <div style="background-color: #f0f0f0; padding: 10px; margin-top: 10px; border-radius: 5px;">
+                <p><strong>Debug Info:</strong></p>
+                <p><code>request.user.avatar</code>: {{ request.user.avatar }}</p>
+                {% if request.user.avatar %}
+                    <p><code>request.user.avatar.url</code>: {{ request.user.avatar.url }}</p>
+                {% else %}
+                    <p>No user avatar assigned in model. Displaying default.</p>
+                {% endif %}
+                <p>Default static path: {% static 'assets/img/added-images/default.png' %}</p>
+              </div>
+              {# Debugging info ends here #}
               <form id="upload-avatar-form" method="post" action="" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="upload_avatar" />
@@ -272,6 +284,26 @@
         <script>
             document.getElementById('avatar-upload').addEventListener('change', function() {
                 document.getElementById('upload-avatar-form').submit();
+            });
+
+            // Force avatar image refresh on page load to bust browser cache
+            document.addEventListener('DOMContentLoaded', function() {
+                const avatarImg = document.getElementById('user-avatar-img');
+                const defaultAvatarPath = "{% static 'assets/img/added-images/default.png' %}";
+                
+                // Only apply cache buster if the image is a user-uploaded avatar, not the default
+                if (avatarImg && !avatarImg.src.includes(defaultAvatarPath)) {
+                    const currentSrc = avatarImg.src;
+                    try {
+                        const url = new URL(currentSrc);
+                        // Add or update a cache-busting timestamp parameter
+                        url.searchParams.set('v', Date.now()); 
+                        // Update the image src, which forces the browser to re-request the image
+                        avatarImg.src = url.toString();
+                    } catch (e) {
+                        console.error("Error parsing avatar image URL:", e);
+                    }
+                }
             });
         </script>
 {% endblock %}
