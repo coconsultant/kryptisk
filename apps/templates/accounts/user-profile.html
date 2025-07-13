@@ -29,24 +29,24 @@
                   <div class="col-lg-4 col-md-5 position-relative my-auto py-2">
                     <img id="user-avatar-img" class="img border-radius-lg w-100 position-relative z-index-2 max-width-200" src="{% if request.user.avatar %}{{ request.user.avatar.url }}?v={{ cache_buster }}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
                     <br><br>
-                    <div>
+                    <div class="text-start">
                       <form id="upload-avatar-form" method="post" action="" enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="upload_avatar" />
-                          <label for="avatar-upload" class="btn btn-sm btn-outline-info text-nowrap w-80">Upload Avatar</label>
+                          <label for="avatar-upload" class="btn btn-sm btn-outline-info text-nowrap w-80 text-center">Upload Avatar</label>
                           <input type="file" id="avatar-upload" name="avatar" class="d-none" accept="image/*" />
                       </form>
                     </div>
-                    <div class="mt-2">
+                    <div class="mt-2 text-start">
                       <form id="use-gravatar-form" method="post" action="">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="use_gravatar" />
-                        <button type="submit" class="btn btn-sm btn-outline-info text-nowrap w-80" {% if not request.user.email %}disabled title="Please add an email address to your profile to use Gravatar."{% endif %}>Use Gravatar</button>
+                        <button type="submit" class="btn btn-sm btn-outline-info text-nowrap w-80 text-center" {% if not request.user.email %}disabled title="Please add an email address to your profile to use Gravatar."{% endif %}>Use Gravatar</button>
                       </form>
                     </div>
-                    <div class="mt-2">
+                    <div class="mt-2 text-start">
                       {# Reset Avatar Button #}
-                        <button type="button" class="btn btn-sm btn-outline-danger text-nowrap w-80" data-bs-toggle="modal" data-bs-target="#resetAvatarModal">Reset Avatar to Default</button>
+                        <button type="button" class="btn btn-sm btn-outline-danger text-nowrap w-80 text-center" data-bs-toggle="modal" data-bs-target="#resetAvatarModal">Reset Avatar to Default</button>
                     </div>
                   </div>
                   <div class="col-lg-8 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 py-2">
