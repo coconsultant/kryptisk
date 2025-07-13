@@ -124,7 +124,7 @@ def profile(request):
         if form.is_valid():
             user_profile = form.save(commit=False) # Get instance without saving to DB yet
 
-            if 'avatar' in request.FILES and request.FILES['avatar']: # Check if avatar file was actually uploaded
+            if 'avatar' in request.FILES and request.FILES['avatar']:  # Check if avatar file was actually uploaded
                 avatar_file = request.FILES['avatar']
                 img = Image.open(avatar_file)
 
@@ -135,27 +135,29 @@ def profile(request):
 
                 # Determine image format for saving
                 img_format = img.format if img.format else 'PNG'
-                if img_format not in ['JPEG', 'PNG', 'GIF', 'BMP', 'TIFF', 'WEBP']:
-                    img_format = 'PNG' # Fallback to a common format
+                if img_format.upper() not in ['JPEG', 'PNG', 'GIF', 'BMP', 'TIFF', 'WEBP']:
+                    img_format = 'PNG'  # Fallback to a common format
 
                 # Convert to RGB if saving as JPEG from a transparent format
-                if img_format == 'JPEG' and img.mode in ('RGBA', 'P'):
+                if img_format.upper() == 'JPEG' and img.mode in ('RGBA', 'P'):
                     img = img.convert('RGB')
-                
+
                 output = BytesIO()
                 # Save the processed image to a BytesIO object
-                img.save(output, format=img_format, quality=85) # Add quality for JPEG
+                img.save(output, format=img_format, quality=85)  # Add quality for JPEG
                 output.seek(0)
 
-                # Assign the processed image content to the avatar field
-                # This replaces the original uploaded file content with the processed one.
-                user_profile.avatar.save(
-                    avatar_file.name, # Use original filename as a base
-                    ContentFile(output.read()), # Pass the bytes from BytesIO
-                    save=False # Do not save the model instance yet
+                # Create a new InMemoryUploadedFile from the processed image and assign it to the avatar field
+                user_profile.avatar = InMemoryUploadedFile(
+                    output,
+                    'ImageField',
+                    avatar_file.name,
+                    f'image/{img_format.lower()}',
+                    output.getbuffer().nbytes,
+                    None
                 )
 
-            user_profile.save() # Finally save the model instance and the avatar file (which has been updated)
+            user_profile.save()  # Finally save the model instance and the avatar file (which has been updated)
 
             # Explicitly refresh the request.user object from the database
             # This ensures that when the page is re-rendered after redirect,
