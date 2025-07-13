@@ -73,22 +73,6 @@ def register_user(request):
 def profile(request):
     # GET request handler
     if request.method == 'GET':
-        # Safely get avatar URL, providing a default if no avatar is set
-        # This avatar_url is passed to context, though the template directly uses request.user.avatar.url
-        avatar_url = request.user.avatar.url if request.user.avatar else f"{ASSETS_ROOT}/img/added-images/default.png"
-
-        cache_buster = None
-        if request.user.avatar:
-            try:
-                # Try to get the file modification time
-                cache_buster = int(os.path.getmtime(request.user.avatar.path))
-            except (FileNotFoundError, OSError, AttributeError):
-                # If file doesn't exist or path is not accessible, use current timestamp
-                cache_buster = int(time.time())
-        else:
-            # For users without avatars, we don't need a cache buster
-            cache_buster = None
-
         return render(request, "accounts/user-profile.html", context={
             'bio': request.user.bio,
             'registered_at': request.user.registered_at,
@@ -100,8 +84,8 @@ def profile(request):
                 'twitter': SITE_OWNER_TWITTER,
                 'instagram': SITE_OWNER_INSTAGRAM,
             },
-            'avatar_url': avatar_url,
-            'cache_buster': cache_buster,
+            # 'debug' is automatically available in templates when DEBUG=True in settings.py
+            # via django.template.context_processors.debug if configured in TEMPLATES options.
         })
 
     # POST request handler
@@ -136,36 +120,31 @@ def profile(request):
             'message': 'message successfully sent.'
         }, status=200)
 
-    if action == 'edit_bio' or action == 'edit_social_link' or action == 'upload_avatar':
+    if action == 'upload_avatar': # Re-evaluate this action if it needs form validation
         form = ProfileForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
-            user_profile = form.save(commit=False) # Get instance without saving to DB yet
+            user_profile = form.save(commit=False) 
 
-            if 'avatar' in request.FILES and request.FILES['avatar']:  # Check if avatar file was actually uploaded
+            if 'avatar' in request.FILES and request.FILES['avatar']:
                 avatar_file = request.FILES['avatar']
                 img = Image.open(avatar_file)
 
-                # Resize image if larger than 800x800
                 max_size = (800, 800)
                 if img.width > max_size[0] or img.height > max_size[1]:
                     img.thumbnail(max_size, Image.LANCZOS)
 
-                # Determine image format for saving
                 img_format = img.format if img.format else 'PNG'
                 if img_format.upper() not in ['JPEG', 'PNG', 'GIF', 'BMP', 'TIFF', 'WEBP']:
-                    img_format = 'PNG'  # Fallback to a common format
+                    img_format = 'PNG'
 
-                # Convert to RGB if saving as JPEG from a transparent format
                 if img_format.upper() == 'JPEG' and img.mode in ('RGBA', 'P'):
                     img = img.convert('RGB')
 
                 output = BytesIO()
-                # Save the processed image to a BytesIO object
-                img.save(output, format=img_format, quality=85)  # Add quality for JPEG
+                img.save(output, format=img_format, quality=85)
                 output.seek(0)
 
-                # Create a new InMemoryUploadedFile from the processed image and assign it to the avatar field
                 user_profile.avatar = InMemoryUploadedFile(
                     output,
                     'ImageField',
@@ -175,22 +154,43 @@ def profile(request):
                     None
                 )
 
-            user_profile.save()  # Finally save the model instance and the avatar file (which has been updated)
+            user_profile.save()
 
-            # Explicitly refresh the request.user object from the database
-            # This ensures that when the page is re-rendered after redirect,
-            # request.user.avatar.url contains the latest value.
             User = get_user_model()
             updated_user = User.objects.get(pk=request.user.pk)
             
-            # Update the request.user with the fresh data
             for attr in ['avatar', 'bio', 'social_twitter', 'social_facebook', 'social_instagram']:
                 setattr(request.user, attr, getattr(updated_user, attr))
 
-            # Redirect to the profile page after successful update
             return HttpResponseRedirect(request.path)
 
-        # If form is not valid, return JSON response with errors
+        return JsonResponse({
+            'message': form.errors
+        }, status=400)
+
+    if action == 'reset_avatar':
+        if request.user.avatar:
+            # Delete the file from the filesystem if it exists
+            if os.path.exists(request.user.avatar.path):
+                os.remove(request.user.avatar.path)
+            # Clear the avatar field in the database
+            request.user.avatar = None
+            request.user.save()
+
+            # Explicitly refresh the request.user object from the database
+            User = get_user_model()
+            updated_user = User.objects.get(pk=request.user.pk)
+            setattr(request.user, 'avatar', getattr(updated_user, 'avatar'))
+            
+        return HttpResponseRedirect(request.path)
+
+    if action == 'edit_bio' or action == 'edit_social_link': # This part was already present, keeping for full context
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(request.path)
+
         return JsonResponse({
             'message': form.errors
         }, status=400)

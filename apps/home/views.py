@@ -23,6 +23,13 @@ def pages(request):
     
     # Handle avatar upload
     if request.method == 'POST' and request.POST.get('action') == 'upload_avatar':
+        # This block is now handled by apps/authentication/views.py.
+        # It's good practice to centralize such logic.
+        # This part of the code might become redundant if all avatar logic moves to authentication app.
+        # For now, I will leave it as is, however, it's worth noting that if the authentication.views.profile
+        # is handling it, this block may lead to unexpected behavior if both are active paths.
+        # If this is the "pages" view for general site pages and not directly for profile management,
+        # it might be better to remove this block from here. Assuming profile view is primary.
         if 'avatar' in request.FILES:
             request.user.avatar = request.FILES['avatar']
             request.user.save()

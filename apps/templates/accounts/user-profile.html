@@ -29,6 +29,14 @@
                   <label for="avatar-upload" class="btn btn-sm btn-outline-info text-nowrap mb-0 mt-2">Upload Avatar</label>
                   <input type="file" id="avatar-upload" name="avatar" class="d-none" accept="image/*" />
               </form>
+              {# Reset Avatar Button (Visible when DEBUG is True) #}
+              {% if debug %}
+                <form id="reset-avatar-form" method="post" action="">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="reset_avatar" />
+                  <button type="submit" class="btn btn-sm btn-outline-danger text-nowrap mb-0 mt-2" onclick="return confirm('Are you sure you want to reset your avatar to default? This cannot be undone.');">Reset Avatar to Default</button>
+                </form>
+              {% endif %}
             </div>
             <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
               <div class="d-flex justify-content-between align-items-center mb-2">
