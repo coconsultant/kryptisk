@@ -23,18 +23,6 @@
           <div class="row py-lg-7 py-5">
             <div class="col-lg-3 col-md-5 position-relative my-auto">
               <img id="user-avatar-img" class="img border-radius-lg max-width-200 w-100 position-relative z-index-2" src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
-              {# Debugging info starts here #}
-              <div style="background-color: #f0f0f0; padding: 10px; margin-top: 10px; border-radius: 5px;">
-                <p><strong>Debug Info:</strong></p>
-                <p><code>request.user.avatar</code>: {{ request.user.avatar }}</p>
-                {% if request.user.avatar %}
-                    <p><code>request.user.avatar.url</code>: {{ request.user.avatar.url }}</p>
-                {% else %}
-                    <p>No user avatar assigned in model. Displaying default.</p>
-                {% endif %}
-                <p>Default static path: {% static 'assets/img/added-images/default.png' %}</p>
-              </div>
-              {# Debugging info ends here #}
               <form id="upload-avatar-form" method="post" action="" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="upload_avatar" />
