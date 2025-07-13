@@ -12,5 +12,5 @@ class CustomUser(AbstractUser):
     social_twitter = models.URLField(default='')
     social_facebook = models.URLField(default='')
     social_instagram = models.URLField(default='')
-    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, default='assets/img/added-images/default.png')
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
 
