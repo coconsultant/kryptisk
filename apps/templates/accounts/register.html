@@ -17,6 +17,24 @@
             width: 20%;
             background-color: red;
         }
+
+        /* Custom checkbox styling for terms and conditions */
+        .form-check-input[type="checkbox"]:not(:checked) {
+            background-color: #fff !important;
+            border-color: #dc3545 !important; /* Red border */
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='%23dc3545' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important; /* Red X SVG */
+        }
+
+        .form-check-input[type="checkbox"]:checked {
+            background-color: #28a745 !important; /* Green background */
+            border-color: #28a745 !important; /* Green border */
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e") !important; /* White Checkmark SVG */
+        }
+
+        .form-check-input[type="checkbox"]:focus {
+            box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25) !important; /* Greenish shadow */
+            border-color: #28a745 !important; /* Consistent focus border color */
+        }
     </style>
 {% endblock %}
 
@@ -107,7 +125,7 @@
                     </div>
                     <span class="text-danger">{{ form.password2.errors }}</span>
 
-                    <div class="form-check form-check-info text-left">
+                    <div class="form-check text-left"> {# Removed form-check-info here #}
                       <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
                       <label class="form-check-label" for="flexCheckDefault">
                         I agree the <a href="#" class="text-dark font-weight-bolder">Terms and Conditions</a>
