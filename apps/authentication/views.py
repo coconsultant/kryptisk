@@ -67,6 +67,9 @@ def register_user(request):
 def profile(request):
     # GET request handler
     if request.method == 'GET':
+        # Safely get avatar URL, providing a default if no avatar is set
+        avatar_url = request.user.avatar.url if request.user.avatar else f"{ASSETS_ROOT}/img/default-avatar.png"
+
         return render(request, "accounts/user-profile.html", context={
             'bio': request.user.bio,
             'registered_at': request.user.registered_at,
@@ -78,7 +81,7 @@ def profile(request):
                 'twitter': SITE_OWNER_TWITTER,
                 'instagram': SITE_OWNER_INSTAGRAM,
             },
-            'avatar_url': request.user.avatar.url,
+            'avatar_url': avatar_url,
         })
 
     # POST request handler
@@ -146,4 +149,3 @@ def delete_account(request):
         }, status=400)
     logout(request)
     return HttpResponseRedirect('/')
-
