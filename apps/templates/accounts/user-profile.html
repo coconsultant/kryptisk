@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 
-{% block title %} Blog Author {% endblock %} 
+{% block title %} Blog Author {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -13,7 +13,7 @@
 
 {% block content %}
 
-  {% include 'includes/navigation-light.html' %}
+  {% include 'includes/navigation.html' %}
 
   <!-- START Testimonials w/ user image & text & info -->
   <section class="py-sm-7 py-5 position-relative">
@@ -27,7 +27,7 @@
             <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
               <div class="d-flex justify-content-between align-items-center mb-2">
                 <h4 class="mb-0">
-                  
+
                   {% if request.user.socialaccount_set.first %}
                     ({% if request.user.socialaccount_set.first.provider == 'github' %}
                     gh
@@ -44,14 +44,14 @@
 
                 </h4>
                 <div class="d-flex gap-2">
-                    
+
                     <div>
                         <form action="{% url 'logout' %}" method="post">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm btn-outline-info text-nowrap mb-0">Logout</button>
                         </form>
                     </div>
-                    
+
                     <div>
                         <button class="btn btn-outline p-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
                           <i class='fa fa-trash text-danger' ></i>
@@ -65,7 +65,7 @@
                 {% if request.user.email %}
                   {{ request.user.email }}
                 {% else %}
-                  
+
                   {% if request.user.socialaccount_set.first.provider == 'github' %}
                     Authenticated with Github
                   {% endif %}
@@ -131,7 +131,7 @@
                     <input name="action" value="contact_us" type="hidden" />
                   <div class="card-header px-4 py-sm-5 py-3">
                     <h2>Say Hi!</h2>
-                    <p class="lead"> 
+                    <p class="lead">
                       Contact US using this form.
                     </p>
                       <p id="message" class="fw-light fs-5 "></p>
