@@ -22,7 +22,7 @@
         <div class="col-12 mx-auto">
           <div class="row py-lg-7 py-5">
             <div class="col-lg-3 col-md-5 position-relative my-auto">
-              <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2" src="{% if request.user.avatar %}{{ request.user.avatar.url }}?v={{ cache_buster }}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
+              <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2" src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% if cache_buster %}?v={{ cache_buster }}{% endif %}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
               <form id="upload-avatar-form" method="post" action="" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="upload_avatar" />
@@ -42,7 +42,7 @@
                     {% endif %})
                   {% endif %}
 
-                  {% if requset.user.email %}
+                  {% if request.user.email %}
                     {{ request.user.email }}
                   {% else %}
                     {{ request.user.username }}
