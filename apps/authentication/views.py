@@ -5,6 +5,15 @@ Copyright (c) 2019 - present AppSeed.us
 
 # Create your views here.
 import json
+import os
+import time # Import for time.time_ns()
+import hashlib
+import requests
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.base import ContentFile
+from django.contrib.auth import get_user_model # Import for explicitly refreshing user object
 
 from django.core.mail import send_mail
 from django.http import JsonResponse, HttpResponseRedirect
@@ -66,6 +75,7 @@ def register_user(request):
 def profile(request):
     # GET request handler
     if request.method == 'GET':
+        cache_buster = time.time_ns() # Get nanosecond precision for aggressive cache busting
         return render(request, "accounts/user-profile.html", context={
             'bio': request.user.bio,
             'registered_at': request.user.registered_at,
@@ -76,14 +86,21 @@ def profile(request):
                 'facebook': SITE_OWNER_FBK,
                 'twitter': SITE_OWNER_TWITTER,
                 'instagram': SITE_OWNER_INSTAGRAM,
-            }
+            },
+            'cache_buster': cache_buster, # Pass the nanosecond timestamp to the template
+            # 'debug' is automatically available in templates when DEBUG=True in settings.py
+            # via django.template.context_processors.debug if configured in TEMPLATES options.
         })
 
     # POST request handler
-    try:
-        body = json.loads(request.body)
-    except Exception as _:
+    if 'multipart/form-data' in request.content_type:
         body = request.POST
+    else:
+        try:
+            body = json.loads(request.body)
+        except Exception:
+            body = request.POST
+
     action = body.get('action')
 
     if action == 'contact_us':
@@ -107,19 +124,117 @@ def profile(request):
             'message': 'message successfully sent.'
         }, status=200)
 
-    if action == 'edit_bio' or action == 'edit_social_link':
-
-        form = ProfileForm(body, instance=request.user)
+    if action == 'upload_avatar': # Re-evaluate this action if it needs form validation
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
-            form.save()
-            return JsonResponse({
-                'message': 'profile successfully edited.'
-            }, status=200)
+            if 'avatar' in request.FILES and request.FILES['avatar']:
+                avatar_file = request.FILES['avatar']
+                img = Image.open(avatar_file)
+
+                max_size = (800, 800)
+                if img.width > max_size[0] or img.height > max_size[1]:
+                    img.thumbnail(max_size, Image.LANCZOS)
+
+                img_format = img.format if img.format else 'PNG'
+                if img_format.upper() not in ['JPEG', 'PNG', 'GIF', 'BMP', 'TIFF', 'WEBP']:
+                    img_format = 'PNG'
+
+                if img_format.upper() == 'JPEG' and img.mode in ('RGBA', 'P'):
+                    img = img.convert('RGB')
+
+                output = BytesIO()
+                img.save(output, format=img_format, quality=85)
+                output.seek(0)
+
+                request.user.avatar = InMemoryUploadedFile(
+                    output,
+                    'ImageField',
+                    avatar_file.name,
+                    f'image/{img_format.lower()}',
+                    output.getbuffer().nbytes,
+                    None
+                )
+
+            request.user.save()
+
+            return HttpResponseRedirect(request.path)
 
         return JsonResponse({
             'message': form.errors
-        })
+        }, status=400)
+
+    if action == 'use_gravatar':
+        if not request.user.email:
+            return JsonResponse({'message': 'No email associated with your account to fetch Gravatar. Please add an email address to use this feature.'}, status=400)
+
+        email_hash = hashlib.md5(request.user.email.lower().strip().encode('utf-8')).hexdigest()
+        # requesting size 800 to ensure good quality if resized
+        gravatar_url = f"https://www.gravatar.com/avatar/{email_hash}?d=identicon&s=800"
+
+        try:
+            response = requests.get(gravatar_url, stream=True)
+            response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
+
+            img = Image.open(BytesIO(response.content))
+
+            max_size = (800, 800)
+            if img.width > max_size[0] or img.height > max_size[1]:
+                img.thumbnail(max_size, Image.LANCZOS)
+
+            img_format = img.format if img.format else 'PNG'
+            if img_format.upper() not in ['JPEG', 'PNG', 'GIF', 'BMP', 'TIFF', 'WEBP']:
+                img_format = 'PNG'
+
+            if img_format.upper() == 'JPEG' and img.mode in ('RGBA', 'P'):
+                img = img.convert('RGB')
+
+            output = BytesIO()
+            img.save(output, format=img_format, quality=85)
+            output.seek(0)
+
+            gravatar_filename = f"gravatar_{request.user.username}.{img_format.lower()}"
+            request.user.avatar = InMemoryUploadedFile(
+                output,
+                'ImageField',
+                gravatar_filename,
+                f'image/{img_format.lower()}',
+                output.getbuffer().nbytes,
+                None
+            )
+            request.user.save()
+
+            return HttpResponseRedirect(request.path)
+
+        except requests.exceptions.RequestException as e:
+            return JsonResponse({'message': f'Error fetching Gravatar: {e}'}, status=500)
+        except Exception as e:
+            return JsonResponse({'message': f'Error processing Gravatar image: {e}'}, status=500)
+
+    if action == 'reset_avatar':
+        if request.user.avatar:
+            # Delete the file from the filesystem if it exists
+            if os.path.exists(request.user.avatar.path):
+                os.remove(request.user.avatar.path)
+            # Clear the avatar field in the database
+            request.user.avatar = None
+            request.user.save()
+
+            # Refresh the user object from the database
+            request.user.refresh_from_db()
+            
+        return HttpResponseRedirect(request.path)
+
+    if action == 'edit_bio' or action == 'edit_social_link': # This part was already present, keeping for full context
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(request.path)
+
+        return JsonResponse({
+            'message': form.errors
+        }, status=400)
 
 
 def delete_account(request):

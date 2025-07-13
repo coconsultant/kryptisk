@@ -58,3 +58,8 @@ pyrepomix_report.md
 .DS_Store
 db.sqlite3
 uv.lock
+<<<<<<< HEAD
+=======
+*.og
+media/**
+>>>>>>> deploy

@@ -5,9 +5,9 @@
         <nav class="navbar navbar-expand-lg  blur blur-rounded top-0 z-index-3 shadow position-absolute mt-4 my-3 py-2 start-0 end-0 mx-4">
           <div class="container-fluid px-0">
             <a class="navbar-brand font-weight-bolder ms-sm-3" href="/" rel="tooltip" title="Designed and Coded by Creative Tim" data-placement="bottom">
-              Soft UI PRO
+              kryptisk analytics
             </a>
-            <a target="_blank" href="https://docs.appseed.us/products/django-apps/soft-ui-design-pro" class="btn btn-sm  bg-gradient-primary  btn-round mb-0 ms-auto d-lg-none d-block">Docs</a>
+            <a target="_blank" href="https://docs.appseed.us/products/django-apps/soft-ui-design-pro" class="btn btn-sm btn-primary w-auto me-2 mb-0 ms-auto d-lg-none d-block">Docs</a>
             <button class="navbar-toggler shadow-none ms-md-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon mt-2">
                 <span class="navbar-toggler-bar bar1"></span>
@@ -337,7 +337,7 @@
                       <a href="/privacy.html" class="dropdown-item border-radius-md">
                         Privacy
                       </a>
-                      <div class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center mt-3 px-0">
+                      <div class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center px-0 mt-3">
                         <div class="d-inline-block">
                           <div class="icon icon-shape icon-xs border-radius-md bg-gradient-primary text-center me-2 d-flex align-items-center justify-content-center ps-0">
                             <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -364,7 +364,7 @@
                       <a href="/desktop-app.html" class="dropdown-item border-radius-md">
                         Desktop App
                       </a>
-                      <div class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center mt-3 px-0">
+                      <div class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center px-0 mt-3">
                         <div class="d-inline-block">
                           <div class="icon icon-shape icon-xs border-radius-md bg-gradient-primary text-center me-2 d-flex align-items-center justify-content-center ps-0">
                             <svg width="12px" height="12px" viewBox="0 0 40 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -396,7 +396,7 @@
                       <a href="/page-blog-author.html" class="dropdown-item border-radius-md">
                         Author
                       </a>
-                      <div class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center mt-3 px-0">
+                      <div class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center px-0 mt-3">
                         <div class="d-inline-block">
                           <div class="icon icon-shape icon-xs border-radius-md bg-gradient-primary text-center me-2 d-flex align-items-center justify-content-center ps-0">
                             <svg class="" width="12px" height="20px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -971,7 +971,7 @@
                   </div>
                 </li>
 
-              {% endif %}  
+              {% endif %}
 
                 <li class="nav-item dropdown dropdown-hover mx-2">
                   <a role="button" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center" id="dropdownMenuDocs" data-bs-toggle="dropdown" aria-expanded="false">
@@ -1012,7 +1012,7 @@
                         </li>
 
                         <li class="nav-item list-group-item border-0 p-0">
-                          <a class="dropdown-item py-2 ps-3 border-radius-md" 
+                          <a class="dropdown-item py-2 ps-3 border-radius-md"
                              target="_blank" href="https://github.com/app-generator/django-soft-ui-design-pro">
                             <div class="d-flex">
                               <div class="icon h-10 me-3 d-flex mt-1">
@@ -1040,7 +1040,7 @@
                               </div>
                             </div>
                           </a>
-                        </li>                         
+                        </li>
 
                       </ul>
                     </div>
@@ -1179,11 +1179,11 @@
               <ul class="navbar-nav d-lg-block d-none">
                 {% if request.user.is_authenticated %}
                   <li class="nav-item">
-                    <a href="{% url 'profile' %}" class="btn btn-sm  bg-gradient-primary  btn-round mb-0 me-1">My Profile</a>
+                    <a href="{% url 'profile' %}" class="btn btn-sm btn-success w-auto mb-0 me-2">{{ request.user.username }}</a>
                   </li>
                 {% else %}
                   <li class="nav-item">
-                    <a target="_blank" href="https://docs.appseed.us/products/django-apps/soft-ui-design-pro" class="btn btn-sm  bg-gradient-primary  btn-round mb-0 me-1">Docs</a>
+                    <a href="{% url 'login' %}" class="btn btn-sm btn-secondary w-auto mb-0 me-2">Sign IN</a>
                   </li>
                 {% endif %}
               </ul>
@@ -1194,4 +1194,3 @@
       </div>
     </div>
   </div>
-  

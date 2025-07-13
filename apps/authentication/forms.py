@@ -40,6 +40,22 @@ class SignUpForm(UserCreationForm):
                 "class": "form-control"
             }
         ))
+    first_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "First Name",
+                "class": "form-control"
+            }
+        ))
+    last_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Last Name",
+                "class": "form-control"
+            }
+        ))
     password1 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
@@ -57,7 +73,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
 
 
 class ProfileForm(forms.ModelForm):
@@ -69,4 +85,4 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ('bio', 'social_twitter', 'social_facebook', 'social_instagram',)
+        fields = ('bio', 'social_twitter', 'social_facebook', 'social_instagram', 'avatar',)
