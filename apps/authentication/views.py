@@ -131,14 +131,14 @@ def profile(request):
 
 
             user_profile.save()
-            return JsonResponse({
-                'message': 'profile successfully edited.',
-                'avatar_url': user_profile.avatar.url
-            }, status=200)
+            # Redirect to the profile page after successful update
+            # This causes a page reload, showing the updated avatar.
+            return HttpResponseRedirect(request.path)
 
+        # If form is not valid, return JSON response with errors
         return JsonResponse({
             'message': form.errors
-        })
+        }, status=400)
 
 
 def delete_account(request):
