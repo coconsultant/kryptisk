@@ -69,4 +69,5 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ('bio', 'social_twitter', 'social_facebook', 'social_instagram',)
+        fields = ('bio', 'social_twitter', 'social_facebook', 'social_instagram', 'avatar',)
+

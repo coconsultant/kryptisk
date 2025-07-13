@@ -5,6 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 # Create your views here.
 import json
+from PIL import Image
 
 from django.core.mail import send_mail
 from django.http import JsonResponse, HttpResponseRedirect
@@ -76,7 +77,8 @@ def profile(request):
                 'facebook': SITE_OWNER_FBK,
                 'twitter': SITE_OWNER_TWITTER,
                 'instagram': SITE_OWNER_INSTAGRAM,
-            }
+            },
+            'avatar_url': request.user.avatar.url,
         })
 
     # POST request handler
@@ -84,6 +86,7 @@ def profile(request):
         body = json.loads(request.body)
     except Exception as _:
         body = request.POST
+
     action = body.get('action')
 
     if action == 'contact_us':
@@ -107,14 +110,27 @@ def profile(request):
             'message': 'message successfully sent.'
         }, status=200)
 
-    if action == 'edit_bio' or action == 'edit_social_link':
-
-        form = ProfileForm(body, instance=request.user)
+    if action == 'edit_bio' or action == 'edit_social_link' or action == 'upload_avatar':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
-            form.save()
+            user_profile = form.save(commit=False)
+
+            if 'avatar' in request.FILES:
+                avatar = request.FILES['avatar']
+                img = Image.open(avatar)
+
+                # Resize image if larger than 800x800
+                max_size = (800, 800)
+                if img.width > max_size[0] or img.height > max_size[1]:
+                    img.thumbnail(max_size, Image.LANCZOS)
+                    img.save(user_profile.avatar.path)
+
+
+            user_profile.save()
             return JsonResponse({
-                'message': 'profile successfully edited.'
+                'message': 'profile successfully edited.',
+                'avatar_url': user_profile.avatar.url
             }, status=200)
 
         return JsonResponse({
@@ -130,3 +146,4 @@ def delete_account(request):
         }, status=400)
     logout(request)
     return HttpResponseRedirect('/')
+
