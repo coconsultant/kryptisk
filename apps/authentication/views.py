@@ -6,7 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 # Create your views here.
 import json
 import os
-import time
+import time # Import for time.time_ns()
 import hashlib
 import requests
 from PIL import Image
@@ -75,6 +75,7 @@ def register_user(request):
 def profile(request):
     # GET request handler
     if request.method == 'GET':
+        cache_buster = time.time_ns() # Get nanosecond precision for aggressive cache busting
         return render(request, "accounts/user-profile.html", context={
             'bio': request.user.bio,
             'registered_at': request.user.registered_at,
@@ -86,6 +87,7 @@ def profile(request):
                 'twitter': SITE_OWNER_TWITTER,
                 'instagram': SITE_OWNER_INSTAGRAM,
             },
+            'cache_buster': cache_buster, # Pass the nanosecond timestamp to the template
             # 'debug' is automatically available in templates when DEBUG=True in settings.py
             # via django.template.context_processors.debug if configured in TEMPLATES options.
         })
