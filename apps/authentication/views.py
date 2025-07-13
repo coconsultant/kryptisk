@@ -124,8 +124,6 @@ def profile(request):
         form = ProfileForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
-            user_profile = form.save(commit=False) 
-
             if 'avatar' in request.FILES and request.FILES['avatar']:
                 avatar_file = request.FILES['avatar']
                 img = Image.open(avatar_file)
@@ -145,7 +143,7 @@ def profile(request):
                 img.save(output, format=img_format, quality=85)
                 output.seek(0)
 
-                user_profile.avatar = InMemoryUploadedFile(
+                request.user.avatar = InMemoryUploadedFile(
                     output,
                     'ImageField',
                     avatar_file.name,
@@ -154,10 +152,7 @@ def profile(request):
                     None
                 )
 
-            user_profile.save()
-
-            # Refresh the user object from the database
-            request.user.refresh_from_db()
+            request.user.save()
 
             return HttpResponseRedirect(request.path)
 
