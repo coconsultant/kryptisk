@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 
-{% block title %} Sign UP Cover {% endblock %} 
+{% block title %} Sign UP Cover {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -26,12 +26,13 @@
 
   {% include 'includes/navigation.html' %}
 
-  <section>
-    <div class="page-header min-vh-75">
+  <header class="header-2">
+    <div class="page-header min-vh-75 relative" style="background-image:url('{% static 'assets/img/added-images/analytics.png' %}')">
+      <span class="mask bg-gradient-dark"></span>
       <div class="container">
         <div class="row">
           <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
-            <div class="card card-plain mt-sm-8 mt-5">
+            <div class="card mt-8 bg-white shadow-lg">
               <div class="card-header pb-0 text-left">
                 <h3 class="font-weight-bolder text-primary text-gradient">Join us today</h3>
                 <p class="mb-0">
@@ -39,16 +40,16 @@
                       <span class="text-danger">{{ msg | safe }}</span>
                     {% else %}
                         Add your credentials
-                    {% endif %}                   
+                    {% endif %}
                 </p>
               </div>
 
               {% if success %}
 
                 <div class="card-body pb-3">
-                
+
                   <div class="text-center">
-                    <a href="{% url 'login' %}" 
+                    <a href="{% url 'login' %}"
                        class="btn bg-gradient-primary w-100 mt-4 mb-0">Sign IN</a>
                   </div>
 
@@ -59,7 +60,7 @@
                 <div class="card-body pb-3">
 
                   <form method="post" action="">
-                    
+
                     {% csrf_token %}
 
                     <label>Username</label>
@@ -73,7 +74,7 @@
                       {{ form.email }}
                     </div>
                     <span class="text-danger">{{ form.email.errors }}</span>
-                    
+
                     <label>Password</label>
                     <div class="input-group input-group-outline">
                       {{ form.password1 }}
@@ -92,7 +93,7 @@
                         <button class="mb-0 btn btn-outline-primary copy-pass-btn" type="button">
                             <i class="fa fa-copy m-0"></i></button>
                     </div>
-                    <span class="text-danger">{{ form.password2.errors }}</span>                  
+                    <span class="text-danger">{{ form.password2.errors }}</span>
 
                     <div class="form-check form-check-info text-left">
                       <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
@@ -104,7 +105,7 @@
                     <div class="text-center">
                       <button type="submit" name="register" class="btn bg-gradient-primary w-100 mt-4 mb-0">Sign UP</button>
                     </div>
-                  
+
                   </form>
                 </div>
                 <div class="card-footer text-center pt-0 px-sm-4 px-1">
@@ -114,22 +115,31 @@
                   </p>
                 </div>
 
-                {% endif %}  
+              {% endif %}
 
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
-              <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6" style="background-image:url('{% static 'assets/img/added-images/analytics.png' %}')"></div>
             </div>
           </div>
         </div>
       </div>
+      <div class="position-absolute w-100 z-index-1 bottom-0">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+          <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+          </defs>
+          <g class="moving-waves">
+            <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.40" />
+            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.35)" />
+            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.25)" />
+            <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.20)" />
+            <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)" />
+            <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0.95" />
+          </g>
+        </svg>
+      </div>
     </div>
+  </header>
 
-    {% include 'includes/footer-auth.html' %}
-
-  </section>
+  {% include 'includes/footer-auth.html' %}
 
 {% endblock content %}
 
