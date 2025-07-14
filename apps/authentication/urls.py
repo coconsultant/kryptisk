@@ -14,5 +14,4 @@ urlpatterns = [
     path('profile/', profile, name="profile"),
     path('email-registration/', email_registration_view, name='email_registration'),
     path('delete_account/', delete_account, name="delete-account"),
-    path('social_login/', include('allauth.urls'))
 ]
