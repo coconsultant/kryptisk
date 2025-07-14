@@ -347,6 +347,10 @@
                 if (confirmUsernameChange) {
                     confirmUsernameChange.addEventListener('click', function() {
                         if (pendingFormData) {
+                            // Disable the button to prevent double submission and provide feedback
+                            confirmUsernameChange.disabled = true;
+                            confirmUsernameChange.textContent = 'Processing...'; 
+                            
                             // Submit the form with username change
                             const form = document.createElement('form');
                             form.method = 'POST';
