@@ -288,12 +288,13 @@ def delete_account(request):
 @login_required(login_url="/login/")
 def email_registration_view(request):
     tracked_emails = TrackedEmail.objects.filter(user=request.user)
+    tracked_emails_count = tracked_emails.count()
     
     if request.method == 'POST':
         action = request.POST.get('action')
         
         if action == 'add_email':
-            if tracked_emails.count() >= 2:
+            if tracked_emails_count >= 2:
                 messages.error(request, 'You can only have up to 2 tracked emails.')
                 return redirect('email_registration')
             
@@ -348,6 +349,7 @@ def email_registration_view(request):
     form = TrackedEmailForm()
     context = {
         'tracked_emails': tracked_emails,
+        'tracked_emails_count': tracked_emails_count,
         'form': form,
         'segment': 'email-registration'
     }
