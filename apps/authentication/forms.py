@@ -77,18 +77,29 @@ class SignUpForm(UserCreationForm):
 
 
 class ProfileForm(forms.ModelForm):
+    first_name = forms.CharField(
+        required=False,
+        max_length=150,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'First Name'
+            }
+        )
+    )
+    last_name = forms.CharField(
+        required=False,
+        max_length=150,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Last Name'
+            }
+        )
+    )
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
-        # Apply form-control and placeholder to first_name and last_name widgets
-        self.fields['first_name'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'First Name'
-        })
-        self.fields['last_name'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'Last Name'
-        })
         # Set all fields to not required
         for field in self.fields:
             self.fields[field].required = False
