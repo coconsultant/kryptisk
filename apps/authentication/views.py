@@ -287,14 +287,12 @@ def delete_account(request):
 
 @login_required(login_url="/login/")
 def email_registration_view(request):
-    tracked_emails = TrackedEmail.objects.filter(user=request.user)
-    tracked_emails_count = tracked_emails.count()
-    
     if request.method == 'POST':
         action = request.POST.get('action')
         
         if action == 'add_email':
-            if tracked_emails_count >= 2:
+            tracked_emails = TrackedEmail.objects.filter(user=request.user)
+            if tracked_emails.count() >= 2:
                 messages.error(request, 'You can only have up to 2 tracked emails.')
                 return redirect('email_registration')
             
@@ -346,9 +344,11 @@ def email_registration_view(request):
                 messages.error(request, 'Email not found.')
             return redirect('email_registration')
 
-    form = TrackedEmailForm()
-    # Recalculate count to ensure it's current after any POST operations
+    # Calculate tracked emails and count after all POST operations
+    tracked_emails = TrackedEmail.objects.filter(user=request.user)
     tracked_emails_count = tracked_emails.count()
+    form = TrackedEmailForm()
+    
     context = {
         'tracked_emails': tracked_emails,
         'tracked_emails_count': tracked_emails_count,
