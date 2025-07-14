@@ -101,20 +101,18 @@
                         </form>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
                       <h4 class="mb-0">
-                        {% if request.user.socialaccount_set.first %}
-                          ({% if request.user.socialaccount_set.first.provider == 'github' %}
-                          gh
-                          {% elif request.user.socialaccount_set.first.provider == 'twitter' %}
-                          tw
-                          {% endif %})
-                        {% endif %}
-
                         {% if request.user.email %}
                           {{ request.user.email }}
                         {% else %}
-                          {{ request.user.username }}
+                          {% if request.user.socialaccount_set.first %}
+                            {% if request.user.socialaccount_set.first.provider == 'github' %}
+                              Authenticated with Github
+                            {% elif request.user.socialaccount_set.first.provider == 'twitter' %}
+                              Authenticated with Twitter
+                            {% endif %}
+                          {% endif %}
                         {% endif %}
                       </h4>
                       <div class="d-flex flex-column gap-2">
@@ -130,18 +128,6 @@
                               </button>
                           </div>
                       </div>
-                    </div>
-                    <div class="row mb-4 px-md-2 ">
-                      {% if request.user.email %}
-                        {{ request.user.email }}
-                      {% else %}
-                        {% if request.user.socialaccount_set.first.provider == 'github' %}
-                          Authenticated with Github
-                        {% endif %}
-                        {% if request.user.socialaccount_set.first.provider == 'Twitter' %}
-                          Authenticated with Twitter
-                        {% endif %}
-                      {% endif %}
                     </div>
                     <div id="bio">
                         <p class="text-lg mb-0">
