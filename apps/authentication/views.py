@@ -248,6 +248,17 @@ def profile(request):
             
         return HttpResponseRedirect(request.path)
 
+    if action == 'update_name':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(request.path)
+
+        return JsonResponse({
+            'message': form.errors
+        }, status=400)
+
     if action == 'edit_bio' or action == 'edit_social_link': # This part was already present, keeping for full context
         form = ProfileForm(request.POST, request.FILES, instance=request.user)
 
