@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.twitter',
     "sslserver",
+    'apps.utils', # Added for startup utility functions
 ]
 
 MIDDLEWARE = [
