@@ -59,9 +59,9 @@ def register_user(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
-            # Save the user but set them as inactive
+            # Save the user as active since allauth will handle email verification
             user = form.save(commit=False)
-            user.is_active = False
+            user.is_active = True
             user.save()
 
             # Send email confirmation using allauth helper
