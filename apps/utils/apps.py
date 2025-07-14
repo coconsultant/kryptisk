@@ -18,8 +18,8 @@ def create_superuser(sender, **kwargs):
         from django.contrib.auth import get_user_model
         User = get_user_model()
 
-        username = "mike@theelectricrambler"
-        email = "mike@theelectricrambler"
+        username = "mike@theelectricrambler.com"
+        email = "mike@theelectricrambler.com"
         password = "asdf;lkj"
         first_name = "Mike"
         last_name = "Fischer"
