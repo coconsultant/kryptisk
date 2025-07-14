@@ -80,9 +80,19 @@ class ProfileForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
+        # Apply form-control and placeholder to first_name and last_name widgets
+        self.fields['first_name'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'First Name'
+        })
+        self.fields['last_name'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Last Name'
+        })
+        # Set all fields to not required
         for field in self.fields:
             self.fields[field].required = False
 
     class Meta:
         model = CustomUser
-        fields = ('bio', 'social_twitter', 'social_facebook', 'social_instagram', 'avatar',)
+        fields = ('first_name', 'last_name', 'bio', 'social_twitter', 'social_facebook', 'social_instagram', 'avatar',)
