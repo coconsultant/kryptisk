@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
-from .models import CustomUser
+from .models import CustomUser, TrackedEmail
 
 # Create a mutable copy of the default UserAdmin fieldsets
 modified_fieldsets = list(UserAdmin.fieldsets)
@@ -35,3 +35,10 @@ class CustomUserAdmin(UserAdmin):
     list_display = ("username", "email", "first_name", "last_name", "is_staff")
     search_fields = ("username", "first_name", "last_name", "email")
     ordering = ("username",)
+
+
+@admin.register(TrackedEmail)
+class TrackedEmailAdmin(admin.ModelAdmin):
+    list_display = ('user', 'email', 'nickname')
+    list_filter = ('user',)
+    search_fields = ('email', 'nickname', 'user__username')

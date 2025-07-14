@@ -19,7 +19,11 @@ from django.core.mail import send_mail
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from .forms import LoginForm, SignUpForm, ProfileForm
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.db import IntegrityError
+from .forms import LoginForm, SignUpForm, ProfileForm, TrackedEmailForm
+from .models import TrackedEmail
 from apps import Utils
 from core.settings import *
 
@@ -279,3 +283,72 @@ def delete_account(request):
         }, status=400)
     logout(request)
     return HttpResponseRedirect('/')
+
+
+@login_required(login_url="/login/")
+def email_registration_view(request):
+    tracked_emails = TrackedEmail.objects.filter(user=request.user)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'add_email':
+            if tracked_emails.count() >= 2:
+                messages.error(request, 'You can only have up to 2 tracked emails.')
+                return redirect('email_registration')
+            
+            form = TrackedEmailForm(request.POST)
+            if form.is_valid():
+                email_to_track = form.cleaned_data['email']
+                if email_to_track == request.user.email:
+                    messages.error(request, 'You cannot track your primary email address.')
+                else:
+                    try:
+                        tracked_email = form.save(commit=False)
+                        tracked_email.user = request.user
+                        tracked_email.save()
+                        messages.success(request, 'Email address added successfully.')
+                    except IntegrityError:
+                        messages.error(request, 'This email address is already being tracked.')
+            else:
+                messages.error(request, 'Please correct the errors below.')
+
+            return redirect('email_registration')
+        
+        elif action == 'edit_email':
+            email_id = request.POST.get('email_id')
+            try:
+                tracked_email = TrackedEmail.objects.get(id=email_id, user=request.user)
+                form = TrackedEmailForm(request.POST, instance=tracked_email)
+                if form.is_valid():
+                    new_email = form.cleaned_data['email']
+                    if new_email == request.user.email:
+                        messages.error(request, 'You cannot track your primary email address.')
+                    else:
+                        form.save()
+                        messages.success(request, 'Email details updated successfully.')
+                else:
+                    messages.error(request, 'Update failed. Please check the details.')
+            except TrackedEmail.DoesNotExist:
+                messages.error(request, 'Email not found.')
+            except IntegrityError:
+                messages.error(request, 'This email address is already being tracked.')
+            return redirect('email_registration')
+
+        elif action == 'remove_email':
+            email_id = request.POST.get('email_id')
+            try:
+                tracked_email = TrackedEmail.objects.get(id=email_id, user=request.user)
+                tracked_email.delete()
+                messages.success(request, 'Email address removed successfully.')
+            except TrackedEmail.DoesNotExist:
+                messages.error(request, 'Email not found.')
+            return redirect('email_registration')
+
+    form = TrackedEmailForm()
+    context = {
+        'tracked_emails': tracked_emails,
+        'form': form,
+        'segment': 'email-registration'
+    }
+    return render(request, 'accounts/email-registration.html', context)
