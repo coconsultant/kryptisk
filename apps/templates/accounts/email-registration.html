@@ -42,6 +42,7 @@
                         {% endfor %}
                       {% endif %}
 
+                      {% if tracked_emails %}
                         <ul class="list-group">
                           {% for tracked_email in tracked_emails %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
