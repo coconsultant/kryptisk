@@ -27,7 +27,7 @@
               <div class="card-body p-4">
                 <div class="row">
                   <div class="col-lg-4 col-md-5 position-relative my-auto py-2">
-                    <img id="user-avatar-img" class="img border-radius-lg w-100 position-relative z-index-2 max-width-200" src="{% if request.user.avatar %}{{ request.user.avatar.url }}?v={{ cache_buster добре }}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
+                    <img id="user-avatar-img" class="img border-radius-lg w-100 position-relative z-index-2 max-width-200" src="{% if request.user.avatar %}{{ request.user.avatar.url }}?v={{ cache_buster }}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
                     <br><br>
                     <div class="d-flex flex-column align-items-start"> {# New flex container for button group #}
                       <div> {# Removed text-start, now aligned by parent flexbox #}
