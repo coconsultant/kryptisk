@@ -124,7 +124,10 @@ def profile(request):
             'message': 'message successfully sent.'
         }, status=200)
 
-    if action == 'upload_avatar': # Re-evaluate this action if it needs form validation
+    if action == 'upload_avatar':
+        # Store the current avatar's FieldFile object *before* any updates
+        old_avatar = request.user.avatar if request.user.avatar else None
+
         form = ProfileForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
@@ -158,6 +161,13 @@ def profile(request):
 
             request.user.save()
 
+            # Delete the old avatar file after the new one has been successfully saved
+            if old_avatar and old_avatar.name and old_avatar.storage.exists(old_avatar.name):
+                try:
+                    old_avatar.delete(save=False)
+                except Exception as e:
+                    print(f"Error deleting old avatar file '{old_avatar.name}': {e}") # Debug message
+
             return HttpResponseRedirect(request.path)
 
         return JsonResponse({
@@ -167,6 +177,9 @@ def profile(request):
     if action == 'use_gravatar':
         if not request.user.email:
             return JsonResponse({'message': 'No email associated with your account to fetch Gravatar. Please add an email address to use this feature.'}, status=400)
+
+        # Store the current avatar's FieldFile object *before* any updates
+        old_avatar = request.user.avatar if request.user.avatar else None
 
         email_hash = hashlib.md5(request.user.email.lower().strip().encode('utf-8')).hexdigest()
         # requesting size 800 to ensure good quality if resized
@@ -204,6 +217,13 @@ def profile(request):
             )
             request.user.save()
 
+            # Delete the old avatar file after the new one has been successfully saved
+            if old_avatar and old_avatar.name and old_avatar.storage.exists(old_avatar.name):
+                try:
+                    old_avatar.delete(save=False)
+                except Exception as e:
+                    print(f"Error deleting old avatar file '{old_avatar.name}': {e}") # Debug message
+
             return HttpResponseRedirect(request.path)
 
         except requests.exceptions.RequestException as e:
@@ -214,8 +234,11 @@ def profile(request):
     if action == 'reset_avatar':
         if request.user.avatar:
             # Delete the file from the filesystem if it exists
-            if os.path.exists(request.user.avatar.path):
-                os.remove(request.user.avatar.path)
+            if request.user.avatar.name and request.user.avatar.storage.exists(request.user.avatar.name):
+                try:
+                    request.user.avatar.delete(save=False)
+                except Exception as e:
+                    print(f"Error deleting avatar file '{request.user.avatar.name}': {e}")
             # Clear the avatar field in the database
             request.user.avatar = None
             request.user.save()
