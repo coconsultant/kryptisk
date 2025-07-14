@@ -123,7 +123,7 @@
                     {% endfor %}
 
                     <!-- Add New Tracked Email Form -->
-                    {% with email_count=tracked_emails.count %}
+                    {% with email_count=tracked_emails|length %}
                     {% if email_count < 2 %}
                     <div class="mt-4">
                       <h5>Add a New Email to Track</h5>
