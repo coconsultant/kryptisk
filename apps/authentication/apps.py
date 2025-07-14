@@ -1,5 +1,3 @@
-import re
-
 from django.apps import AppConfig
 
 
@@ -10,20 +8,14 @@ class AuthConfig(AppConfig):
     def ready(self):
         try:
             from django.contrib.sites.models import Site
-            from core.settings import SERVER
-            site = Site.objects.filter(domain=SERVER)
-            if site.count() == 0:
-                site = Site.objects.create(domain=SERVER)
-            else:
-                site = site.first()
-            with open('core/settings.py', 'r') as f:
-                setting_contents = f.read()
-            with open('core/settings.py', 'w') as f:
-                if 'SITE_ID' in setting_contents:
-                    final_setting = re.sub(r'SITE_ID[ ]*=[ ]*[0-9]+',f'SITE_ID = {site.id}', setting_contents)
-                else:
-                    final_setting = setting_contents + '\n' + f'SITE_ID = {site.id}\n'
-                f.write(final_setting)
-        except Exception as e:
+            from django.conf import settings
+            
+            # Ensure correct Site configuration
+            Site.objects.update_or_create(
+                id=settings.SITE_ID,
+                defaults={"domain": settings.SERVER, "name": "Kryptisk"}
+            )
+        except Exception:
+            # Handle case where database might not be ready yet
             pass
 
