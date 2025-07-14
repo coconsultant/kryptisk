@@ -74,12 +74,30 @@
                                 <label for="{{ profile_form.last_name.id_for_label }}" class="form-label">Last Name</label>
                                 <input type="text" class="form-control" id="{{ profile_form.last_name.id_for_label }}" name="last_name" value="{{ request.user.last_name|default:'' }}" placeholder="Enter your last name">
                             </div>
+                            <input type="submit" class="btn btn-success mt-3" value="Save Name">
+                            <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-name-edit-btn">Cancel</button>
+                        </form>
+                    </div>
+
+                    {# Display Username Section #}
+                    <div id="username-display" class="d-flex align-items-center mb-2">
+                        <h4 class="mb-0 me-2">@{{ request.user.username }}</h4>
+                        <span id="edit-username-btn" class="cursor-pointer text-info">Edit Username
+                            <i class="fas fa-arrow-right text-sm ms-1"></i>
+                        </span>
+                    </div>
+
+                    {# Edit Username Form Section #}
+                    <div id="username-edit-form-container" class="mt-3 d-none">
+                        <form id="edit-username-form" method="post" action="">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="update_username" />
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username</label>
                                 <input type="text" class="form-control" id="username" name="username" value="{{ request.user.username|default:'' }}" placeholder="Enter your username">
                             </div>
-                            <input type="submit" class="btn btn-success mt-3" value="Save Changes">
-                            <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-name-edit-btn">Cancel</button>
+                            <input type="submit" class="btn btn-success mt-3" value="Save Username">
+                            <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-username-edit-btn">Cancel</button>
                         </form>
                     </div>
 
@@ -264,6 +282,13 @@
                 const editNameBtn = document.getElementById('edit-name-btn');
                 const cancelNameEditBtn = document.getElementById('cancel-name-edit-btn');
                 const editNameForm = document.getElementById('edit-name-form');
+                
+                // Username edit functionality
+                const usernameDisplay = document.getElementById('username-display');
+                const usernameEditFormContainer = document.getElementById('username-edit-form-container');
+                const editUsernameBtn = document.getElementById('edit-username-btn');
+                const cancelUsernameEditBtn = document.getElementById('cancel-username-edit-btn');
+                const editUsernameForm = document.getElementById('edit-username-form');
                 const usernameInput = document.getElementById('username');
                 const usernameChangeModal = new bootstrap.Modal(document.getElementById('usernameChangeModal'));
                 const cancelUsernameChange = document.getElementById('cancel-username-change');
@@ -272,6 +297,7 @@
                 let originalUsername = '{{ request.user.username }}';
                 let pendingFormData = null;
 
+                // Name edit handlers
                 if (editNameBtn && nameDisplay && nameEditFormContainer && cancelNameEditBtn) {
                     editNameBtn.addEventListener('click', function() {
                         nameDisplay.classList.add('d-none');
@@ -281,6 +307,19 @@
                     cancelNameEditBtn.addEventListener('click', function() {
                         nameEditFormContainer.classList.add('d-none');
                         nameDisplay.classList.remove('d-none');
+                    });
+                }
+
+                // Username edit handlers
+                if (editUsernameBtn && usernameDisplay && usernameEditFormContainer && cancelUsernameEditBtn) {
+                    editUsernameBtn.addEventListener('click', function() {
+                        usernameDisplay.classList.add('d-none');
+                        usernameEditFormContainer.classList.remove('d-none');
+                    });
+
+                    cancelUsernameEditBtn.addEventListener('click', function() {
+                        usernameEditFormContainer.classList.add('d-none');
+                        usernameDisplay.classList.remove('d-none');
                         // Reset username to original value
                         if (usernameInput) {
                             usernameInput.value = originalUsername;
@@ -288,23 +327,17 @@
                     });
                 }
 
-                // Handle form submission with username change check
-                if (editNameForm && usernameInput) {
-                    editNameForm.addEventListener('submit', function(e) {
+                // Handle username form submission with warning modal
+                if (editUsernameForm && usernameInput) {
+                    editUsernameForm.addEventListener('submit', function(e) {
                         e.preventDefault();
                         
                         const currentUsername = usernameInput.value.trim();
                         
-                        // Check if username has changed
-                        if (currentUsername !== originalUsername) {
-                            // Store form data for later submission
-                            pendingFormData = new FormData(editNameForm);
-                            // Show warning modal
-                            usernameChangeModal.show();
-                        } else {
-                            // Submit form normally if username hasn't changed
-                            editNameForm.submit();
-                        }
+                        // Store form data for later submission
+                        pendingFormData = new FormData(editUsernameForm);
+                        // Show warning modal
+                        usernameChangeModal.show();
                     });
                 }
 
@@ -324,7 +357,7 @@
                             // Submit the form with username change
                             const form = document.createElement('form');
                             form.method = 'POST';
-                            form.action = editNameForm.action;
+                            form.action = editUsernameForm.action;
                             
                             // Add all form data including CSRF token
                             for (let [key, value] of pendingFormData.entries()) {
