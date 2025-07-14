@@ -26,6 +26,7 @@ from .forms import LoginForm, SignUpForm, ProfileForm, TrackedEmailForm
 from .models import TrackedEmail
 from apps import Utils
 from core.settings import *
+from allauth.account.utils import send_email_confirmation
 
 
 def login_view(request):
@@ -58,15 +59,19 @@ def register_user(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get("username")
-            raw_password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=raw_password)
+            # Save the user but set them as inactive
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
 
-            msg = 'User created successfully.'
+            # Trigger the allauth confirmation email
+            send_email_confirmation(request, user, signup=True)
+
+            msg = 'User created successfully. Please check your email to verify your account.'
             success = True
 
-            # return redirect("/login/")
+            # Redirect to a page informing the user to check their email
+            return render(request, "accounts/register.html", {"form": form, "msg": msg, "success": success})
 
         else:
             msg = 'Form is not valid'

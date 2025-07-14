@@ -185,14 +185,21 @@ SITE_OWNER_FBK        = os.getenv('SITE_OWNER_FBK'       , None)
 SITE_OWNER_TWITTER    = os.getenv('SITE_OWNER_TWITTER'   , None)
 SITE_OWNER_INSTAGRAM  = os.getenv('SITE_OWNER_INSTAGRAM' , None)
 
-EMAIL_HOST            = os.getenv('EMAIL_HOST'           , None)
-EMAIL_HOST_USER       = os.getenv('EMAIL_HOST_USER'      , None)
-EMAIL_HOST_PASSWORD   = os.getenv('EMAIL_HOST_PASSWORD'  , None)
-EMAIL_PORT            = os.getenv('EMAIL_PORT'           , None)
-EMAIL_SENDER          = os.getenv('EMAIL_SENDER'         , None)
+# Email settings for django-allauth
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('SENDER_EMAIL')
 
-# Flag for email settings active
-EMAIL_SETTINGS        = True
+# Allauth specific settings
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'home'
 
 GITHUB_ID     = os.getenv('GITHUB_ID'    , None) # Corrected syntax here, removed extra '
 GITHUB_SECRET = os.getenv('GITHUB_SECRET', None)
@@ -214,7 +221,8 @@ if DEBUG:
 else:
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'  # assumed production http protocol is https
 
-LOGIN_REDIRECT_URL = f'{ACCOUNT_DEFAULT_HTTP_PROTOCOL}://localhost:{8000 if DEBUG else 80}/'
+# LOGIN_REDIRECT_URL is set higher up as "home" already and should be fine.
+# LOGIN_REDIRECT_URL = f'{ACCOUNT_DEFAULT_HTTP_PROTOCOL}://localhost:{8000 if DEBUG else 80}/' # This line makes it absolute, which might conflict. Removing it.
 
 SOCIALACCOUNT_PROVIDERS = {}
 if GITHUB_AUTH:
@@ -234,4 +242,3 @@ if TWITTER_AUTH:
         }
     }
 SITE_ID = 19
-
