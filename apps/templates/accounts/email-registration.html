@@ -120,7 +120,7 @@
                     </div>
 
                     <!-- Add New Tracked Email Form -->
-                    {% if tracked_emails.count < 2 %}
+                    {% if tracked_emails|length < 2 %}
                     <div class="mt-4">
                       <h5>Add a New Email to Track</h5>
                       <form method="post" action="{% url 'email_registration' %}">
