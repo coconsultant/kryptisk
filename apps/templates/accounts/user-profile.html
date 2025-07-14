@@ -102,19 +102,23 @@
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                      <h4 class="mb-0">
-                        {% if request.user.email %}
-                          {{ request.user.email }}
-                        {% else %}
-                          {% if request.user.socialaccount_set.first %}
-                            {% if request.user.socialaccount_set.first.provider == 'github' %}
-                              Authenticated with Github
-                            {% elif request.user.socialaccount_set.first.provider == 'twitter' %}
-                              Authenticated with Twitter
+                      <div>
+                        {# Email Label #}
+                        <p class="form-label mb-0">Email</p>
+                        <h4 class="mb-0">
+                          {% if request.user.email %}
+                            {{ request.user.email }}
+                          {% else %}
+                            {% if request.user.socialaccount_set.first %}
+                              {% if request.user.socialaccount_set.first.provider == 'github' %}
+                                Authenticated with Github
+                              {% elif request.user.socialaccount_set.first.provider == 'twitter' %}
+                                Authenticated with Twitter
+                              {% endif %}
                             {% endif %}
                           {% endif %}
-                        {% endif %}
-                      </h4>
+                        </h4>
+                      </div>
                       <div class="d-flex flex-column gap-2">
                           <div>
                               <form action="{% url 'logout' %}" method="post">
