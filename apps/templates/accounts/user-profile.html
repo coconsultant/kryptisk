@@ -54,6 +54,7 @@
                   <div class="col-lg-8 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 py-2">
                     {# Display Name Section #}
                     <div id="name-display" class="mb-2">
+                        <p class="form-label mb-0">Name</p>
                         <h4 class="mb-0">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
                         <!-- If your project uses custom template filters for form styling, you might need to load them here -->
                         <span id="edit-name-btn" class="cursor-pointer text-info">Edit Name
@@ -81,6 +82,7 @@
 
                     {# Display Username Section #}
                     <div id="username-display" class="mb-2">
+                        <p class="form-label mb-0">Username</p>
                         <h4 class="mb-0">@{{ request.user.username }}</h4>
                         <span id="edit-username-btn" class="cursor-pointer text-info">Edit Username
                             <i class="fas fa-arrow-right text-sm ms-1"></i>
@@ -134,6 +136,7 @@
                       </div>
                     </div>
                     <div id="bio">
+                        <p class="form-label mb-0">Bio</p>
                         <p class="text-lg mb-0">
                           {{ bio | safe }}
                        <br><span id="edit-btn" class="cursor-pointer text-info icon-move-right">Edit Bio
