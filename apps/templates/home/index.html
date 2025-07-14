@@ -416,37 +416,29 @@
       <div class="container pb-lg-8 pb-7 pt-5 postion-relative z-index-2 position-relative">
         <div class="row">
           <div class="col-md-7 mx-auto text-center">
-            <span class="badge bg-gradient-dark mb-2">Our Plans</span>
+            <span class="badge bg-gradient-dark mb-2">Our Plan</span>
             <h3 class="text-white">Ready to Boost Your Communication with Kryptisk?</h3>
-            <p class="text-white">Choose the plan that fits your needs, from individual tracking to robust business solutions for your entire team.</p>
+            <p class="text-white">Unlock powerful insights into your digital communications with a simple, transparent plan.</p>
           </div>
         </div>
       </div>
     </div>
     <div class="mt-lg-n8 mt-n6">
       <div class="container">
-        <div class="row mt-5">
+        <div class="row mt-5 justify-content-center"> {# Added justify-content-center to center the single card #}
 
           <div class="col-lg-4 col-sm-6 mb-lg-0 mb-4">
             <div class="card shadow-none border h-100">
               <div class="card-header text-sm-start text-center pt-4 pb-3 px-4">
-                <h5 class="mb-1">Student &amp; Individual</h5>
-                <p class="mb-3 text-sm">Perfect for students, job seekers, and solo users.</p>
+                <h5 class="mb-1">Standard Plan</h5>
+                <p class="mb-3 text-sm">Track your emails and attachments efficiently.</p>
                 <h3 class="font-weight-bolder mt-3">
-                  $29<small class="text-sm">/month</small>
+                  $2<small class="text-sm">/month per mail address</small>
                 </h3>
-                <a href="#" class="btn btn-sm bg-gradient-dark w-100 border-radius-md mt-4 mb-2">Start Free Trial</a>
+                <a href="{% url 'register' %}" class="btn btn-sm bg-gradient-dark w-100 border-radius-md mt-4 mb-2">Get Started</a>
               </div>
               <hr class="horizontal dark my-0">
               <div class="card-body">
-                <div class="d-flex pb-3">
-                  <div>
-                    <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-3">
-                    <span class="text-sm">Complete documentation access</span>
-                  </div>
-                </div>
                 <div class="d-flex pb-3">
                   <div>
                     <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
@@ -484,31 +476,7 @@
                     <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
                   </div>
                   <div class="ps-3">
-                    <span class="text-sm">Basic email support</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-sm-6 mb-lg-0 mb-4">
-            <div class="card shadow-none border h-100">
-              <div class="card-header text-sm-start text-center pt-4 pb-3 px-4">
-                <h5 class="mb-1">Professional</h5>
-                <p class="mb-3 text-sm">Ideal for sales professionals, recruiters, and small teams.</p>
-                <h3 class="font-weight-bolder mt-3">
-                  $79<small class="text-sm">/month</small>
-                </h3>
-                <a href="#" class="btn btn-sm bg-gradient-dark w-100 border-radius-md mt-4 mb-2">Buy now</a>
-              </div>
-              <hr class="horizontal dark my-0">
-              <div class="card-body">
-                <div class="d-flex pb-3">
-                  <div>
-                    <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-3">
-                    <span class="text-sm">All Student &amp; Individual features</span>
+                    <span class="text-sm">Standard email support</span>
                   </div>
                 </div>
                 <div class="d-flex pb-3">
@@ -516,112 +484,7 @@
                     <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
                   </div>
                   <div class="ps-3">
-                    <span class="text-sm">Advanced Analytics &amp; Reporting</span>
-                  </div>
-                </div>
-                <div class="d-flex pb-3">
-                  <div>
-                    <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-3">
-                    <span class="text-sm">Team Collaboration (Up to 5 Users)</span>
-                  </div>
-                </div>
-                <div class="d-flex pb-3">
-                  <div>
-                    <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-3">
-                    <span class="text-sm">Priority email support</span>
-                  </div>
-                </div>
-                <div class="d-flex pb-3">
-                  <div>
-                    <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-3">
-                    <span class="text-sm">Projects - Unlimited</span>
-                  </div>
-                </div>
-                <div class="d-flex pb-3">
-                  <div>
-                    <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-3">
-                    <span class="text-sm">Future feature access (beta)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-sm-6 mb-lg-0 mb-4">
-            <div class="card shadow-none border bg-gradient-dark h-100 overflow-hidden">
-              <img src="{% static 'assets/img/shapes/pattern-lines.svg' %}" alt="pattern-lines" class="position-absolute">
-              <div class="card-header bg-transparent text-sm-start text-center pt-4 pb-3 px-4 z-index-2">
-                <h5 class="mb-1 text-white">Business &amp; Enterprise</h5>
-                <p class="mb-3 text-sm text-white">Comprehensive solution for large teams and organizations.</p>
-                <h3 class="font-weight-bolder mt-3 text-white">
-                  Custom Quote
-                </h3>
-                <a href="#" class="btn btn-sm btn-white w-100 border-radius-md mt-4 mb-2">Contact Us</a>
-              </div>
-              <hr class="horizontal light my-0">
-              <div class="card-body z-index-2">
-                <div class="d-flex pb-3">
-                  <div>
-                    <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-3">
-                    <span class="text-sm text-white">All Professional features</span>
-                  </div>
-                </div>
-                <div class="d-flex pb-3">
-                  <div>
-                    <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-3">
-                    <span class="text-sm text-white">AI Text Analysis (Upcoming)</span>
-                  </div>
-                </div>
-                <div class="d-flex pb-3">
-                  <div>
-                    <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-3">
-                    <span class="text-sm text-white">Custom QR Code Generation (Upcoming)</span>
-                  </div>
-                </div>
-                <div class="d-flex pb-3">
-                  <div>
-                    <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-3">
-                    <span class="text-sm text-white">Dedicated Account Manager</span>
-                  </div>
-                </div>
-                <div class="d-flex pb-3">
-                  <div>
-                    <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-3">
-                    <span class="text-sm text-white">Custom Integrations &amp; API Access</span>
-                  </div>
-                </div>
-                <div class="d-flex pb-3">
-                  <div>
-                    <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-3">
-                    <span class="text-sm text-white">24/7 Premium Support</span>
-                  </div>
-                </div>
-                <div class="d-flex pb-3">
-                  <div>
-                    <i class="fas fa-check text-success text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-3">
-                    <span class="text-sm text-white">Lifetime Updates</span>
+                    <span class="text-sm">Comprehensive Documentation</span>
                   </div>
                 </div>
               </div>
