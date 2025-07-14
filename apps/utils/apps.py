@@ -39,4 +39,3 @@ def create_superuser(sender, **kwargs):
                 print(f"Error creating superuser '{username}': {e}")
         else:
             print(f"Superuser '{username}' already exists. Skipping creation.")
-
