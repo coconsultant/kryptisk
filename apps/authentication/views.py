@@ -26,7 +26,7 @@ from .forms import LoginForm, SignUpForm, ProfileForm, TrackedEmailForm
 from .models import TrackedEmail
 from apps import Utils
 from core.settings import *
-from allauth.account.utils import send_email_confirmation
+from allauth.account.models import EmailAddress
 
 
 def login_view(request):
@@ -65,7 +65,8 @@ def register_user(request):
             user.save()
 
             # Send email confirmation using allauth helper
-            send_email_confirmation(request, user, signup=True)
+            if user.email:
+                EmailAddress.objects.add_email(request, user, user.email, signup=True, confirm=True)
 
             msg = 'User created successfully. Please check your email to verify your account.'
             success = True
