@@ -122,7 +122,8 @@
                     {% endfor %}
 
                     <!-- Add New Tracked Email Form -->
-                    {% if tracked_emails.count < 2 %}
+                    {% with email_count=tracked_emails.count %}
+                    {% if email_count < 2 %}
                     <div class="mt-4">
                       <h5>Add a New Email to Track</h5>
                       <form method="post" action="{% url 'email_registration' %}">
@@ -142,6 +143,7 @@
                     {% else %}
                       <p class="text-muted">You have reached the maximum of 2 tracked emails.</p>
                     {% endif %}
+                    {% endwith %}
 
                   </div>
                 </div>
