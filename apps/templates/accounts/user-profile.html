@@ -74,8 +74,8 @@
                                 <label for="{{ profile_form.last_name.id_for_label }}" class="form-label">Last Name</label>
                                 <input type="text" class="form-control" id="{{ profile_form.last_name.id_for_label }}" name="last_name" value="{{ request.user.last_name|default:'' }}" placeholder="Enter your last name">
                             </div>
-                            <input type="submit" class="btn btn-dark mt-3" value="Save Name">
-                            <button type="button" class="btn btn-secondary mt-3 ms-2" id="cancel-name-edit-btn">Cancel</button>
+                            <input type="submit" class="btn btn-success mt-3" value="Save Name">
+                            <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-name-edit-btn">Cancel</button>
                         </form>
                     </div>
 
