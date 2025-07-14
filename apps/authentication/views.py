@@ -347,6 +347,8 @@ def email_registration_view(request):
             return redirect('email_registration')
 
     form = TrackedEmailForm()
+    # Recalculate count to ensure it's current after any POST operations
+    tracked_emails_count = tracked_emails.count()
     context = {
         'tracked_emails': tracked_emails,
         'tracked_emails_count': tracked_emails_count,
