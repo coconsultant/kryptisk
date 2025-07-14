@@ -245,16 +245,4 @@ if TWITTER_AUTH:
             'key': ''
         }
     }
-from django.contrib.sites.models import Site
-
 SITE_ID = 1
-
-# Ensure correct Site configuration
-try:
-    Site.objects.update_or_create(
-        id=SITE_ID,
-        defaults={"domain": SERVER, "name": "Kryptisk"}
-    )
-except:
-    # Handle case where database might not be ready yet
-    pass
