@@ -169,7 +169,7 @@
     </div>
   </header>
 
-  {% include 'includes/footer-auth.html' %}
+  {% include 'includes/footer-5.html' %}
 
 {% endblock content %}
 
@@ -194,7 +194,7 @@
             const pass2 = document.querySelector('#id_password2')
             pass2.setAttribute('type',type)
 
-            document.querySelector('#show-pass-icon').className = isHidden ? "feather m-0 icon-eye" : "feather m-0 icon-eye-off"
+            document.querySelector('.show-pass-btn i').className = isHidden ? "m-0 fa fa-eye" : "m-0 fa fa-eye-slash"
         })
 
         document.querySelector('.copy-pass-btn').addEventListener('mouseup' , (e) => {
