@@ -79,26 +79,28 @@
 
 
                     <!-- Add New Tracked Email Form -->
-                    {% if tracked_emails|length < 2 %}
-                    <div class="mt-4">
-                      <h5>Add a New Email to Track</h5>
-                      <form method="post" action="{% url 'email_registration' %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="add_email">
-                        <div class="mb-3">
-                          <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
-                          {{ form.email }}
-                        </div>
-                        <div class="mb-3">
-                          <label for="{{ form.nickname.id_for_label }}" class="form-label">Nickname (Optional)</label>
-                          {{ form.nickname }}
-                        </div>
-                        <button type="submit" class="btn btn-primary">Add Email</button>
-                      </form>
-                    </div>
-                    {% else %}
-                      <p class="text-muted">You have reached the maximum of 2 tracked emails.</p>
-                    {% endif %}
+                    {% with tracked_emails|length as email_count %}
+                      {% if email_count < 2 %}
+                      <div class="mt-4">
+                        <h5>Add a New Email to Track</h5>
+                        <form method="post" action="{% url 'email_registration' %}">
+                          {% csrf_token %}
+                          <input type="hidden" name="action" value="add_email">
+                          <div class="mb-3">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
+                            {{ form.email }}
+                          </div>
+                          <div class="mb-3">
+                            <label for="{{ form.nickname.id_for_label }}" class="form-label">Nickname (Optional)</label>
+                            {{ form.nickname }}
+                          </div>
+                          <button type="submit" class="btn btn-primary">Add Email</button>
+                        </form>
+                      </div>
+                      {% else %}
+                        <p class="text-muted">You have reached the maximum of 2 tracked emails.</p>
+                      {% endif %}
+                    {% endwith %}
 
                   </div>
                 </div>
