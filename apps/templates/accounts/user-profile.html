@@ -74,7 +74,11 @@
                                 <label for="{{ profile_form.last_name.id_for_label }}" class="form-label">Last Name</label>
                                 <input type="text" class="form-control" id="{{ profile_form.last_name.id_for_label }}" name="last_name" value="{{ request.user.last_name|default:'' }}" placeholder="Enter your last name">
                             </div>
-                            <input type="submit" class="btn btn-success mt-3" value="Save Name">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" value="{{ request.user.username|default:'' }}" placeholder="Enter your username">
+                            </div>
+                            <input type="submit" class="btn btn-success mt-3" value="Save Changes">
                             <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-name-edit-btn">Cancel</button>
                         </form>
                     </div>
@@ -226,6 +230,25 @@
 </div>
 </div>
 
+<!-- Username Change Warning Modal -->
+<div class="modal fade" id="usernameChangeModal" tabindex="-1" aria-labelledby="usernameChangeModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="usernameChangeModalLabel">Username Change Warning</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      Changing your username will log you out immediately. You will need to log back in with your new username. Are you sure you want to continue?
+    </div>
+    <div class="modal-footer justify-content-end">
+      <button type="button" class="btn bg-gradient-dark mb-0" data-bs-dismiss="modal" id="cancel-username-change">Cancel</button>
+      <button type="button" class="btn bg-gradient-danger mb-0" id="confirm-username-change">Confirm & Logout</button>
+    </div>
+  </div>
+</div>
+</div>
+
   {% include 'includes/footer-5.html' %}
 
 {% endblock content %}
@@ -240,6 +263,14 @@
                 const nameEditFormContainer = document.getElementById('name-edit-form-container');
                 const editNameBtn = document.getElementById('edit-name-btn');
                 const cancelNameEditBtn = document.getElementById('cancel-name-edit-btn');
+                const editNameForm = document.getElementById('edit-name-form');
+                const usernameInput = document.getElementById('username');
+                const usernameChangeModal = new bootstrap.Modal(document.getElementById('usernameChangeModal'));
+                const cancelUsernameChange = document.getElementById('cancel-username-change');
+                const confirmUsernameChange = document.getElementById('confirm-username-change');
+                
+                let originalUsername = '{{ request.user.username }}';
+                let pendingFormData = null;
 
                 if (editNameBtn && nameDisplay && nameEditFormContainer && cancelNameEditBtn) {
                     editNameBtn.addEventListener('click', function() {
@@ -250,6 +281,63 @@
                     cancelNameEditBtn.addEventListener('click', function() {
                         nameEditFormContainer.classList.add('d-none');
                         nameDisplay.classList.remove('d-none');
+                        // Reset username to original value
+                        if (usernameInput) {
+                            usernameInput.value = originalUsername;
+                        }
+                    });
+                }
+
+                // Handle form submission with username change check
+                if (editNameForm && usernameInput) {
+                    editNameForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        
+                        const currentUsername = usernameInput.value.trim();
+                        
+                        // Check if username has changed
+                        if (currentUsername !== originalUsername) {
+                            // Store form data for later submission
+                            pendingFormData = new FormData(editNameForm);
+                            // Show warning modal
+                            usernameChangeModal.show();
+                        } else {
+                            // Submit form normally if username hasn't changed
+                            editNameForm.submit();
+                        }
+                    });
+                }
+
+                // Handle username change modal actions
+                if (cancelUsernameChange && usernameInput) {
+                    cancelUsernameChange.addEventListener('click', function() {
+                        // Reset username to original value
+                        usernameInput.value = originalUsername;
+                        pendingFormData = null;
+                        usernameChangeModal.hide();
+                    });
+                }
+
+                if (confirmUsernameChange) {
+                    confirmUsernameChange.addEventListener('click', function() {
+                        if (pendingFormData) {
+                            // Submit the form with username change
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = editNameForm.action;
+                            
+                            // Add all form data including CSRF token
+                            for (let [key, value] of pendingFormData.entries()) {
+                                const input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = key;
+                                input.value = value;
+                                form.appendChild(input);
+                            }
+                            
+                            document.body.appendChild(form);
+                            form.submit();
+                        }
                     });
                 }
 
