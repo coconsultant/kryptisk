@@ -73,11 +73,15 @@
                           <input type="hidden" name="action" value="add_email">
                           <div class="mb-3">
                             <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
-                            {{ form.email }}
+                            <div class="w-70">
+                              {{ form.email }}
+                            </div>
                           </div>
                           <div class="mb-3">
                             <label for="{{ form.nickname.id_for_label }}" class="form-label">Nickname (Optional)</label>
-                            {{ form.nickname }}
+                            <div class="w-70">
+                              {{ form.nickname }}
+                            </div>
                           </div>
                           <button type="submit" class="btn btn-primary">Add Email</button>
                         </form>
@@ -131,11 +135,15 @@
           <div class="modal-body">
             <div class="mb-3">
               <label for="email-{{ tracked_email.id }}" class="form-label">Email Address</label>
-              <input type="email" class="form-control" id="email-{{ tracked_email.id }}" name="email" value="{{ tracked_email.email }}" required>
+              <div class="w-70">
+                <input type="email" class="form-control" id="email-{{ tracked_email.id }}" name="email" value="{{ tracked_email.email }}" required>
+              </div>
             </div>
             <div class="mb-3">
               <label for="nickname-{{ tracked_email.id }}" class="form-label">Nickname</label>
-              <input type="text" class="form-control" id="nickname-{{ tracked_email.id }}" name="nickname" value="{{ tracked_email.nickname|default:'' }}">
+              <div class="w-70">
+                <input type="text" class="form-control" id="nickname-{{ tracked_email.id }}" name="nickname" value="{{ tracked_email.nickname|default:'' }}">
+              </div>
             </div>
           </div>
           <div class="modal-footer">
