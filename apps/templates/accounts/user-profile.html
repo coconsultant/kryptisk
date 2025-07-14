@@ -68,13 +68,11 @@
                             <input type="hidden" name="action" value="update_name" />
                             <div class="mb-3">
                                 <label for="{{ profile_form.first_name.id_for_label }}" class="form-label">First Name</label>
-                                {% comment %} Ensure 'form-control' class is applied for Bootstrap styling {% endcomment %}
-                                {{ profile_form.first_name.as_widget(attrs={'class': 'form-control'}) }}
+                                {{ profile_form.first_name }}
                             </div>
                             <div class="mb-3">
                                 <label for="{{ profile_form.last_name.id_for_label }}" class="form-label">Last Name</label>
-                                {% comment %} Ensure 'form-control' class is applied for Bootstrap styling {% endcomment %}
-                                {{ profile_form.last_name.as_widget(attrs={'class': 'form-control'}) }}
+                                {{ profile_form.last_name }}
                             </div>
                             <input type="submit" class="btn btn-dark mt-3" value="Save Name">
                             <button type="button" class="btn btn-secondary mt-3 ms-2" id="cancel-name-edit-btn">Cancel</button>
