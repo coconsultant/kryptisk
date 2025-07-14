@@ -53,8 +53,8 @@
                   </div>
                   <div class="col-lg-8 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 py-2">
                     {# Display Name Section #}
-                    <div id="name-display" class="d-flex align-items-center mb-2">
-                        <h4 class="mb-0 me-2">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
+                    <div id="name-display" class="mb-2">
+                        <h4 class="mb-0">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
                         <!-- If your project uses custom template filters for form styling, you might need to load them here -->
                         <span id="edit-name-btn" class="cursor-pointer text-info">Edit Name
                             <i class="fas fa-arrow-right text-sm ms-1"></i>
@@ -80,8 +80,8 @@
                     </div>
 
                     {# Display Username Section #}
-                    <div id="username-display" class="d-flex align-items-center mb-2">
-                        <h4 class="mb-0 me-2">@{{ request.user.username }}</h4>
+                    <div id="username-display" class="mb-2">
+                        <h4 class="mb-0">@{{ request.user.username }}</h4>
                         <span id="edit-username-btn" class="cursor-pointer text-info">Edit Username
                             <i class="fas fa-arrow-right text-sm ms-1"></i>
                         </span>
