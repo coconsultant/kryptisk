@@ -30,6 +30,8 @@ from apps.notifications.models import Notification
 from apps import Utils
 from core.settings import *
 from allauth.account.models import EmailAddress
+from datetime import timedelta # Import datetime for trial calculation
+from django.utils import timezone # Import timezone for current date
 
 
 def login_view(request):
@@ -89,12 +91,26 @@ def register_user(request):
 
 
 def profile(request):
+    # Define trial duration
+    TRIAL_DURATION_DAYS = 3
+
+    # Calculate trial days left
+    days_left = None
+    if request.user.is_authenticated and request.user.registered_at:
+        trial_end_date = request.user.registered_at + timedelta(days=TRIAL_DURATION_DAYS)
+        today = timezone.localdate()
+        days_left = (trial_end_date - today).days
+        # Ensure days_left doesn't go below zero if trial expired
+        if days_left < 0:
+            days_left = 0
+
     # GET request handler
     if request.method == 'GET':
         cache_buster = time.time_ns() # Get nanosecond precision for aggressive cache busting
         return render(request, "accounts/user-profile.html", context={
             'bio': request.user.bio,
             'registered_at': request.user.registered_at,
+            'days_left_on_trial': days_left, # Pass days left to the template
             'contact_us_info': {
                 'phone': SITE_OWNER_PHONE,
                 'email': SITE_OWNER_MAIL,
