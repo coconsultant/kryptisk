@@ -11,6 +11,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),          # Django admin route
     path("", include("apps.authentication.urls")), # Auth routes - login / register
+    path('accounts/', include('allauth.urls')),  # Allauth routes
 
     # ADD NEW Routes HERE
 

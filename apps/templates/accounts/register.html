@@ -47,10 +47,10 @@
   <header class="header-2">
     <div class="page-header min-vh-75 relative" style="background-image:url('{% static 'assets/img/added-images/analytics.png' %}')">
       <span class="mask bg-gradient-dark"></span>
-      <div class="container">
+      <div class="container" style="position: relative; z-index: 5;">
         <div class="row">
           <div class="col-xl-8 col-lg-10 col-md-11 mx-auto">
-            <div class="card mt-8 bg-white shadow-lg">
+            <div class="card mt-8 bg-white shadow-lg" style="position: relative; z-index: 10;">
               <div class="card-header pb-0 text-left">
                 <h3 class="font-weight-bolder text-primary text-gradient">Join us today</h3>
                 <p class="mb-0">
@@ -151,7 +151,10 @@
           </div>
         </div>
       </div>
-      <div class="position-absolute w-100 z-index-1 bottom-0">
+      <div class="mb-5"></div>
+      <br>
+      <br>
+      <div class="position-absolute w-100 bottom-0" style="z-index: 1;">
         <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
           <defs>
             <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
@@ -169,7 +172,7 @@
     </div>
   </header>
 
-  {% include 'includes/footer-auth.html' %}
+  {% include 'includes/footer-5.html' %}
 
 {% endblock content %}
 
@@ -194,7 +197,7 @@
             const pass2 = document.querySelector('#id_password2')
             pass2.setAttribute('type',type)
 
-            document.querySelector('#show-pass-icon').className = isHidden ? "feather m-0 icon-eye" : "feather m-0 icon-eye-off"
+            document.querySelector('.show-pass-btn i').className = isHidden ? "m-0 fa fa-eye" : "m-0 fa fa-eye-slash"
         })
 
         document.querySelector('.copy-pass-btn').addEventListener('mouseup' , (e) => {

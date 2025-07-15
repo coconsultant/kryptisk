@@ -5,7 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from apps.authentication.models import CustomUser
+from apps.authentication.models import CustomUser, TrackedEmail
 
 
 class LoginForm(forms.Form):
@@ -77,12 +77,50 @@ class SignUpForm(UserCreationForm):
 
 
 class ProfileForm(forms.ModelForm):
+    first_name = forms.CharField(
+        required=False,
+        max_length=150,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'First Name'
+            }
+        )
+    )
+    last_name = forms.CharField(
+        required=False,
+        max_length=150,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Last Name'
+            }
+        )
+    )
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
+        # Set all fields to not required
         for field in self.fields:
             self.fields[field].required = False
 
     class Meta:
         model = CustomUser
-        fields = ('bio', 'social_twitter', 'social_facebook', 'social_instagram', 'avatar',)
+        fields = ('first_name', 'last_name', 'bio', 'social_twitter', 'social_facebook', 'social_instagram', 'avatar',)
+
+
+class TrackedEmailForm(forms.ModelForm):
+    class Meta:
+        model = TrackedEmail
+        fields = ['email', 'nickname']
+        widgets = {
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter email to track',
+                'required': 'required'
+            }),
+            'nickname': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Nickname (optional)'
+            }),
+        }

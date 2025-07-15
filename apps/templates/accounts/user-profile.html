@@ -28,43 +28,99 @@
                 <div class="row">
                   <div class="col-lg-4 col-md-5 position-relative my-auto py-2">
                     <img id="user-avatar-img" class="img border-radius-lg w-100 position-relative z-index-2 max-width-200" src="{% if request.user.avatar %}{{ request.user.avatar.url }}?v={{ cache_buster }}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
-                    <div class="mt-2">
-                      <form id="upload-avatar-form" method="post" action="" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="upload_avatar" />
-                          <label for="avatar-upload" class="btn btn-sm btn-outline-info text-nowrap w-70">Upload Avatar</label>
-                          <input type="file" id="avatar-upload" name="avatar" class="d-none" accept="image/*" />
-                      </form>
-                    </div>
-                    <div class="mt-2">
-                      <form id="use-gravatar-form" method="post" action="">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="use_gravatar" />
-                        <button type="submit" class="btn btn-sm btn-outline-info text-nowrap w-70" {% if not request.user.email %}disabled title="Please add an email address to your profile to use Gravatar."{% endif %}>Use Gravatar</button>
-                      </form>
-                    </div>
-                    <div class="mt-2">
-                      {# Reset Avatar Button #}
-                        <button type="button" class="btn btn-sm btn-outline-danger text-nowrap w-70" data-bs-toggle="modal" data-bs-target="#resetAvatarModal">Reset Avatar to Default</button>
+                    <br><br>
+                    <div class="d-flex flex-column align-items-start"> {# New flex container for button group #}
+                      <div> {# Removed text-start, now aligned by parent flexbox #}
+                        <form id="upload-avatar-form" method="post" action="" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <input type="hidden" name="action" value="upload_avatar" />
+                            <label for="avatar-upload" class="btn btn-sm btn-outline-info text-nowrap w-100 text-center">Upload Avatar</label>
+                            <input type="file" id="avatar-upload" name="avatar" class="d-none" accept="image/*" />
+                        </form>
+                      </div>
+                      <div class="mt-2"> {# Removed text-start, now aligned by parent flexbox #}
+                        <form id="use-gravatar-form" method="post" action="">
+                          {% csrf_token %}
+                          <input type="hidden" name="action" value="use_gravatar" />
+                          <button type="submit" class="btn btn-sm btn-outline-info text-nowrap w-100 text-center" {% if not request.user.email %}disabled title="Please add an email address to your profile to use Gravatar."{% endif %}>Use Gravatar</button>
+                        </form>
+                      </div>
+                      <div class="mt-2"> {# Removed text-start, now aligned by parent flexbox #}
+                        {# Reset Avatar Button #}
+                          <button type="button" class="btn btn-sm btn-outline-danger text-nowrap w-100 text-center" data-bs-toggle="modal" data-bs-target="#resetAvatarModal">Reset Avatar to Default</button>
+                      </div>
                     </div>
                   </div>
                   <div class="col-lg-8 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 py-2">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <h4 class="mb-0">
-                        {% if request.user.socialaccount_set.first %}
-                          ({% if request.user.socialaccount_set.first.provider == 'github' %}
-                          gh
-                          {% elif request.user.socialaccount_set.first.provider == 'twitter' %}
-                          tw
-                          {% endif %})
-                        {% endif %}
+                    {# Display Name Section #}
+                    <div id="name-display" class="mb-2">
+                        <p class="form-label mb-0">Name</p>
+                        <h4 class="mb-0">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
+                        <!-- If your project uses custom template filters for form styling, you might need to load them here -->
+                        <span id="edit-name-btn" class="cursor-pointer text-info">Edit Name
+                            <i class="fas fa-arrow-right text-sm ms-1"></i>
+                        </span>
+                    </div>
 
-                        {% if request.user.email %}
-                          {{ request.user.email }}
-                        {% else %}
-                          {{ request.user.username }}
-                        {% endif %}
-                      </h4>
+                    {# Edit Name Form Section #}
+                    <div id="name-edit-form-container" class="mt-3 d-none">
+                        <form id="edit-name-form" method="post" action="">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="update_name" />
+                            <div class="mb-3">
+                                <label for="{{ profile_form.first_name.id_for_label }}" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="{{ profile_form.first_name.id_for_label }}" name="first_name" value="{{ request.user.first_name|default:'' }}" placeholder="Enter your first name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ profile_form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="{{ profile_form.last_name.id_for_label }}" name="last_name" value="{{ request.user.last_name|default:'' }}" placeholder="Enter your last name">
+                            </div>
+                            <input type="submit" class="btn btn-success mt-3" value="Save Name">
+                            <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-name-edit-btn">Cancel</button>
+                        </form>
+                    </div>
+
+                    {# Display Username Section #}
+                    <div id="username-display" class="mb-2">
+                        <p class="form-label mb-0">Username</p>
+                        <h4 class="mb-0">@{{ request.user.username }}</h4>
+                        <span id="edit-username-btn" class="cursor-pointer text-info">Edit Username
+                            <i class="fas fa-arrow-right text-sm ms-1"></i>
+                        </span>
+                    </div>
+
+                    {# Edit Username Form Section #}
+                    <div id="username-edit-form-container" class="mt-3 d-none">
+                        <form id="edit-username-form" method="post" action="">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="update_username" />
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" value="{{ request.user.username|default:'' }}" placeholder="Enter your username">
+                            </div>
+                            <input type="submit" class="btn btn-success mt-3" value="Save Username">
+                            <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-username-edit-btn">Cancel</button>
+                        </form>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                      <div>
+                        {# Email Label #}
+                        <p class="form-label mb-0">Email</p>
+                        <h4 class="mb-0">
+                          {% if request.user.email %}
+                            {{ request.user.email }}
+                          {% else %}
+                            {% if request.user.socialaccount_set.first %}
+                              {% if request.user.socialaccount_set.first.provider == 'github' %}
+                                Authenticated with Github
+                              {% elif request.user.socialaccount_set.first.provider == 'twitter' %}
+                                Authenticated with Twitter
+                              {% endif %}
+                            {% endif %}
+                          {% endif %}
+                        </h4>
+                      </div>
                       <div class="d-flex flex-column gap-2">
                           <div>
                               <form action="{% url 'logout' %}" method="post">
@@ -79,22 +135,11 @@
                           </div>
                       </div>
                     </div>
-                    <div class="row mb-4 px-md-2 ">
-                      {% if request.user.email %}
-                        {{ request.user.email }}
-                      {% else %}
-                        {% if request.user.socialaccount_set.first.provider == 'github' %}
-                          Authenticated with Github
-                        {% endif %}
-                        {% if request.user.socialaccount_set.first.provider == 'Twitter' %}
-                          Authenticated with Twitter
-                        {% endif %}
-                      {% endif %}
-                    </div>
                     <div id="bio">
+                        <p class="form-label mb-0">Bio</p>
                         <p class="text-lg mb-0">
                           {{ bio | safe }}
-                       <br><span id="edit-btn" class="cursor-pointer text-info icon-move-right">Edit
+                       <br><span id="edit-btn" class="cursor-pointer text-info icon-move-right">Edit Bio
                         <i class="fas fa-arrow-right text-sm ms-1"></i>
                       </span>
                     </p>
@@ -196,6 +241,25 @@
 </div>
 </div>
 
+<!-- Username Change Warning Modal -->
+<div class="modal fade" id="usernameChangeModal" tabindex="-1" aria-labelledby="usernameChangeModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="usernameChangeModalLabel">Username Change Warning</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      Changing your username will log you out immediately. You will need to log back in with your new username. Are you sure you want to continue?
+    </div>
+    <div class="modal-footer justify-content-end">
+      <button type="button" class="btn bg-gradient-dark mb-0" data-bs-dismiss="modal" id="cancel-username-change">Cancel</button>
+      <button type="button" class="btn bg-gradient-danger mb-0" id="confirm-username-change">Confirm & Logout</button>
+    </div>
+  </div>
+</div>
+</div>
+
   {% include 'includes/footer-5.html' %}
 
 {% endblock content %}
@@ -204,8 +268,125 @@
 {% block javascripts %}
         <script src="{% static 'assets/js/user-profile.js' %}"></script>
         <script>
-            document.getElementById('avatar-upload').addEventListener('change', function() {
-                document.getElementById('upload-avatar-form').submit();
+            document.addEventListener('DOMContentLoaded', function() {
+                // Name edit functionality
+                const nameDisplay = document.getElementById('name-display');
+                const nameEditFormContainer = document.getElementById('name-edit-form-container');
+                const editNameBtn = document.getElementById('edit-name-btn');
+                const cancelNameEditBtn = document.getElementById('cancel-name-edit-btn');
+                const editNameForm = document.getElementById('edit-name-form');
+                
+                // Username edit functionality
+                const usernameDisplay = document.getElementById('username-display');
+                const usernameEditFormContainer = document.getElementById('username-edit-form-container');
+                const editUsernameBtn = document.getElementById('edit-username-btn');
+                const cancelUsernameEditBtn = document.getElementById('cancel-username-edit-btn');
+                const editUsernameForm = document.getElementById('edit-username-form');
+                const usernameInput = document.getElementById('username');
+                const usernameChangeModal = new bootstrap.Modal(document.getElementById('usernameChangeModal'));
+                const cancelUsernameChange = document.getElementById('cancel-username-change');
+                const confirmUsernameChange = document.getElementById('confirm-username-change');
+                
+                let originalUsername = '{{ request.user.username }}';
+                let pendingFormData = null;
+
+                // Name edit handlers
+                if (editNameBtn && nameDisplay && nameEditFormContainer && cancelNameEditBtn) {
+                    editNameBtn.addEventListener('click', function() {
+                        nameDisplay.classList.add('d-none');
+                        nameEditFormContainer.classList.remove('d-none');
+                    });
+
+                    cancelNameEditBtn.addEventListener('click', function() {
+                        nameEditFormContainer.classList.add('d-none');
+                        nameDisplay.classList.remove('d-none');
+                    });
+                }
+
+                // Username edit handlers
+                if (editUsernameBtn && usernameDisplay && usernameEditFormContainer && cancelUsernameEditBtn) {
+                    editUsernameBtn.addEventListener('click', function() {
+                        usernameDisplay.classList.add('d-none');
+                        usernameEditFormContainer.classList.remove('d-none');
+                    });
+
+                    cancelUsernameEditBtn.addEventListener('click', function() {
+                        usernameEditFormContainer.classList.add('d-none');
+                        usernameDisplay.classList.remove('d-none');
+                        // Reset username to original value
+                        if (usernameInput) {
+                            usernameInput.value = originalUsername;
+                        }
+                    });
+                }
+
+                // Handle username form submission with warning modal
+                if (editUsernameForm && usernameInput) {
+                    editUsernameForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        
+                        const currentUsername = usernameInput.value.trim();
+                        
+                        // Store form data for later submission
+                        pendingFormData = new FormData(editUsernameForm);
+                        // Show warning modal
+                        usernameChangeModal.show();
+                    });
+                }
+
+                // Handle username change modal actions
+                if (cancelUsernameChange && usernameInput) {
+                    cancelUsernameChange.addEventListener('click', function() {
+                        // Reset username to original value
+                        usernameInput.value = originalUsername;
+                        pendingFormData = null;
+                        usernameChangeModal.hide();
+                    });
+                }
+
+                if (confirmUsernameChange) {
+                    confirmUsernameChange.addEventListener('click', function() {
+                        if (pendingFormData) {
+                            // Disable the button to prevent double submission and provide feedback
+                            confirmUsernameChange.disabled = true;
+                            confirmUsernameChange.textContent = 'Processing...'; 
+                            
+                            // Submit the form with username change
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = editUsernameForm.action;
+                            
+                            // Add all form data including CSRF token
+                            for (let [key, value] of pendingFormData.entries()) {
+                                const input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = key;
+                                input.value = value;
+                                form.appendChild(input);
+                            }
+                            
+                            document.body.appendChild(form);
+                            form.submit();
+                        }
+                    });
+                }
+
+                // Existing avatar upload
+                document.getElementById('avatar-upload').addEventListener('change', function() {
+                    document.getElementById('upload-avatar-form').submit();
+                });
+
+                // Bio edit functionality (from existing code)
+                const bioDisplay = document.getElementById('bio');
+                const quillContainer = document.querySelector('.quill-container');
+                const editBioBtn = document.getElementById('edit-btn');
+
+                if (editBioBtn && bioDisplay && quillContainer) {
+                    editBioBtn.addEventListener('click', function() {
+                        bioDisplay.classList.add('d-none');
+                        quillContainer.classList.remove('d-none');
+                    });
+                }
             });
         </script>
 {% endblock %}

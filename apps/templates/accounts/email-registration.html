@@ -1,0 +1,208 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Email Registration {% endblock %}
+
+{% block body_class %} bg-gray-100 {% endblock %}
+
+{% block content %}
+
+  {% include 'includes/navigation.html' %}
+
+  <header class="header-2">
+    <div class="page-header min-vh-75 relative" style="background-image:url('{% static 'assets/img/added-images/analytics.png' %}')">
+      <span class="mask bg-gradient-dark"></span>
+      <div class="container" style="position: relative; z-index: 5;">
+        <div class="row">
+          <div class="col-xl-8 col-lg-10 col-md-11 mx-auto">
+            <div class="card mt-8 bg-white shadow-lg" style="position: relative; z-index: 10;">
+              <div class="card-body p-4">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h4 class="mb-3">Email Tracking Management</h4>
+
+                    <!-- Primary Email -->
+                    <div class="mb-4">
+                      <h5>Primary Account Email</h5>
+                      <p>This is your main account email.</p>
+                      <form method="post" action="{% url 'email_registration' %}" id="primaryEmailForm">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="toggle_primary_email_tracking">
+                        <div class="d-flex align-items-center mb-3">
+                          <div class="w-50 me-3">
+                            <input type="text" class="form-control" value="{{ request.user.email }}" disabled>
+                          </div>
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="trackPrimaryEmail" name="track_primary_email_checkbox" {% if is_primary_email_tracked %}checked{% endif %} onchange="document.getElementById('primaryEmailForm').submit();">
+                            <label class="form-check-label" for="trackPrimaryEmail">Track this email</label>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+
+                    <!-- Tracked Emails -->
+                    <div class="mb-4">
+                      <h5>Tracked Emails (up to 2)</h5>
+                      <p>Manage additional emails for tracking purposes.</p>
+
+                      {% if messages %}
+                        {% for message in messages %}
+                          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>
+                        {% endfor %}
+                      {% endif %}
+
+                      {% if tracked_emails %}
+                        <ul class="list-group">
+                          {% for tracked_email in tracked_emails %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                              <div>
+                                <strong>{{ tracked_email.nickname|default:"No Nickname" }}</strong><br>
+                                <small>
+                                  {{ tracked_email.email }}
+                                  {% if tracked_email.is_verified %}
+                                    <span class="text-success fw-bold ms-2">(Verified)</span>
+                                  {% else %}
+                                    <span class="text-danger fw-bold ms-2">(Unverified)</span>
+                                  {% endif %}
+                                </small>
+                              </div>
+                              <div>
+                                {% if tracked_email.email != request.user.email %} {# Hide edit/remove buttons for primary email #}
+                                  <button class="btn btn-sm btn-info me-2" data-bs-toggle="modal" data-bs-target="#editEmailModal-{{ tracked_email.id }}">Edit</button>
+                                  <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#removeEmailModal-{{ tracked_email.id }}">Remove</button>
+                                {% else %}
+                                  <span class="text-muted small">Managed above</span>
+                                {% endif %}
+                              </div>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      {% else %}
+                        <p>You have no tracked emails.</p>
+                      {% endif %}
+                    </div>
+
+
+                    <!-- Add New Tracked Email Form -->
+                    {% if tracked_emails_count < 2 %}
+                      <div class="mt-4">
+                        <h5>Add a New Email to Track</h5>
+                        <form method="post" action="{% url 'email_registration' %}">
+                          {% csrf_token %}
+                          <input type="hidden" name="action" value="add_email">
+                          <div class="mb-3">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
+                            <div class="w-50">
+                              {{ form.email }}
+                            </div>
+                          </div>
+                          <div class="mb-3">
+                            <label for="{{ form.nickname.id_for_label }}" class="form-label">Nickname (Optional)</label>
+                            <div class="w-50">
+                              {{ form.nickname }}
+                            </div>
+                          </div>
+                          <button type="submit" class="btn btn-primary">Add Email</button>
+                        </form>
+                      </div>
+                      {% else %}
+                        <p class="text-muted">You have reached the maximum of 2 tracked emails.</p>
+                      {% endif %}
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="position-absolute w-100 z-index-1 bottom-0">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+          <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+          </defs>
+          <g class="moving-waves">
+            <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.40" />
+            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.35)" />
+            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.25)" />
+            <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.20)" />
+            <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)" />
+            <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0.95" />
+          </g>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  {% include 'includes/footer-5.html' %}
+
+  <!-- Modals for Edit and Remove -->
+  {% for tracked_email in tracked_emails %}
+  {% if tracked_email.email != request.user.email %} {# Only show modals for non-primary emails #}
+  <!-- Edit Email Modal -->
+  <div class="modal fade" id="editEmailModal-{{ tracked_email.id }}" tabindex="-1" aria-labelledby="editEmailModalLabel-{{ tracked_email.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form method="post" action="{% url 'email_registration' %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="edit_email">
+          <input type="hidden" name="email_id" value="{{ tracked_email.id }}">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editEmailModalLabel-{{ tracked_email.id }}">Edit Tracked Email</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="email-{{ tracked_email.id }}" class="form-label">Email Address</label>
+              <div class="w-50">
+                <input type="email" class="form-control" id="email-{{ tracked_email.id }}" name="email" value="{{ tracked_email.email }}" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="nickname-{{ tracked_email.id }}" class="form-label">Nickname</label>
+              <div class="w-50">
+                <input type="text" class="form-control" id="nickname-{{ tracked_email.id }}" name="nickname" value="{{ tracked_email.nickname|default:'' }}">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Remove Email Modal -->
+  <div class="modal fade" id="removeEmailModal-{{ tracked_email.id }}" tabindex="-1" aria-labelledby="removeEmailModalLabel-{{ tracked_email.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form method="post" action="{% url 'email_registration' %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="remove_email">
+          <input type="hidden" name="email_id" value="{{ tracked_email.id }}">
+          <div class="modal-header">
+            <h5 class="modal-title" id="removeEmailModalLabel-{{ tracked_email.id }}">Remove Tracked Email</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to remove this email?
+              <br><strong>{{ tracked_email.email }}</strong>
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-danger">Remove</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+
+{% endblock content %}
