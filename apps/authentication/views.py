@@ -299,16 +299,16 @@ def email_registration_view(request):
         action = request.POST.get('action')
         
         if action == 'add_email':
-            tracked_emails = TrackedEmail.objects.filter(user=request.user)
-            if tracked_emails.count() >= 2:
-                messages.error(request, 'You can only have up to 2 tracked emails.')
-                return redirect('email_registration')
+            current_tracked_emails_count = TrackedEmail.objects.filter(user=request.user).count()
             
             form = TrackedEmailForm(request.POST)
             if form.is_valid():
                 email_to_track = form.cleaned_data['email']
+                
                 if email_to_track == request.user.email:
-                    messages.error(request, 'You cannot track your primary email address.')
+                    messages.error(request, 'Your primary email is managed via the dedicated checkbox. Please add other email addresses here.')
+                elif current_tracked_emails_count >= 2:
+                    messages.error(request, 'You have reached the maximum of 2 tracked emails. Please remove an existing email to add a new one.')
                 else:
                     try:
                         tracked_email = form.save(commit=False)
@@ -334,21 +334,64 @@ def email_registration_view(request):
                         messages.success(request, 'Email address added. A verification email has been sent.')
                         return redirect('email_registration')
                     except IntegrityError:
-                        messages.error(request, 'This email address is already being tracked.')
+                        messages.error(request, 'This email address is already being tracked for your account.')
             else:
                 messages.error(request, 'Please correct the errors below.')
 
-            # If we fall through, it's an error. Re-render the page with the form.
+            # If we fall through, re-render the page with form errors
             tracked_emails = TrackedEmail.objects.filter(user=request.user)
-            tracked_emails_count = tracked_emails.count()
+            tracked_emails_count = tracked_emails.count() # Recalculate as it might have changed
+            is_primary_email_tracked = TrackedEmail.objects.filter(user=request.user, email=request.user.email).exists()
+
             context = {
                 'tracked_emails': tracked_emails,
                 'tracked_emails_count': tracked_emails_count,
                 'form': form,
-                'segment': 'email-registration'
+                'segment': 'email-registration',
+                'is_primary_email_tracked': is_primary_email_tracked,
             }
             return render(request, 'accounts/email-registration.html', context)
         
+        elif action == 'toggle_primary_email_tracking':
+            primary_email = request.user.email
+            track_primary = request.POST.get('track_primary_email_checkbox') == 'on' 
+            
+            primary_email_tracked_obj = TrackedEmail.objects.filter(user=request.user, email=primary_email).first()
+            current_tracked_emails_count = TrackedEmail.objects.filter(user=request.user).count()
+
+            if track_primary: # User wants to track primary email
+                if not primary_email_tracked_obj: # If it's not already tracked
+                    if current_tracked_emails_count < 2:
+                        try:
+                            # Create new TrackedEmail for primary email
+                            TrackedEmail.objects.create(
+                                user=request.user, 
+                                email=primary_email, 
+                                is_verified=True, # Primary email is implicitly verified
+                                nickname='Primary Account Email' # Default nickname for primary email
+                            )
+                            messages.success(request, 'Your primary email is now being tracked.')
+                        except IntegrityError:
+                            messages.error(request, 'Your primary email is already tracked.')
+                    else:
+                        messages.error(request, 'You have reached the maximum of 2 tracked emails. Please untrack another email to track your primary email.')
+                elif not primary_email_tracked_obj.is_verified:
+                    # If it exists but wasn't verified (shouldn't happen for primary, but for robustness)
+                    primary_email_tracked_obj.is_verified = True
+                    primary_email_tracked_obj.verification_token = None
+                    primary_email_tracked_obj.save()
+                    messages.success(request, 'Your primary email is now being tracked and verified.')
+                else:
+                    messages.info(request, 'Your primary email is already being tracked.')
+            else: # User wants to untrack primary email
+                if primary_email_tracked_obj:
+                    primary_email_tracked_obj.delete()
+                    messages.success(request, 'Your primary email is no longer being tracked.')
+                else:
+                    messages.info(request, 'Your primary email was not being tracked.')
+            
+            return redirect('email_registration')
+
         elif action == 'edit_email':
             email_id = request.POST.get('email_id')
             try:
@@ -357,8 +400,10 @@ def email_registration_view(request):
                 form = TrackedEmailForm(request.POST, instance=tracked_email)
                 if form.is_valid():
                     new_email = form.cleaned_data['email']
-                    if new_email == request.user.email:
-                        messages.error(request, 'You cannot track your primary email address.')
+                    if new_email == request.user.email and original_email != request.user.email:
+                        messages.error(request, 'Your primary email is managed via the dedicated checkbox. You cannot set another tracked email to be your primary email through this edit function.')
+                    elif TrackedEmail.objects.filter(user=request.user, email=new_email).exclude(id=tracked_email.id).exists():
+                         messages.error(request, 'This email address is already being tracked for your account.')
                     else:
                         instance = form.save(commit=False)
                         if new_email != original_email:
@@ -387,16 +432,19 @@ def email_registration_view(request):
                     messages.error(request, 'Update failed. Please check the details.')
             except TrackedEmail.DoesNotExist:
                 messages.error(request, 'Email not found.')
-            except IntegrityError:
-                messages.error(request, 'This email address is already being tracked.')
+            except IntegrityError: 
+                messages.error(request, 'This email address is already being tracked for your account.')
             return redirect('email_registration')
 
         elif action == 'remove_email':
             email_id = request.POST.get('email_id')
             try:
                 tracked_email = TrackedEmail.objects.get(id=email_id, user=request.user)
-                tracked_email.delete()
-                messages.success(request, 'Email address removed successfully.')
+                if tracked_email.email == request.user.email:
+                    messages.error(request, 'You cannot remove your primary email directly. Please uncheck the "Track this email" box next to it.')
+                else:
+                    tracked_email.delete()
+                    messages.success(request, 'Email address removed successfully.')
             except TrackedEmail.DoesNotExist:
                 messages.error(request, 'Email not found.')
             return redirect('email_registration')
@@ -405,23 +453,15 @@ def email_registration_view(request):
     tracked_emails = TrackedEmail.objects.filter(user=request.user)
     tracked_emails_count = tracked_emails.count()
     form = TrackedEmailForm()
+
+    # Determine if primary email is currently tracked
+    is_primary_email_tracked = TrackedEmail.objects.filter(user=request.user, email=request.user.email).exists()
     
     context = {
         'tracked_emails': tracked_emails,
         'tracked_emails_count': tracked_emails_count,
         'form': form,
-        'segment': 'email-registration'
+        'segment': 'email-registration',
+        'is_primary_email_tracked': is_primary_email_tracked, # Pass this to template
     }
     return render(request, 'accounts/email-registration.html', context)
-
-
-def verify_tracked_email(request, token):
-    try:
-        tracked_email = TrackedEmail.objects.get(verification_token=token)
-        tracked_email.is_verified = True
-        tracked_email.verification_token = None # Clear the token after verification
-        tracked_email.save()
-        messages.success(request, f'The email {tracked_email.email} has been successfully verified.')
-    except TrackedEmail.DoesNotExist:
-        messages.error(request, 'Invalid verification link.')
-    return redirect('email_registration')

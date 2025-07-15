@@ -24,8 +24,20 @@
                     <!-- Primary Email -->
                     <div class="mb-4">
                       <h5>Primary Account Email</h5>
-                      <p>This is your main account email and cannot be changed here.</p>
-                      <input type="text" class="form-control" value="{{ request.user.email }}" disabled>
+                      <p>This is your main account email.</p>
+                      <form method="post" action="{% url 'email_registration' %}" id="primaryEmailForm">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="toggle_primary_email_tracking">
+                        <div class="d-flex align-items-center mb-3">
+                          <div class="w-50 me-3">
+                            <input type="text" class="form-control" value="{{ request.user.email }}" disabled>
+                          </div>
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="trackPrimaryEmail" name="track_primary_email_checkbox" {% if is_primary_email_tracked %}checked{% endif %} onchange="document.getElementById('primaryEmailForm').submit();">
+                            <label class="form-check-label" for="trackPrimaryEmail">Track this email</label>
+                          </div>
+                        </div>
+                      </form>
                     </div>
 
                     <!-- Tracked Emails -->
@@ -58,8 +70,12 @@
                                 </small>
                               </div>
                               <div>
-                                <button class="btn btn-sm btn-info me-2" data-bs-toggle="modal" data-bs-target="#editEmailModal-{{ tracked_email.id }}">Edit</button>
-                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#removeEmailModal-{{ tracked_email.id }}">Remove</button>
+                                {% if tracked_email.email != request.user.email %} {# Hide edit/remove buttons for primary email #}
+                                  <button class="btn btn-sm btn-info me-2" data-bs-toggle="modal" data-bs-target="#editEmailModal-{{ tracked_email.id }}">Edit</button>
+                                  <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#removeEmailModal-{{ tracked_email.id }}">Remove</button>
+                                {% else %}
+                                  <span class="text-muted small">Managed above</span>
+                                {% endif %}
                               </div>
                             </li>
                           {% endfor %}
@@ -125,6 +141,7 @@
 
   <!-- Modals for Edit and Remove -->
   {% for tracked_email in tracked_emails %}
+  {% if tracked_email.email != request.user.email %} {# Only show modals for non-primary emails #}
   <!-- Edit Email Modal -->
   <div class="modal fade" id="editEmailModal-{{ tracked_email.id }}" tabindex="-1" aria-labelledby="editEmailModalLabel-{{ tracked_email.id }}" aria-hidden="true">
     <div class="modal-dialog">
@@ -185,6 +202,7 @@
       </div>
     </div>
   </div>
+  {% endif %}
   {% endfor %}
 
 {% endblock content %}
