@@ -14,6 +14,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),  # Allauth routes
 
     # ADD NEW Routes HERE
+    path('notifications/', include('apps.notifications.urls')),
 
     # Leave `Home.Urls` as last the last line
     path("", include("apps.home.urls"))

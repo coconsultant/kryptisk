@@ -1186,6 +1186,15 @@
               </ul>
               <ul class="navbar-nav d-lg-block d-none">
                 {% if request.user.is_authenticated %}
+                  <li class="nav-item dropdown d-flex align-items-center me-2">
+                    <a href="javascript:;" class="nav-link text-body p-0" id="notification-bell" data-bs-toggle="modal" data-bs-target="#notificationModal" style="position: relative;">
+                      <i class="ni ni-bell-55 cursor-pointer"></i>
+                      <span id="notification-count-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white small py-1 px-2" style="display: none; font-size: .6rem;">
+                        <span id="notification-count"></span>
+                        <span class="visually-hidden">unread notifications</span>
+                      </span>
+                    </a>
+                  </li>
                   <li class="nav-item">
                     <a href="{% url 'profile' %}" class="btn btn-sm btn-success w-auto mb-0 me-2">{{ request.user.username }}</a>
                   </li>
@@ -1202,3 +1211,35 @@
       </div>
     </div>
   </div>
+<!-- Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group" id="notification-list" style="max-height: 400px; overflow-y: auto;">
+          <!-- Notifications will be loaded here by JavaScript -->
+          <li class="list-group-item">Loading...</li>
+        </ul>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <a href="#" id="acknowledge-all-link" class="text-sm" style="display: none;">Acknowledge All</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.fade-out {
+  transition: opacity 0.5s ease-out;
+  opacity: 0;
+}
+#notification-list .form-check-label {
+    white-space: normal; /* Allow text to wrap */
+    word-break: break-word; /* Break long words */
+}
+</style>

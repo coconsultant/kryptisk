@@ -26,6 +26,7 @@ from django.contrib import messages
 from django.db import IntegrityError
 from .forms import LoginForm, SignUpForm, ProfileForm, TrackedEmailForm
 from .models import TrackedEmail
+from apps.notifications.models import Notification
 from apps import Utils
 from core.settings import *
 from allauth.account.models import EmailAddress
@@ -69,6 +70,9 @@ def register_user(request):
             # Send email confirmation using allauth helper
             if user.email:
                 EmailAddress.objects.add_email(request, user, user.email, signup=True, confirm=True)
+
+            # Create a welcome notification
+            Notification.objects.create(user=user, message="Welcome to Kryptisk! We're glad to have you.")
 
             msg = 'User created successfully. Please check your email to verify your account.'
             success = True

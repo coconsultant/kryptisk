@@ -46,5 +46,9 @@ Coded by www.creative-tim.com
    <!-- Specific Page JS goes HERE  -->
    {% block javascripts %}{% endblock javascripts %}  
 
+  {% if request.user.is_authenticated %}
+  <script src="{% static 'js/notifications.js' %}"></script>
+  {% endif %}
+
 </body>
 </html>
