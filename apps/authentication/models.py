@@ -9,7 +9,7 @@ from django.conf import settings
 
 class CustomUser(AbstractUser):
     bio = models.TextField(default='This is my bio.')
-    registered_at = models.DateField(auto_now=True)
+    registered_at = models.DateField(auto_now_add=True)
     social_twitter = models.URLField(default='')
     social_facebook = models.URLField(default='')
     social_instagram = models.URLField(default='')
