@@ -332,12 +332,22 @@ def email_registration_view(request):
                         )
                         
                         messages.success(request, 'Email address added. A verification email has been sent.')
+                        return redirect('email_registration')
                     except IntegrityError:
                         messages.error(request, 'This email address is already being tracked.')
             else:
                 messages.error(request, 'Please correct the errors below.')
 
-            return redirect('email_registration')
+            # If we fall through, it's an error. Re-render the page with the form.
+            tracked_emails = TrackedEmail.objects.filter(user=request.user)
+            tracked_emails_count = tracked_emails.count()
+            context = {
+                'tracked_emails': tracked_emails,
+                'tracked_emails_count': tracked_emails_count,
+                'form': form,
+                'segment': 'email-registration'
+            }
+            return render(request, 'accounts/email-registration.html', context)
         
         elif action == 'edit_email':
             email_id = request.POST.get('email_id')
@@ -391,7 +401,7 @@ def email_registration_view(request):
                 messages.error(request, 'Email not found.')
             return redirect('email_registration')
 
-    # Calculate tracked emails and count after all POST operations
+    # This is now for GET requests only
     tracked_emails = TrackedEmail.objects.filter(user=request.user)
     tracked_emails_count = tracked_emails.count()
     form = TrackedEmailForm()
