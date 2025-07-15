@@ -188,18 +188,16 @@ SITE_OWNER_TWITTER    = os.getenv('SITE_OWNER_TWITTER'   , None)
 SITE_OWNER_INSTAGRAM  = os.getenv('SITE_OWNER_INSTAGRAM' , None)
 
 # Email settings for django-allauth
-if os.getenv('EMAIL_HOST'):
-    EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
-    EMAIL_HOST = os.getenv('AWS_SES_REGION_ENDPOINT')
-    EMAIL_PORT = int(os.getenv('EMAIL_PORT', 465)) # Changed default port from 587 to 465
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = os.getenv('AWS_SMTP_USERNAME')
-    EMAIL_HOST_PASSWORD = os.getenv('AWS_SMTP_PASSWORD')
-    DEFAULT_FROM_EMAIL = os.getenv('AWS_SENDER_EMAIL')
-    EMAIL_SENDER = os.getenv('AWS_SENDER_EMAIL')
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_FROM_EMAIL = 'noreply@localhost'
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('AWS_SES_REGION_ENDPOINT')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587)) # Changed default port from 587 to 465
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('AWS_SMTP_USERNAME')
+EMAIL_HOST_PASSWORD = os.getenv('AWS_SMTP_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('AWS_DEFAULT_FROM_EMAIL')
+EMAIL_SENDER = os.getenv('AWS_SENDER_EMAIL')
+EMAIL_USE_SSL= False
+
 
 # Allauth specific settings
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
@@ -208,6 +206,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'home'
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_EMAIL_FROM = os.getenv('EMAIL_SENDER')
 
 GITHUB_ID     = os.getenv('GITHUB_ID'    , None) # Corrected syntax here, removed extra '
 GITHUB_SECRET = os.getenv('GITHUB_SECRET', None)

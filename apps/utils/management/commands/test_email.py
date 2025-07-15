@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         recipient_email = options['to']
-        
+
         try:
             self.stdout.write('Testing email configuration...')
             self.stdout.write(f'Email Backend: {settings.EMAIL_BACKEND}')
@@ -24,7 +24,7 @@ class Command(BaseCommand):
             self.stdout.write(f'Email Port: {getattr(settings, "EMAIL_PORT", "Not configured")}')
             self.stdout.write(f'Email Use TLS: {getattr(settings, "EMAIL_USE_TLS", "Not configured")}')
             self.stdout.write(f'Default From Email: {getattr(settings, "DEFAULT_FROM_EMAIL", "Not configured")}')
-            
+
             send_mail(
                 subject='Kryptisk Email Test',
                 message='This is a test email from Kryptisk to verify email configuration is working correctly.',
@@ -32,11 +32,11 @@ class Command(BaseCommand):
                 recipient_list=[recipient_email],
                 fail_silently=False,
             )
-            
+
             self.stdout.write(
                 self.style.SUCCESS(f'Test email sent successfully to {recipient_email}')
             )
-            
+
         except Exception as e:
             self.stdout.write(
                 self.style.ERROR(f'Failed to send test email: {str(e)}')
