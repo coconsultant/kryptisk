@@ -10,9 +10,9 @@ from django.conf import settings
 class CustomUser(AbstractUser):
     bio = models.TextField(default='This is my bio.')
     registered_at = models.DateField(auto_now_add=True)
-    social_twitter = models.URLField(default='')
-    social_facebook = models.URLField(default='')
-    social_instagram = models.URLField(default='')
+    social_twitter = models.URLField(blank=True, null=True, default=None)
+    social_facebook = models.URLField(blank=True, null=True, default=None)
+    social_instagram = models.URLField(blank=True, null=True, default=None)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     subscribed = models.BooleanField(default=False) # New field for subscription status
 
@@ -29,4 +29,3 @@ class TrackedEmail(models.Model):
 
     def __str__(self):
         return f"{self.nickname} ({self.email})" if self.nickname else self.email
-
