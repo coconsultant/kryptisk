@@ -27,7 +27,7 @@
               <div class="card-body p-4">
                 {# TRIAL COUNTDOWN START #}
                 {% if request.user.is_authenticated and days_left_on_trial is not None %}
-                  <div class="text-end text-sm text-muted mb-3" style="position: absolute; top: 1rem; right: 1rem; z-index: 10;">
+                  <div class="text-end text-sm text-bold mb-3" style="position: absolute; top: 1rem; right: 1rem; z-index: 10;">
                     {% if days_left_on_trial > 0 %}
                       Free trial ends in {{ days_left_on_trial }} day{{ days_left_on_trial|pluralize }}.
                     {% else %}
@@ -90,7 +90,7 @@
                             <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-name-edit-btn">Cancel</button>
                         </form>
                     </div>
-
+                    <br>
                     {# Display Username Section #}
                     <div id="username-display" class="mb-2">
                         <p class="form-label mb-0">Username</p>
@@ -99,7 +99,7 @@
                             <i class="fas fa-arrow-right text-sm ms-1"></i>
                         </span>
                     </div>
-
+                    <br>
                     {# Edit Username Form Section #}
                     <div id="username-edit-form-container" class="mt-3 d-none">
                         <form id="edit-username-form" method="post" action="">
@@ -282,7 +282,7 @@
                 const editNameBtn = document.getElementById('edit-name-btn');
                 const cancelNameEditBtn = document.getElementById('cancel-name-edit-btn');
                 const editNameForm = document.getElementById('edit-name-form');
-                
+
                 // Username edit functionality
                 const usernameDisplay = document.getElementById('username-display');
                 const usernameEditFormContainer = document.getElementById('username-edit-form-container');
@@ -293,7 +293,7 @@
                 const usernameChangeModal = new bootstrap.Modal(document.getElementById('usernameChangeModal'));
                 const cancelUsernameChange = document.getElementById('cancel-username-change');
                 const confirmUsernameChange = document.getElementById('confirm-username-change');
-                
+
                 let originalUsername = '{{ request.user.username }}';
                 let pendingFormData = null;
 
@@ -331,9 +331,9 @@
                 if (editUsernameForm && usernameInput) {
                     editUsernameForm.addEventListener('submit', function(e) {
                         e.preventDefault();
-                        
+
                         const currentUsername = usernameInput.value.trim();
-                        
+
                         // Store form data for later submission
                         pendingFormData = new FormData(editUsernameForm);
                         // Show warning modal
@@ -356,13 +356,13 @@
                         if (pendingFormData) {
                             // Disable the button to prevent double submission and provide feedback
                             confirmUsernameChange.disabled = true;
-                            confirmUsernameChange.textContent = 'Processing...'; 
-                            
+                            confirmUsernameChange.textContent = 'Processing...';
+
                             // Submit the form with username change
                             const form = document.createElement('form');
                             form.method = 'POST';
                             form.action = editUsernameForm.action;
-                            
+
                             // Add all form data including CSRF token
                             for (let [key, value] of pendingFormData.entries()) {
                                 const input = document.createElement('input');
@@ -371,7 +371,7 @@
                                 input.value = value;
                                 form.appendChild(input);
                             }
-                            
+
                             document.body.appendChild(form);
                             form.submit();
                         }
