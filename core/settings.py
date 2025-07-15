@@ -195,6 +195,7 @@ if os.getenv('EMAIL_HOST'):
     EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
     EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
     DEFAULT_FROM_EMAIL = os.getenv('SENDER_EMAIL')
+    EMAIL_SENDER = os.getenv('SENDER_EMAIL')
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     DEFAULT_FROM_EMAIL = 'noreply@localhost'
