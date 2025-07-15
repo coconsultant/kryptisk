@@ -188,7 +188,16 @@ SITE_OWNER_TWITTER    = os.getenv('SITE_OWNER_TWITTER'   , None)
 SITE_OWNER_INSTAGRAM  = os.getenv('SITE_OWNER_INSTAGRAM' , None)
 
 # Email settings for django-allauth
-if os.getenv('EMAIL_HOST'):
+if os.getenv('EMAIL_SYSTEM') == "AWS":
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = os.getenv('AWS_SES_REGION_ENDPOINT')
+    EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.getenv('AWS_SMTP_USERNAME')
+    EMAIL_HOST_PASSWORD = os.getenv('AWS_SMTP_PASSWORD')
+    DEFAULT_FROM_EMAIL = os.getenv('SENDER_EMAIL')
+    EMAIL_SENDER = os.getenv('SENDER_EMAIL')
+else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = os.getenv('EMAIL_HOST')
     EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
@@ -197,9 +206,6 @@ if os.getenv('EMAIL_HOST'):
     EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
     DEFAULT_FROM_EMAIL = os.getenv('SENDER_EMAIL')
     EMAIL_SENDER = os.getenv('SENDER_EMAIL')
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_FROM_EMAIL = 'noreply@localhost'
 
 # Allauth specific settings
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
