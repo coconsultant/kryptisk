@@ -14,6 +14,7 @@ class CustomUser(AbstractUser):
     social_facebook = models.URLField(default='')
     social_instagram = models.URLField(default='')
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    subscribed = models.BooleanField(default=False) # New field for subscription status
 
 
 class TrackedEmail(models.Model):
