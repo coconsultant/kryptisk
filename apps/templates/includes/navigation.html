@@ -451,6 +451,11 @@
                       <div class="col-6 ps-0 d-flex justify-content-center flex-column">
                         <ul class="list-group">
                           <li class="nav-item list-group-item border-0 p-0">
+                            <a href="{% url 'profile' %}" class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1">
+                              <span>My Profile</span>
+                            </a>
+                          </li>
+                          <li class="nav-item list-group-item border-0 p-0">
                             <a href="{% url 'email_registration' %}" class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1">
                               <span>Register Email Address</span>
                             </a>
@@ -541,6 +546,9 @@
                     </div>
                     <div class="row d-lg-none">
                       <div class="col-12 d-flex justify-content-center flex-column">
+                        <a href="{% url 'profile' %}" class="dropdown-item border-radius-md">
+                          My Profile
+                        </a>
                         <a href="{% url 'email_registration' %}" class="dropdown-item border-radius-md">
                           Register Email Address
                         </a>
