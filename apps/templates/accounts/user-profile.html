@@ -26,14 +26,16 @@
             <div class="card mt-4 bg-white shadow-lg">
               <div class="card-body p-4">
                 {# TRIAL COUNTDOWN START #}
-                {% if request.user.is_authenticated and days_left_on_trial is not None %}
-                  <div class="text-end text-sm text-bold mb-3" style="position: absolute; top: 1rem; right: 1rem; z-index: 10;">
-                    {% if days_left_on_trial > 0 %}
-                      Free trial ends in {{ days_left_on_trial }} day{{ days_left_on_trial|pluralize }}.
-                    {% else %}
-                      Your free trial has ended.
-                    {% endif %}
-                  </div>
+                {% if request.user.is_authenticated %}
+                  {% if not request.user.subscribed %}
+                    <div class="text-end text-sm text-bold mb-3" style="position: absolute; top: 1rem; right: 1rem; z-index: 10;">
+                      {% if days_left_on_trial is not None and days_left_on_trial > 0 %}
+                        Free trial ends in {{ days_left_on_trial }} day{{ days_left_on_trial|pluralize }}.
+                      {% else %}
+                        Please Subscribe.
+                      {% endif %}
+                    </div>
+                  {% endif %}
                 {% endif %}
                 {# TRIAL COUNTDOWN END #}
                 <div class="row">
