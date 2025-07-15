@@ -18,7 +18,7 @@ from django.contrib.auth import get_user_model # Import for explicitly refreshin
 
 from django.core.mail import send_mail
 from django.http import JsonResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404 # Added get_object_or_404
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -357,11 +357,11 @@ def email_registration_view(request):
             track_primary = request.POST.get('track_primary_email_checkbox') == 'on' 
             
             primary_email_tracked_obj = TrackedEmail.objects.filter(user=request.user, email=primary_email).first()
-            current_tracked_emails_count = TrackedEmail.objects.filter(user=request.user).count()
+            current_tracked_emails_count = TrackedEmail.objects.filter(user=request.user).exclude(email=primary_email).count()
 
             if track_primary: # User wants to track primary email
                 if not primary_email_tracked_obj: # If it's not already tracked
-                    if current_tracked_emails_count < 2:
+                    if current_tracked_emails_count < 2: # Check if there's space for primary + 1 more (max 2 total, excluding potential primary which IS being added)
                         try:
                             # Create new TrackedEmail for primary email
                             TrackedEmail.objects.create(
@@ -374,7 +374,7 @@ def email_registration_view(request):
                         except IntegrityError:
                             messages.error(request, 'Your primary email is already tracked.')
                     else:
-                        messages.error(request, 'You have reached the maximum of 2 tracked emails. Please untrack another email to track your primary email.')
+                        messages.error(request, 'You have reached the maximum of 2 tracked emails (excluding your primary). Please untrack another email to track your primary email.')
                 elif not primary_email_tracked_obj.is_verified:
                     # If it exists but wasn't verified (shouldn't happen for primary, but for robustness)
                     primary_email_tracked_obj.is_verified = True
@@ -385,8 +385,13 @@ def email_registration_view(request):
                     messages.info(request, 'Your primary email is already being tracked.')
             else: # User wants to untrack primary email
                 if primary_email_tracked_obj:
-                    primary_email_tracked_obj.delete()
-                    messages.success(request, 'Your primary email is no longer being tracked.')
+                    # It's important to only remove if it's the primary email object
+                    # This prevents accidentally removing another tracked email if for some reason
+                    # its email address matches the primary_email although it shouldn't be the case
+                    # based on the unique_together constraint and current logic.
+                    if primary_email_tracked_obj.email == primary_email:
+                        primary_email_tracked_obj.delete()
+                        messages.success(request, 'Your primary email is no longer being tracked.')
                 else:
                     messages.info(request, 'Your primary email was not being tracked.')
             
@@ -465,3 +470,20 @@ def email_registration_view(request):
         'is_primary_email_tracked': is_primary_email_tracked, # Pass this to template
     }
     return render(request, 'accounts/email-registration.html', context)
+
+
+def verify_tracked_email(request, token):
+    """
+    View to handle email verification for tracked emails.
+    """
+    tracked_email = get_object_or_404(TrackedEmail, verification_token=token)
+
+    if tracked_email.is_verified:
+        messages.info(request, f'The email address {tracked_email.email} is already verified.')
+    else:
+        tracked_email.is_verified = True
+        tracked_email.verification_token = None  # Clear the token after use
+        tracked_email.save()
+        messages.success(request, f'Your email address {tracked_email.email} has been successfully verified for tracking!')
+
+    return redirect('email_registration')
