@@ -189,10 +189,9 @@ SITE_OWNER_INSTAGRAM  = os.getenv('SITE_OWNER_INSTAGRAM' , None)
 
 # Email settings for django-allauth
 if os.getenv('EMAIL_HOST'):
-    #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
     EMAIL_HOST = os.getenv('AWS_SES_REGION_ENDPOINT')
-    EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+    EMAIL_PORT = int(os.getenv('EMAIL_PORT', 465)) # Changed default port from 587 to 465
     EMAIL_USE_TLS = True
     EMAIL_HOST_USER = os.getenv('AWS_SMTP_USERNAME')
     EMAIL_HOST_PASSWORD = os.getenv('AWS_SMTP_PASSWORD')
