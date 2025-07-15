@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.twitter',
     "sslserver",
     'apps.utils', # Added for startup utility functions
+    'apps.notifications',
 ]
 
 MIDDLEWARE = [
