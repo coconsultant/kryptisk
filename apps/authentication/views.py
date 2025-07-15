@@ -344,7 +344,8 @@ def email_registration_view(request):
                     except IntegrityError:
                         Notification.objects.create(user=request.user, message='This email address is already being tracked for your account.')
             else:
-                Notification.objects.create(user=request.user, message='Could not add email. Please correct the errors and try again.')
+                # Form is invalid, it will be re-rendered with errors, so no generic notification is needed.
+                pass
 
             # If we fall through, re-render the page with form errors
             tracked_emails = TrackedEmail.objects.filter(user=request.user)
