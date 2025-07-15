@@ -98,7 +98,7 @@ def profile(request):
     days_left = None
     if request.user.is_authenticated and request.user.registered_at:
         trial_end_date = request.user.registered_at + timedelta(days=TRIAL_DURATION_DAYS)
-        today = timezone.localdate()
+        today = timezone.now().date()
         days_left = (trial_end_date - today).days
         # Ensure days_left doesn't go below zero if trial expired
         if days_left < 0:
