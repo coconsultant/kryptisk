@@ -70,7 +70,15 @@
                                 </small>
                               </div>
                               <div>
-                                {% if tracked_email.email != request.user.email %} {# Hide edit/remove buttons for primary email #}
+                                {% if tracked_email.email != request.user.email %} {# Hide edit/remove/resend buttons for primary email #}
+                                  {% if not tracked_email.is_verified %}
+                                    <form method="post" action="{% url 'email_registration' %}" class="d-inline">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="action" value="resend_verification">
+                                      <input type="hidden" name="email_id" value="{{ tracked_email.id }}">
+                                      <button type="submit" class="btn btn-sm btn-warning me-2">Resend Verification</button>
+                                    </form>
+                                  {% endif %}
                                   <button class="btn btn-sm btn-info me-2" data-bs-toggle="modal" data-bs-target="#editEmailModal-{{ tracked_email.id }}">Edit</button>
                                   <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#removeEmailModal-{{ tracked_email.id }}">Remove</button>
                                 {% else %}

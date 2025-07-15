@@ -454,6 +454,41 @@ def email_registration_view(request):
                 messages.error(request, 'Email not found.')
             return redirect('email_registration')
 
+        elif action == 'resend_verification':
+            email_id = request.POST.get('email_id')
+            try:
+                tracked_email = get_object_or_404(TrackedEmail, id=email_id, user=request.user)
+
+                if tracked_email.is_verified:
+                    messages.info(request, f'The email address {tracked_email.email} is already verified.')
+                else:
+                    # Generate a new verification token
+                    tracked_email.verification_token = uuid.uuid4().hex
+                    tracked_email.save()
+
+                    # Send verification email with the new token
+                    verification_link = request.build_absolute_uri(
+                        reverse('verify_tracked_email', kwargs={'token': tracked_email.verification_token})
+                    )
+                    subject = 'Verify Your Email for Kryptisk Tracking'
+                    message_body = f"Please click the link to verify your email address for tracking: {verification_link}"
+                    send_mail(
+                        subject,
+                        message_body,
+                        EMAIL_SENDER,
+                        [tracked_email.email],
+                        fail_silently=False,
+                    )
+                    messages.success(request, f'A new verification email has been sent to {tracked_email.email}. Please check your inbox.')
+
+            except TrackedEmail.DoesNotExist:
+                messages.error(request, 'Email not found or unauthorized.')
+            except Exception as e:
+                print(f'Error resending verification email: {e}') # For debugging
+                messages.error(request, 'An error occurred while trying to resend the verification email.')
+
+            return redirect('email_registration')
+
     # This is now for GET requests only
     tracked_emails = TrackedEmail.objects.filter(user=request.user)
     tracked_emails_count = tracked_emails.count()
