@@ -97,12 +97,13 @@ def profile(request):
     # Calculate trial days left
     days_left = None
     if request.user.is_authenticated and request.user.registered_at:
-        # Convert registered_at date to datetime for proper calculation
-        registered_datetime = timezone.datetime.combine(request.user.registered_at, timezone.datetime.min.time())
-        registered_datetime = timezone.make_aware(registered_datetime)
-        trial_end_datetime = registered_datetime + timedelta(days=TRIAL_DURATION_DAYS)
-        now = timezone.now()
-        days_left = (trial_end_datetime - now).days
+        # Calculate days since registration
+        today = timezone.now().date()
+        days_since_registration = (today - request.user.registered_at).days
+        
+        # Calculate remaining trial days
+        days_left = TRIAL_DURATION_DAYS - days_since_registration
+        
         # Ensure days_left doesn't go below zero if trial expired
         if days_left < 0:
             days_left = 0
