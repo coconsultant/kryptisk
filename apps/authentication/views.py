@@ -8,6 +8,7 @@ import json
 import os
 import time # Import for time.time_ns()
 import hashlib
+import uuid
 import requests
 from PIL import Image
 from io import BytesIO
@@ -18,6 +19,7 @@ from django.contrib.auth import get_user_model # Import for explicitly refreshin
 from django.core.mail import send_mail
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -311,8 +313,25 @@ def email_registration_view(request):
                     try:
                         tracked_email = form.save(commit=False)
                         tracked_email.user = request.user
+                        tracked_email.is_verified = False
+                        tracked_email.verification_token = uuid.uuid4().hex
                         tracked_email.save()
-                        messages.success(request, 'Email address added successfully.')
+
+                        # Send verification email
+                        verification_link = request.build_absolute_uri(
+                            reverse('verify_tracked_email', kwargs={'token': tracked_email.verification_token})
+                        )
+                        subject = 'Verify Your Email for Kryptisk Tracking'
+                        message_body = f"Please click the link to verify your email address for tracking: {verification_link}"
+                        send_mail(
+                            subject,
+                            message_body,
+                            EMAIL_SENDER,
+                            [tracked_email.email],
+                            fail_silently=False,
+                        )
+                        
+                        messages.success(request, 'Email address added. A verification email has been sent.')
                     except IntegrityError:
                         messages.error(request, 'This email address is already being tracked.')
             else:
@@ -324,14 +343,36 @@ def email_registration_view(request):
             email_id = request.POST.get('email_id')
             try:
                 tracked_email = TrackedEmail.objects.get(id=email_id, user=request.user)
+                original_email = tracked_email.email
                 form = TrackedEmailForm(request.POST, instance=tracked_email)
                 if form.is_valid():
                     new_email = form.cleaned_data['email']
                     if new_email == request.user.email:
                         messages.error(request, 'You cannot track your primary email address.')
                     else:
-                        form.save()
-                        messages.success(request, 'Email details updated successfully.')
+                        instance = form.save(commit=False)
+                        if new_email != original_email:
+                            instance.is_verified = False
+                            instance.verification_token = uuid.uuid4().hex
+                            
+                            # Send verification email for the new address
+                            verification_link = request.build_absolute_uri(
+                                reverse('verify_tracked_email', kwargs={'token': instance.verification_token})
+                            )
+                            subject = 'Verify Your Email for Kryptisk Tracking'
+                            message_body = f"Please click the link to verify your email address for tracking: {verification_link}"
+                            send_mail(
+                                subject,
+                                message_body,
+                                EMAIL_SENDER,
+                                [new_email],
+                                fail_silently=False,
+                            )
+                            messages.success(request, 'Email updated. A verification email has been sent to the new address.')
+                        else:
+                            messages.success(request, 'Email details updated successfully.')
+                        
+                        instance.save()
                 else:
                     messages.error(request, 'Update failed. Please check the details.')
             except TrackedEmail.DoesNotExist:
@@ -362,3 +403,15 @@ def email_registration_view(request):
         'segment': 'email-registration'
     }
     return render(request, 'accounts/email-registration.html', context)
+
+
+def verify_tracked_email(request, token):
+    try:
+        tracked_email = TrackedEmail.objects.get(verification_token=token)
+        tracked_email.is_verified = True
+        tracked_email.verification_token = None # Clear the token after verification
+        tracked_email.save()
+        messages.success(request, f'The email {tracked_email.email} has been successfully verified.')
+    except TrackedEmail.DoesNotExist:
+        messages.error(request, 'Invalid verification link.')
+    return redirect('email_registration')

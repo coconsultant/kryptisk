@@ -48,7 +48,14 @@
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                               <div>
                                 <strong>{{ tracked_email.nickname|default:"No Nickname" }}</strong><br>
-                                <small>{{ tracked_email.email }}</small>
+                                <small>
+                                  {{ tracked_email.email }}
+                                  {% if tracked_email.is_verified %}
+                                    <span class="text-success fw-bold ms-2">(Verified)</span>
+                                  {% else %}
+                                    <span class="text-danger fw-bold ms-2">(Unverified)</span>
+                                  {% endif %}
+                                </small>
                               </div>
                               <div>
                                 <button class="btn btn-sm btn-info me-2" data-bs-toggle="modal" data-bs-target="#editEmailModal-{{ tracked_email.id }}">Edit</button>

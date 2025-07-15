@@ -20,6 +20,8 @@ class TrackedEmail(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='tracked_emails')
     email = models.EmailField()
     nickname = models.CharField(max_length=100, blank=True)
+    is_verified = models.BooleanField(default=False)
+    verification_token = models.CharField(max_length=100, blank=True, null=True, unique=True)
 
     class Meta:
         unique_together = ('user', 'email')
