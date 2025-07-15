@@ -315,8 +315,10 @@ def email_registration_view(request):
                 
                 if email_to_track == request.user.email:
                     Notification.objects.create(user=request.user, message='Your primary email is managed via the dedicated checkbox. Please add other email addresses here.')
+                    return redirect('email_registration')
                 elif non_primary_tracked_emails_count >= 2: # Changed to use non_primary_tracked_emails_count
                     Notification.objects.create(user=request.user, message='You have reached the maximum of 2 additional tracked emails. Please remove an existing email to add a new one.')
+                    return redirect('email_registration')
                 else:
                     try:
                         tracked_email = form.save(commit=False)
@@ -343,6 +345,7 @@ def email_registration_view(request):
                         return redirect('email_registration')
                     except IntegrityError:
                         Notification.objects.create(user=request.user, message='This email address is already being tracked for your account.')
+                        return redirect('email_registration')
             else:
                 # Form is invalid, it will be re-rendered with errors, so no generic notification is needed.
                 pass
