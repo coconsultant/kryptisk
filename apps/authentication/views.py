@@ -276,7 +276,9 @@ def profile(request):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(request.path)
+            return JsonResponse({
+                'message': 'Profile updated successfully.'
+            }, status=200)
 
         return JsonResponse({
             'message': form.errors
@@ -295,20 +297,22 @@ def delete_account(request):
 
 @login_required(login_url="/login/")
 def email_registration_view(request):
+    # Calculate non_primary_tracked_emails_count for template and add_email logic
+    non_primary_tracked_emails_count = TrackedEmail.objects.filter(user=request.user).exclude(email=request.user.email).count()
+
     if request.method == 'POST':
         action = request.POST.get('action')
         
         if action == 'add_email':
-            current_tracked_emails_count = TrackedEmail.objects.filter(user=request.user).count()
-            
+            # `non_primary_tracked_emails_count` controls the limit for adding new emails
             form = TrackedEmailForm(request.POST)
             if form.is_valid():
                 email_to_track = form.cleaned_data['email']
                 
                 if email_to_track == request.user.email:
                     messages.error(request, 'Your primary email is managed via the dedicated checkbox. Please add other email addresses here.')
-                elif current_tracked_emails_count >= 2:
-                    messages.error(request, 'You have reached the maximum of 2 tracked emails. Please remove an existing email to add a new one.')
+                elif non_primary_tracked_emails_count >= 2: # Changed to use non_primary_tracked_emails_count
+                    messages.error(request, 'You have reached the maximum of 2 additional tracked emails. Please remove an existing email to add a new one.') # Clarified message
                 else:
                     try:
                         tracked_email = form.save(commit=False)
@@ -340,12 +344,13 @@ def email_registration_view(request):
 
             # If we fall through, re-render the page with form errors
             tracked_emails = TrackedEmail.objects.filter(user=request.user)
-            tracked_emails_count = tracked_emails.count() # Recalculate as it might have changed
+            # is_primary_email_tracked is already calculated and used in context for GET request,
+            # so it needs to be calculated again here to pass to the context for POST
             is_primary_email_tracked = TrackedEmail.objects.filter(user=request.user, email=request.user.email).exists()
 
             context = {
                 'tracked_emails': tracked_emails,
-                'tracked_emails_count': tracked_emails_count,
+                'non_primary_tracked_emails_count': non_primary_tracked_emails_count, # Pass for re-rendering form
                 'form': form,
                 'segment': 'email-registration',
                 'is_primary_email_tracked': is_primary_email_tracked,
@@ -357,11 +362,12 @@ def email_registration_view(request):
             track_primary = request.POST.get('track_primary_email_checkbox') == 'on' 
             
             primary_email_tracked_obj = TrackedEmail.objects.filter(user=request.user, email=primary_email).first()
-            current_tracked_emails_count = TrackedEmail.objects.filter(user=request.user).exclude(email=primary_email).count()
+            # This count (excluding primary) is correctly used for this specific action's limit check
+            current_non_primary_tracked_emails_count_for_toggle = TrackedEmail.objects.filter(user=request.user).exclude(email=primary_email).count()
 
             if track_primary: # User wants to track primary email
                 if not primary_email_tracked_obj: # If it's not already tracked
-                    if current_tracked_emails_count < 2: # Check if there's space for primary + 1 more (max 2 total, excluding potential primary which IS being added)
+                    if current_non_primary_tracked_emails_count_for_toggle < 2: # Check if there's space for primary + 1 more (max 2 total, excluding potential primary which IS being added)
                         try:
                             # Create new TrackedEmail for primary email
                             TrackedEmail.objects.create(
@@ -374,7 +380,7 @@ def email_registration_view(request):
                         except IntegrityError:
                             messages.error(request, 'Your primary email is already tracked.')
                     else:
-                        messages.error(request, 'You have reached the maximum of 2 tracked emails (excluding your primary). Please untrack another email to track your primary email.')
+                        messages.error(request, 'You have reached the maximum of 2 additional tracked emails. Please untrack another email to track your primary email.')
                 elif not primary_email_tracked_obj.is_verified:
                     # If it exists but wasn't verified (shouldn't happen for primary, but for robustness)
                     primary_email_tracked_obj.is_verified = True
@@ -491,7 +497,6 @@ def email_registration_view(request):
 
     # This is now for GET requests only
     tracked_emails = TrackedEmail.objects.filter(user=request.user)
-    tracked_emails_count = tracked_emails.count()
     form = TrackedEmailForm()
 
     # Determine if primary email is currently tracked
@@ -499,7 +504,7 @@ def email_registration_view(request):
     
     context = {
         'tracked_emails': tracked_emails,
-        'tracked_emails_count': tracked_emails_count,
+        'non_primary_tracked_emails_count': non_primary_tracked_emails_count, # Pass this to template
         'form': form,
         'segment': 'email-registration',
         'is_primary_email_tracked': is_primary_email_tracked, # Pass this to template
