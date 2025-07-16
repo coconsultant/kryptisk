@@ -87,6 +87,15 @@
                           </h4>
                         </div>
                       </div>
+                      {% if current_user.website %}
+                      <div class="mb-2">
+                        <p class="form-label mb-0">Website</p>
+                        <h4 class="mb-0">
+                          <a href="{{ current_user.website }}" target="_blank">{{ current_user.website }}</a>
+                        </h4>
+                      </div>
+                      <br>
+                      {% endif %}
                       <div id="bio">
                         <p class="form-label mb-0">Bio</p>
                         <p class="text-lg mb-0">
