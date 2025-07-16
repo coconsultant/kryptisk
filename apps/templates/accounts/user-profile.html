@@ -52,29 +52,8 @@
           <div class="col-xl-8 col-lg-10 col-md-11 mx-auto">
             <div class="card mt-4 bg-white shadow-lg" style="position: relative; z-index: 10;">
               <div class="card-body p-4">
-                {# MEMBER SINCE AND TRIAL COUNTDOWN START #}
-                {% if request.user.is_authenticated %}
-                  <div class="text-end text-bold mb-3" style="position: absolute; top: 1rem; right: 1rem; z-index: 5;">
-                    <div class="mb-1">Member Since {{ request.user.date_joined|date:"m/d/Y" }}</div>
-                    <div class="mb-1">
-                      <form action="{% url 'account_logout' %}" method="post" class="d-inline">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-link p-0 text-danger fs-5 fw-bold text-decoration-none">Logout</button>
-                      </form>
-                    </div>
-                    {% if not request.user.subscribed %}
-                      <div>
-                        {% if days_left_on_trial %}
-                          Free trial ends in {{ days_left_on_trial }} day{{ days_left_on_trial|pluralize }}.
-                        {% else %}
-                          Please Subscribe.
-                        {% endif %}
-                      </div>
-                    {% endif %}
-                  </div>
-                {% endif %}
-                {# MEMBER SINCE AND TRIAL COUNTDOWN END #}
                 <div class="row">
+                  {# First column: Avatar section #}
                   <div class="col-lg-4 col-md-5 position-relative my-auto py-2">
                     <img id="user-avatar-img" class="img border-radius-lg w-100 position-relative z-index-2 max-width-200" src="{% if request.user.avatar %}{{ request.user.avatar.url }}?v={{ cache_buster }}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
                     <br><br>
@@ -100,137 +79,190 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-lg-8 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 py-2">
-                    {# Display Name Section #}
-                    <div id="name-display" class="mb-2">
-                        <p class="form-label mb-0 fs-5 fw-bold">Name</p>
-                        <p id="edit-name-btn" class="mb-0 cursor-pointer text-decoration-underline" title="Click to edit name">{{ request.user.first_name }} {{ request.user.last_name }}</p>
-                    </div>
 
-                    {# Edit Name Form Section #}
-                    <div id="name-edit-form-container" class="mt-3 d-none">
-                        <form id="edit-name-form" method="post" action="">
-                            {% csrf_token %}
-                            <input type="hidden" name="action" value="update_name" />
-                            <div class="mb-3">
-                                <label for="{{ profile_form.first_name.id_for_label }}" class="form-label fs-5 fw-bold">First Name</label>
-                                <input type="text" class="form-control" id="{{ profile_form.first_name.id_for_label }}" name="first_name" value="{{ request.user.first_name|default:'' }}" placeholder="Enter your first name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="{{ profile_form.last_name.id_for_label }}" class="form-label fs-5 fw-bold">Last Name</label>
-                                <input type="text" class="form-control" id="{{ profile_form.last_name.id_for_label }}" name="last_name" value="{{ request.user.last_name|default:'' }}" placeholder="Enter your last name">
-                            </div>
-                            <input type="submit" class="btn btn-success mt-3" value="Save Name">
-                            <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-name-edit-btn">Cancel</button>
-                        </form>
-                    </div>
-                    <br>
-                    {# Display Username Section #}
-                    <div id="username-display" class="mb-2">
-                        <p class="form-label mb-0 fs-5 fw-bold">Username</p>
-                        <p id="edit-username-btn" class="mb-0 cursor-pointer text-decoration-underline" title="Click to edit username">@{{ request.user.username }}</p>
-                    </div>
-                    <br>
-                    {# Edit Username Form Section #}
-                    <div id="username-edit-form-container" class="mt-3 d-none">
-                        <form id="edit-username-form" method="post" action="">
-                            {% csrf_token %}
-                            <input type="hidden" name="action" value="update_username" />
-                            <div class="mb-3">
-                                <label for="username" class="form-label fs-5 fw-bold">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" value="{{ request.user.username|default:'' }}" placeholder="Enter your username">
-                            </div>
-                            <input type="submit" class="btn btn-success mt-3" value="Save Username">
-                            <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-username-edit-btn">Cancel</button>
-                        </form>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                      <div>
-                        {# Email Label #}
-                        <p class="form-label mb-0 fs-5 fw-bold">Email</p>
-                        <p class="mb-0">
-                          {% if request.user.email %}
-                            {{ request.user.email }}
-                          {% else %}
-                            {% if request.user.socialaccount_set.first %}
-                              {% if request.user.socialaccount_set.first.provider == 'github' %}
-                                Authenticated with Github
-                              {% elif request.user.socialaccount_set.first.provider == 'twitter' %}
-                                Authenticated with Twitter
-                              {% endif %}
-                            {% endif %}
-                          {% endif %}
-                        </p>
-                      </div>
-                      <div class="d-flex flex-column gap-2">
-                          {# Logout moved to top right under Member Since #}
-                          {# Removed Delete Account Button #}
-                      </div>
-                    </div>
-
-                    {# Display Website Section #}
-                    <div id="website-display" class="mb-2">
-                        <p class="form-label mb-0 fs-5 fw-bold">Website</p>
-                        <p id="edit-website-btn" class="mb-0 cursor-pointer text-decoration-underline" title="Click to edit website">
-                            {% if request.user.website %}
-                                {{ request.user.website }}
-                            {% else %}
-                                Not set
-                            {% endif %}
-                        </p>
-                    </div>
-                    <br>
-                    {# Edit Website Form Section #}
-                    <div id="website-edit-form-container" class="mt-3 d-none">
-                        <form id="edit-website-form" method="post" action="">
-                            {% csrf_token %}
-                            <input type="hidden" name="action" value="update_website" />
-                            <div class="mb-3 w-40"> {# w-40 div #}
-                                <label for="website" class="form-label fs-5 fw-bold">Website URL</label>
-                                <input type="url" class="form-control" id="website" name="website" value="{{ request.user.website|default:'' }}" placeholder="e.g., https://www.example.com">
-                            </div>
-                            <input type="submit" class="btn btn-success mt-3" value="Save Website">
-                            <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-website-edit-btn">Cancel</button>
-                        </form>
-                    </div>
-
-                    <div id="bio" style="position: relative; z-index: 6;">
-                        <p class="form-label mb-0 fs-5 fw-bold">Bio</p>
-                        <div id="edit-btn" class="cursor-pointer text-decoration-underline" title="Click to edit bio" style="position: relative; z-index: 7;">
-                          {{ bio | safe }}
+                  {# Second column: Tab Content Area (main profile details and blank page) #}
+                  <div class="col-lg-5 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 py-2">
+                    <div class="tab-content" id="pills-tabContent">
+                      {# My Profile Tab Pane #}
+                      <div class="tab-pane fade show active" id="my-profile-tab" role="tabpanel" aria-labelledby="my-profile-tab-tab">
+                        {# Display Name Section #}
+                        <div id="name-display" class="mb-2">
+                            <p class="form-label mb-0 fs-5 fw-bold">Name</p>
+                            <p id="edit-name-btn" class="mb-0 cursor-pointer text-decoration-underline" title="Click to edit name">{{ request.user.first_name }} {{ request.user.last_name }}</p>
                         </div>
-                    </div>
-                      <div class="row quill-container d-none">
-                          <div id="toolbar-container">
-                            <span class="ql-formats">
-                              <select class="ql-size"></select>
-                            </span>
-                            <span class="ql-formats">
-                              <button class="ql-bold"></button>
-                              <button class="ql-italic"></button>
-                              <button class="ql-underline"></button>
-                              <button class="ql-strike"></button>
-                            </span>
-                            <span class="ql-formats">
-                              <button class="ql-list" value="ordered"></button>
-                              <button class="ql-list" value="bullet"></button>
-                            </span>
-                            <span class="ql-formats">
-                              <button class="ql-clean"></button>
-                            </span>
-                          </div>
-                          <div id="editor-container">
-                              {{ bio | safe }}
-                          </div>
-                            <form id="edit-bio" method="post" action="">
+
+                        {# Edit Name Form Section #}
+                        <div id="name-edit-form-container" class="mt-3 d-none">
+                            <form id="edit-name-form" method="post" action="">
                                 {% csrf_token %}
-                                <input type="hidden" name="action" value="edit_bio" />
-                                <input type="hidden" name="bio" id="bio-content" />
-                                <input type="submit" class="btn btn-success mt-3" value="Save">
-                                <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-bio-edit-btn">Cancel</button>
+                                <input type="hidden" name="action" value="update_name" />
+                                <div class="mb-3">
+                                    <label for="{{ profile_form.first_name.id_for_label }}" class="form-label fs-5 fw-bold">First Name</label>
+                                    <input type="text" class="form-control" id="{{ profile_form.first_name.id_for_label }}" name="first_name" value="{{ request.user.first_name|default:'' }}" placeholder="Enter your first name">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="{{ profile_form.last_name.id_for_label }}" class="form-label fs-5 fw-bold">Last Name</label>
+                                    <input type="text" class="form-control" id="{{ profile_form.last_name.id_for_label }}" name="last_name" value="{{ request.user.last_name|default:'' }}" placeholder="Enter your last name">
+                                </div>
+                                <input type="submit" class="btn btn-success mt-3" value="Save Name">
+                                <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-name-edit-btn">Cancel</button>
                             </form>
                         </div>
+                        <br>
+                        {# Display Username Section #}
+                        <div id="username-display" class="mb-2">
+                            <p class="form-label mb-0 fs-5 fw-bold">Username</p>
+                            <p id="edit-username-btn" class="mb-0 cursor-pointer text-decoration-underline" title="Click to edit username">@{{ request.user.username }}</p>
+                        </div>
+                        <br>
+                        {# Edit Username Form Section #}
+                        <div id="username-edit-form-container" class="mt-3 d-none">
+                            <form id="edit-username-form" method="post" action="">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="update_username" />
+                                <div class="mb-3">
+                                    <label for="username" class="form-label fs-5 fw-bold">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" value="{{ request.user.username|default:'' }}" placeholder="Enter your username">
+                                </div>
+                                <input type="submit" class="btn btn-success mt-3" value="Save Username">
+                                <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-username-edit-btn">Cancel</button>
+                            </form>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                          <div>
+                            {# Email Label #}
+                            <p class="form-label mb-0 fs-5 fw-bold">Email</p>
+                            <p class="mb-0">
+                              {% if request.user.email %}
+                                {{ request.user.email }}
+                              {% else %}
+                                {% if request.user.socialaccount_set.first %}
+                                  {% if request.user.socialaccount_set.first.provider == 'github' %}
+                                    Authenticated with Github
+                                  {% elif request.user.socialaccount_set.first.provider == 'twitter' %}
+                                    Authenticated with Twitter
+                                  {% endif %}
+                                {% endif %}
+                              {% endif %}
+                            </p>
+                          </div>
+                        </div>
+
+                        {# Display Website Section #}
+                        <div id="website-display" class="mb-2">
+                            <p class="form-label mb-0 fs-5 fw-bold">Website</p>
+                            <p id="edit-website-btn" class="mb-0 cursor-pointer text-decoration-underline" title="Click to edit website">
+                                {% if request.user.website %}
+                                    {{ request.user.website }}
+                                {% else %}
+                                    Not set
+                                {% endif %}
+                            </p>
+                        </div>
+                        <br>
+                        {# Edit Website Form Section #}
+                        <div id="website-edit-form-container" class="mt-3 d-none">
+                            <form id="edit-website-form" method="post" action="">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="update_website" />
+                                <div class="mb-3 w-40"> {# w-40 div #}
+                                    <label for="website" class="form-label fs-5 fw-bold">Website URL</label>
+                                    <input type="url" class="form-control" id="website" name="website" value="{{ request.user.website|default:'' }}" placeholder="e.g., https://www.example.com">
+                                </div>
+                                <input type="submit" class="btn btn-success mt-3" value="Save Website">
+                                <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-website-edit-btn">Cancel</button>
+                            </form>
+                        </div>
+
+                        <div id="bio" style="position: relative; z-index: 6;">
+                            <p class="form-label mb-0 fs-5 fw-bold">Bio</p>
+                            <div id="edit-btn" class="cursor-pointer text-decoration-underline" title="Click to edit bio" style="position: relative; z-index: 7;">
+                              {{ bio | safe }}
+                            </div>
+                        </div>
+                          <div class="row quill-container d-none">
+                              <div id="toolbar-container">
+                                <span class="ql-formats">
+                                  <select class="ql-size"></select>
+                                </span>
+                                <span class="ql-formats">
+                                  <button class="ql-bold"></button>
+                                  <button class="ql-italic"></button>
+                                  <button class="ql-underline"></button>
+                                  <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                  <button class="ql-list" value="ordered"></button>
+                                  <button class="ql-list" value="bullet"></button>
+                                </span>
+                                <span class="ql-formats">
+                                  <button class="ql-clean"></button>
+                                </span>
+                              </div>
+                              <div id="editor-container">
+                                  {{ bio | safe }}
+                              </div>
+                                <form id="edit-bio" method="post" action="">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="edit_bio" />
+                                    <input type="hidden" name="bio" id="bio-content" />
+                                    <input type="submit" class="btn btn-success mt-3" value="Save">
+                                    <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-bio-edit-btn">Cancel</button>
+                                </form>
+                            </div>
+                      </div>
+
+                      {# Page Two Tab Pane #}
+                      <div class="tab-pane fade" id="page-two-tab" role="tabpanel" aria-labelledby="page-two-tab-tab">
+                        <div class="row">
+                          <div class="col-12 mt-4 py-2">
+                            <p>This is the content for Page Two. It is currently blank, as requested.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {# Third column: Member Since / Trial & Vertical Tabs Navigation #}
+                  <div class="col-lg-3 col-md-12 mt-4 mt-lg-0 py-2">
+                    {# Top half of third column: Member Since and Trial Countdown #}
+                    {% if request.user.is_authenticated %}
+                      <div class="text-end text-bold mb-3">
+                        <div class="mb-1">Member Since {{ request.user.date_joined|date:"m/d/Y" }}</div>
+                        <div class="mb-1">
+                          <form action="{% url 'account_logout' %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-link p-0 text-danger fs-5 fw-bold text-decoration-none">Logout</button>
+                          </form>
+                        </div>
+                        {% if not request.user.subscribed %}
+                          <div>
+                            {% if days_left_on_trial %}
+                              Free trial ends in {{ days_left_on_trial }} day{{ days_left_on_trial|pluralize }}.
+                            {% else %}
+                              Please Subscribe.
+                            {% endif %}
+                          </div>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+
+                    {# Bottom half of third column: Vertical Tabs Navigation #}
+                    <div class="nav-wrapper position-relative end-0 mt-4">
+                      <ul class="nav nav-pills nav-fill flex-column p-1" id="pills-tab-vertical" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link mb-0 px-0 py-1 active" data-bs-toggle="tab" href="#my-profile-tab" role="tab" aria-controls="my-profile-tab" aria-selected="true" id="my-profile-tab-tab">
+                            My Profile
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link mb-0 px-0 py-1" data-bs-toggle="tab" href="#page-two-tab" role="tab" aria-controls="page-two-tab" aria-selected="false" id="page-two-tab-tab">
+                            Page Two
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
