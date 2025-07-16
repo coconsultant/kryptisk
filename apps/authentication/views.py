@@ -94,25 +94,22 @@ def profile(request):
     # Define trial duration
     TRIAL_DURATION_DAYS = 3
 
-    # Refresh user from database to ensure we have latest data
-    if request.user.is_authenticated:
-        request.user.refresh_from_db()
-    
-    # Calculate trial days left
-    days_left = None
-    if request.user.is_authenticated and request.user.registered_at:
-        # Calculate days since registration
-        today = timezone.now().date()
-        days_since_registration = (today - request.user.registered_at).days
-        
-        # Calculate remaining trial days
-        days_left = max(0, TRIAL_DURATION_DAYS - days_since_registration)
-
     # GET request handler
     if request.method == 'GET':
         # Get fresh user data from database to ensure no caching
         User = get_user_model()
         fresh_user = User.objects.get(pk=request.user.pk)
+        
+        # Calculate trial days left using fresh user data
+        days_left = None
+        if fresh_user.registered_at:
+            # Calculate days since registration
+            today = timezone.now().date()
+            days_since_registration = (today - fresh_user.registered_at).days
+            
+            # Calculate remaining trial days
+            days_left = max(0, TRIAL_DURATION_DAYS - days_since_registration)
+        
         cache_buster = time.time_ns() # Get nanosecond precision for aggressive cache busting
         return render(request, "accounts/user-profile.html", context={
             'bio': fresh_user.bio,
