@@ -27,7 +27,7 @@
               <div class="card-body p-4">
                 {# MEMBER SINCE AND TRIAL COUNTDOWN START #}
                 {% if request.user.is_authenticated %}
-                  <div class="text-end text-sm text-bold mb-3" style="position: absolute; top: 1rem; right: 1rem; z-index: 10;">
+                  <div class="text-end text-sm text-bold mb-3" style="position: absolute; top: 1rem; right: 1rem; z-index: 5;">
                     <div class="mb-1">Member Since {{ request.user.date_joined|date:"m/d/Y" }}</div>
                     {% if not request.user.subscribed %}
                       <div>
