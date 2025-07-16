@@ -22,6 +22,7 @@
           <div class="col-xl-8 col-lg-10 col-md-11 mx-auto">
             <div class="card mt-4 bg-white shadow-lg">
               <div class="card-body p-4">
+                {% csrf_token %}
                 <div class="row">
                   <div class="col-lg-4 col-md-5 position-relative my-auto py-2">
                     {% if current_user.is_authenticated %}
@@ -43,47 +44,29 @@
                   </div>
                   <div class="col-lg-8 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 py-2">
                     {% if current_user.is_authenticated %}
-                      <!-- vCard Preferences Form -->
-                      <div class="card mb-4">
-                        <div class="card-header">
-                          <h6 class="mb-0">vCard Elements</h6>
-                          <p class="text-sm mb-0">Toggle which elements to include in your QR code</p>
+                      <!-- Display current vCard content with toggles -->
+                      {% if current_user.vcard_include_name and current_user.first_name or current_user.last_name %}
+                      <div class="mb-2 d-flex justify-content-between align-items-center">
+                        <div>
+                          <p class="form-label mb-0">Name</p>
+                          <h4 class="mb-0">{{ current_user.first_name }} {{ current_user.last_name }}</h4>
                         </div>
-                        <div class="card-body">
-                          <form method="post" action="">
-                            {% csrf_token %}
-                            <input type="hidden" name="action" value="update_vcard_preferences" />
-                            
-                            <div class="form-check form-switch mb-2">
-                              <input class="form-check-input" type="checkbox" id="vcard_include_name" name="vcard_include_name" {% if current_user.vcard_include_name %}checked{% endif %}>
-                              <label class="form-check-label" for="vcard_include_name">Include Name</label>
-                            </div>
-                            
-                            <div class="form-check form-switch mb-2">
-                              <input class="form-check-input" type="checkbox" id="vcard_include_email" name="vcard_include_email" {% if current_user.vcard_include_email %}checked{% endif %}>
-                              <label class="form-check-label" for="vcard_include_email">Include Email</label>
-                            </div>
-                            
-                            <div class="form-check form-switch mb-2">
-                              <input class="form-check-input" type="checkbox" id="vcard_include_website" name="vcard_include_website" {% if current_user.vcard_include_website %}checked{% endif %}>
-                              <label class="form-check-label" for="vcard_include_website">Include Website</label>
-                            </div>
-                            
-                            <div class="form-check form-switch mb-3">
-                              <input class="form-check-input" type="checkbox" id="vcard_include_bio" name="vcard_include_bio" {% if current_user.vcard_include_bio %}checked{% endif %}>
-                              <label class="form-check-label" for="vcard_include_bio">Include Bio</label>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary btn-sm">Update Preferences</button>
-                          </form>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_name" name="vcard_include_name" {% if current_user.vcard_include_name %}checked{% endif %} data-field="name">
+                          <label class="form-check-label" for="vcard_include_name">Include</label>
                         </div>
                       </div>
-
-                      <!-- Display current vCard content -->
-                      {% if current_user.vcard_include_name and current_user.first_name or current_user.last_name %}
-                      <div class="mb-2">
-                        <p class="form-label mb-0">Name</p>
-                        <h4 class="mb-0">{{ current_user.first_name }} {{ current_user.last_name }}</h4>
+                      <br>
+                      {% else %}
+                      <div class="mb-2 d-flex justify-content-between align-items-center">
+                        <div>
+                          <p class="form-label mb-0">Name</p>
+                          <h4 class="mb-0 text-muted">Not set</h4>
+                        </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_name" name="vcard_include_name" {% if current_user.vcard_include_name %}checked{% endif %} data-field="name">
+                          <label class="form-check-label" for="vcard_include_name">Include</label>
+                        </div>
                       </div>
                       <br>
                       {% endif %}
@@ -106,25 +89,89 @@
                             {% endif %}
                           </h4>
                         </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_email" name="vcard_include_email" {% if current_user.vcard_include_email %}checked{% endif %} data-field="email">
+                          <label class="form-check-label" for="vcard_include_email">Include</label>
+                        </div>
+                      </div>
+                      {% else %}
+                      <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                          <p class="form-label mb-0">Email</p>
+                          <h4 class="mb-0">
+                            {% if current_user.email %}
+                              {{ current_user.email }}
+                            {% else %}
+                              {% if current_user.socialaccount_set.first %}
+                                {% if current_user.socialaccount_set.first.provider == 'github' %}
+                                  Authenticated with Github
+                                {% elif current_user.socialaccount_set.first.provider == 'twitter' %}
+                                  Authenticated with Twitter
+                                {% endif %}
+                              {% endif %}
+                            {% endif %}
+                          </h4>
+                        </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_email" name="vcard_include_email" {% if current_user.vcard_include_email %}checked{% endif %} data-field="email">
+                          <label class="form-check-label" for="vcard_include_email">Include</label>
+                        </div>
                       </div>
                       {% endif %}
                       
                       {% if current_user.vcard_include_website and current_user.website %}
-                      <div class="mb-2">
-                        <p class="form-label mb-0">Website</p>
-                        <h4 class="mb-0">
-                          <a href="{{ current_user.website }}" target="_blank">{{ current_user.website }}</a>
-                        </h4>
+                      <div class="mb-2 d-flex justify-content-between align-items-center">
+                        <div>
+                          <p class="form-label mb-0">Website</p>
+                          <h4 class="mb-0">
+                            <a href="{{ current_user.website }}" target="_blank">{{ current_user.website }}</a>
+                          </h4>
+                        </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_website" name="vcard_include_website" {% if current_user.vcard_include_website %}checked{% endif %} data-field="website">
+                          <label class="form-check-label" for="vcard_include_website">Include</label>
+                        </div>
+                      </div>
+                      <br>
+                      {% else %}
+                      <div class="mb-2 d-flex justify-content-between align-items-center">
+                        <div>
+                          <p class="form-label mb-0">Website</p>
+                          <h4 class="mb-0 text-muted">{% if current_user.website %}{{ current_user.website }}{% else %}Not set{% endif %}</h4>
+                        </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_website" name="vcard_include_website" {% if current_user.vcard_include_website %}checked{% endif %} data-field="website">
+                          <label class="form-check-label" for="vcard_include_website">Include</label>
+                        </div>
                       </div>
                       <br>
                       {% endif %}
                       
                       {% if current_user.vcard_include_bio %}
-                      <div id="bio">
-                        <p class="form-label mb-0">Bio</p>
-                        <p class="text-lg mb-0">
-                          {{ current_user.bio|default:"N/A"|safe }}
-                        </p>
+                      <div id="bio" class="d-flex justify-content-between align-items-start">
+                        <div>
+                          <p class="form-label mb-0">Bio</p>
+                          <p class="text-lg mb-0">
+                            {{ current_user.bio|default:"N/A"|safe }}
+                          </p>
+                        </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_bio" name="vcard_include_bio" {% if current_user.vcard_include_bio %}checked{% endif %} data-field="bio">
+                          <label class="form-check-label" for="vcard_include_bio">Include</label>
+                        </div>
+                      </div>
+                      {% else %}
+                      <div id="bio" class="d-flex justify-content-between align-items-start">
+                        <div>
+                          <p class="form-label mb-0">Bio</p>
+                          <p class="text-lg mb-0">
+                            {{ current_user.bio|default:"N/A"|safe }}
+                          </p>
+                        </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_bio" name="vcard_include_bio" {% if current_user.vcard_include_bio %}checked{% endif %} data-field="bio">
+                          <label class="form-check-label" for="vcard_include_bio">Include</label>
+                        </div>
                       </div>
                       {% endif %}
                     {% endif %}
@@ -159,4 +206,38 @@
 {% endblock content %}
 
 {% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggles = document.querySelectorAll('.vcard-toggle');
+    
+    toggles.forEach(toggle => {
+        toggle.addEventListener('change', function() {
+            const formData = new FormData();
+            formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+            formData.append('action', 'update_vcard_preferences');
+            
+            // Get all toggle states
+            toggles.forEach(t => {
+                if (t.checked) {
+                    formData.append(t.name, 'on');
+                }
+            });
+            
+            fetch('', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    // Reload the page to update the QR code and display
+                    window.location.reload();
+                }
+            }).catch(error => {
+                console.error('Error updating preferences:', error);
+                // Revert the toggle if there was an error
+                this.checked = !this.checked;
+            });
+        });
+    });
+});
+</script>
 {% endblock javascripts %}
