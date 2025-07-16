@@ -81,7 +81,7 @@
                   </div>
 
                   {# Second column: Tab Content Area (main profile details and blank page) #}
-                  <div class="col-lg-5 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 py-2">
+                  <div class="col-lg-4 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 py-2">
                     <div class="tab-content" id="pills-tabContent">
                       {# My Profile Tab Pane #}
                       <div class="tab-pane fade show active" id="my-profile-tab" role="tabpanel" aria-labelledby="my-profile-tab-tab" tabindex="0">
@@ -225,7 +225,7 @@
                   </div>
 
                   {# Third column: Member Since / Trial & Vertical Tabs Navigation #}
-                  <div class="col-lg-3 col-md-12 mt-4 mt-lg-0 py-2">
+                  <div class="col-lg-4 col-md-12 mt-4 mt-lg-0 py-2">
                     {# Top half of third column: Member Since and Trial Countdown #}
                     {% if request.user.is_authenticated %}
                       <div class="text-end text-bold mb-3">
@@ -252,12 +252,12 @@
                     <div class="nav-wrapper position-relative end-0 mt-4">
                       <ul class="nav nav-pills nav-fill flex-column p-1" id="pills-tab-vertical" role="tablist">
                         <li class="nav-item">
-                          <a class="nav-link mb-0 px-0 py-1 active" data-bs-toggle="tab" href="#my-profile-tab" role="tab" aria-controls="my-profile-tab" aria-selected="true" id="my-profile-tab-tab">
+                          <a class="nav-link mb-0 px-3 py-2 active" data-bs-toggle="pill" href="#my-profile-tab" role="tab" aria-controls="my-profile-tab" aria-selected="true" id="my-profile-tab-tab">
                             My Profile
                           </a>
                         </li>
                         <li class="nav-item">
-                          <a class="nav-link mb-0 px-0 py-1" data-bs-toggle="tab" href="#page-two-tab" role="tab" aria-controls="page-two-tab" aria-selected="false" id="page-two-tab-tab">
+                          <a class="nav-link mb-0 px-3 py-2" data-bs-toggle="pill" href="#page-two-tab" role="tab" aria-controls="page-two-tab" aria-selected="false" id="page-two-tab-tab">
                             Page Two
                           </a>
                         </li>
