@@ -22,27 +22,77 @@
           <div class="col-xl-8 col-lg-10 col-md-11 mx-auto">
             <div class="card mt-4 bg-white shadow-lg">
               <div class="card-body p-4">
-                <div class="row">
-                  <div class="col-lg-12 text-center">
-                    <h3 class="mb-4">Your vCard QR Code</h3>
-                  </div>
-                  <div class="col-lg-6 mx-auto text-center">
-                    {% if current_user.is_authenticated %}
-                      <div class="my-4">
-                        <img src="{% url 'generate_vcard_qr_image' user_id=current_user.id %}" alt="vCard QR Code" class="img-fluid border-radius-lg shadow-lg" style="max-width: 300px;">
+                {# MEMBER SINCE AND TRIAL COUNTDOWN START #}
+                {% if request.user.is_authenticated %}
+                  <div class="text-end text-sm text-bold mb-3" style="position: absolute; top: 1rem; right: 1rem; z-index: 10;">
+                    <div class="mb-1">Member Since {{ request.user.date_joined|date:"m/d/Y" }}</div>
+                    {% if not request.user.subscribed %}
+                      <div>
+                        {% if days_left_on_trial is not None and days_left_on_trial > 0 %}
+                          Free trial ends in {{ days_left_on_trial }} day{{ days_left_on_trial|pluralize }}.
+                        {% else %}
+                          Please Subscribe.
+                        {% endif %}
                       </div>
-                      <p class="lead mt-4">
-                        Scan this QR code to add your contact information to a smartphone.
-                      </p>
-                      <ul class="list-group list-group-flush text-start">
-                        <li class="list-group-item"><strong>Name:</strong> {{ current_user.first_name }} {{ current_user.last_name }}</li>
-                        <li class="list-group-item"><strong>Username:</strong> @{{ current_user.username }}</li>
-                        <li class="list-group-item"><strong>Email:</strong> {{ current_user.email|default:"N/A" }}</li>
-                        <li class="list-group-item"><strong>Bio:</strong> {{ current_user.bio|default:"N/A"|safe }}</li>
-                      </ul>
+                    {% endif %}
+                  </div>
+                {% endif %}
+                {# MEMBER SINCE AND TRIAL COUNTDOWN END #}
+                <div class="row">
+                  <div class="col-lg-4 col-md-5 position-relative my-auto py-2">
+                    {% if current_user.is_authenticated %}
+                      <div class="text-center">
+                        <img src="{% url 'generate_vcard_qr_image' user_id=current_user.id %}" alt="vCard QR Code" class="img border-radius-lg w-100 position-relative z-index-2 max-width-200" style="max-width: 300px;">
+                      </div>
+                      <br><br>
+                      <div class="text-center">
+                        <p class="lead">
+                          Scan this QR code to add your contact information to a smartphone.
+                        </p>
+                      </div>
                     {% else %}
-                      <p class="lead">Please log in to generate your vCard QR code.</p>
-                      <a href="{% url 'login' %}" class="btn btn-primary">Log In</a>
+                      <div class="text-center">
+                        <p class="lead">Please log in to generate your vCard QR code.</p>
+                        <a href="{% url 'login' %}" class="btn btn-primary">Log In</a>
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="col-lg-8 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 py-2">
+                    {% if current_user.is_authenticated %}
+                      <div class="mb-2">
+                        <p class="form-label mb-0">Name</p>
+                        <h4 class="mb-0">{{ current_user.first_name }} {{ current_user.last_name }}</h4>
+                      </div>
+                      <br>
+                      <div class="mb-2">
+                        <p class="form-label mb-0">Username</p>
+                        <h4 class="mb-0">@{{ current_user.username }}</h4>
+                      </div>
+                      <br>
+                      <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                          <p class="form-label mb-0">Email</p>
+                          <h4 class="mb-0">
+                            {% if current_user.email %}
+                              {{ current_user.email }}
+                            {% else %}
+                              {% if current_user.socialaccount_set.first %}
+                                {% if current_user.socialaccount_set.first.provider == 'github' %}
+                                  Authenticated with Github
+                                {% elif current_user.socialaccount_set.first.provider == 'twitter' %}
+                                  Authenticated with Twitter
+                                {% endif %}
+                              {% endif %}
+                            {% endif %}
+                          </h4>
+                        </div>
+                      </div>
+                      <div id="bio">
+                        <p class="form-label mb-0">Bio</p>
+                        <p class="text-lg mb-0">
+                          {{ current_user.bio|default:"N/A"|safe }}
+                        </p>
+                      </div>
                     {% endif %}
                   </div>
                 </div>
