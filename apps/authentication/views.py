@@ -133,13 +133,14 @@ def profile(request):
     else:
         try:
             body = json.loads(request.body)
-        except Exception:
+        except json.JSONDecodeError:
+            body = request.POST
+        except Exception: # Fallback for other potential json errors
             body = request.POST
 
     action = body.get('action')
 
     if action == 'contact_us':
-
         subject = body.get('subject')
         email = body.get('email', request.user.email)
         message = body.get('message')
@@ -148,16 +149,10 @@ def profile(request):
         try:
             send_mail(subject, f'sender: {request.user} - {name} - {email} \nmessage: \n{message}',
                       EMAIL_SENDER, [SITE_OWNER_MAIL])
+            return JsonResponse({'message': 'message successfully sent.'}, status=200)
         except Exception as e:
-
             print(f'There is an error in sending email: {str(e)}')
-            return JsonResponse({
-                'message': 'Error sending email. Please review settings.'
-            }, status=400)
-
-        return JsonResponse({
-            'message': 'message successfully sent.'
-        }, status=200)
+            return JsonResponse({'message': 'Error sending email. Please review settings.'}, status=400)
 
     if action == 'upload_avatar':
         # Store the current avatar's FieldFile object *before* any updates
@@ -300,6 +295,14 @@ def profile(request):
         request.user.save()
         return HttpResponseRedirect(request.path)
 
+    # NEW: Handle website update
+    if action == 'update_website':
+        website_url = body.get('website', '').strip()
+        # Set to None if an empty string is submitted to allow NULL in the database
+        request.user.website = website_url if website_url else None
+        request.user.save()
+        return HttpResponseRedirect(request.path)
+
     if action == 'edit_social_link':
         form = ProfileForm(request.POST, request.FILES, instance=request.user)
 
@@ -312,6 +315,9 @@ def profile(request):
         return JsonResponse({
             'message': form.errors
         }, status=400)
+        
+    # Catch-all for any unhandled POST requests
+    return JsonResponse({'message': 'Invalid action or request not processed.'}, status=400)
 
 
 def delete_account(request):
