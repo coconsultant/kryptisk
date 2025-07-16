@@ -294,7 +294,13 @@ def profile(request):
             'message': form.errors
         }, status=400)
 
-    if action == 'edit_bio' or action == 'edit_social_link': # This part was already present, keeping for full context
+    if action == 'edit_bio':
+        bio_content = body.get('bio', '')
+        request.user.bio = bio_content
+        request.user.save()
+        return HttpResponseRedirect(request.path)
+
+    if action == 'edit_social_link':
         form = ProfileForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():

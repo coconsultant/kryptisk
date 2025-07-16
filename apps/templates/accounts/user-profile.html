@@ -388,15 +388,45 @@
                     document.getElementById('upload-avatar-form').submit();
                 });
 
-                // Bio edit functionality (from existing code)
+                // Bio edit functionality
                 const bioDisplay = document.getElementById('bio');
                 const quillContainer = document.querySelector('.quill-container');
                 const editBioBtn = document.getElementById('edit-btn');
+                const editBioForm = document.getElementById('edit-bio');
+                const cancelBioEditBtn = document.getElementById('cancel-bio-edit-btn');
+                const bioContentInput = document.getElementById('bio-content');
+                let quill = null;
 
                 if (editBioBtn && bioDisplay && quillContainer) {
                     editBioBtn.addEventListener('click', function() {
                         bioDisplay.classList.add('d-none');
                         quillContainer.classList.remove('d-none');
+                        
+                        // Initialize Quill editor if not already done
+                        if (!quill) {
+                            quill = new Quill('#editor-container', {
+                                modules: {
+                                    toolbar: '#toolbar-container'
+                                },
+                                theme: 'snow'
+                            });
+                        }
+                    });
+                }
+
+                if (cancelBioEditBtn && bioDisplay && quillContainer) {
+                    cancelBioEditBtn.addEventListener('click', function() {
+                        quillContainer.classList.add('d-none');
+                        bioDisplay.classList.remove('d-none');
+                    });
+                }
+
+                if (editBioForm && bioContentInput) {
+                    editBioForm.addEventListener('submit', function(e) {
+                        if (quill) {
+                            // Get the HTML content from Quill editor
+                            bioContentInput.value = quill.root.innerHTML;
+                        }
                     });
                 }
             });
