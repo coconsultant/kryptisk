@@ -31,7 +31,7 @@
                     <div class="mb-1">Member Since {{ request.user.date_joined|date:"m/d/Y" }}</div>
                     {% if not request.user.subscribed %}
                       <div>
-                        {% if days_left_on_trial|default:"0" > 0 %}
+                        {% if days_left_on_trial %}
                           Free trial ends in {{ days_left_on_trial }} day{{ days_left_on_trial|pluralize }}.
                         {% else %}
                           Please Subscribe.
