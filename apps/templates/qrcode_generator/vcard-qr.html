@@ -1,0 +1,78 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load tz %}
+
+{% block title %} vCard QR Code {% endblock %}
+
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block body_class %} blog-author bg-gray-100 {% endblock %}
+
+{% block content %}
+
+  {% include 'includes/navigation.html' %}
+
+  <!-- START vCard QR Section -->
+  <header class="header-2">
+    <div class="page-header min-vh-75 relative" style="background-image:url('{% static 'assets/img/added-images/analytics.png' %}')">
+      <span class="mask bg-gradient-dark"></span>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-8 col-lg-10 col-md-11 mx-auto">
+            <div class="card mt-4 bg-white shadow-lg">
+              <div class="card-body p-4">
+                <div class="row">
+                  <div class="col-lg-12 text-center">
+                    <h3 class="mb-4">Your vCard QR Code</h3>
+                  </div>
+                  <div class="col-lg-6 mx-auto text-center">
+                    {% if current_user.is_authenticated %}
+                      <div class="my-4">
+                        <img src="{% url 'generate_vcard_qr_image' user_id=current_user.id %}" alt="vCard QR Code" class="img-fluid border-radius-lg shadow-lg" style="max-width: 300px;">
+                      </div>
+                      <p class="lead mt-4">
+                        Scan this QR code to add your contact information to a smartphone.
+                      </p>
+                      <ul class="list-group list-group-flush text-start">
+                        <li class="list-group-item"><strong>Name:</strong> {{ current_user.first_name }} {{ current_user.last_name }}</li>
+                        <li class="list-group-item"><strong>Username:</strong> @{{ current_user.username }}</li>
+                        <li class="list-group-item"><strong>Email:</strong> {{ current_user.email|default:"N/A" }}</li>
+                        <li class="list-group-item"><strong>Bio:</strong> {{ current_user.bio|default:"N/A"|safe }}</li>
+                      </ul>
+                    {% else %}
+                      <p class="lead">Please log in to generate your vCard QR code.</p>
+                      <a href="{% url 'login' %}" class="btn btn-primary">Log In</a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="position-absolute w-100 z-index-1 bottom-0">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+          <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+          </defs>
+          <g class="moving-waves">
+            <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.40" />
+            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.35)" />
+            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.25)" />
+            <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.20)" />
+            <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)" />
+            <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0.95" />
+          </g>
+        </svg>
+      </div>
+    </div>
+  </header>
+  <!-- END vCard QR Section -->
+
+  {% include 'includes/footer-5.html' %}
+
+{% endblock content %}
+
+{% block javascripts %}
+{% endblock javascripts %}
