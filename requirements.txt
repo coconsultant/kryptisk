@@ -31,3 +31,6 @@ toml==0.10.2
 urllib3==2.5.0
 whitenoise==6.9.0
 pillow
+django-smtp-ssl
+boto3
+qrcode

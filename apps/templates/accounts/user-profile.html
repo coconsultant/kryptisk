@@ -8,6 +8,33 @@
 {% block stylesheets %}
     <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.bubble.css" rel="stylesheet">
+    <style>
+        .tooltip {
+            --bs-tooltip-delay-show: 100ms;
+        }
+        [title] {
+            position: relative;
+        }
+        [title]:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 1000;
+            animation: fadeIn 0.1s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
 {% endblock %}
 
 {% block body_class %} blog-author bg-gray-100 {% endblock %}
@@ -20,11 +47,33 @@
   <header class="header-2">
     <div class="page-header min-vh-75 relative" style="background-image:url('{% static 'assets/img/added-images/analytics.png' %}')">
       <span class="mask bg-gradient-dark"></span>
-      <div class="container">
+      <div class="container position-relative z-index-2">
         <div class="row">
           <div class="col-xl-8 col-lg-10 col-md-11 mx-auto">
-            <div class="card mt-4 bg-white shadow-lg">
+            <div class="card mt-4 bg-white shadow-lg" style="position: relative; z-index: 10;">
               <div class="card-body p-4">
+                {# MEMBER SINCE AND TRIAL COUNTDOWN START #}
+                {% if request.user.is_authenticated %}
+                  <div class="text-end text-bold mb-3" style="position: absolute; top: 1rem; right: 1rem; z-index: 5;">
+                    <div class="mb-1">Member Since {{ request.user.date_joined|date:"m/d/Y" }}</div>
+                    <div class="mb-1">
+                      <form action="{% url 'account_logout' %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link p-0 text-danger fs-5 fw-bold text-decoration-none">Logout</button>
+                      </form>
+                    </div>
+                    {% if not request.user.subscribed %}
+                      <div>
+                        {% if days_left_on_trial %}
+                          Free trial ends in {{ days_left_on_trial }} day{{ days_left_on_trial|pluralize }}.
+                        {% else %}
+                          Please Subscribe.
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endif %}
+                {# MEMBER SINCE AND TRIAL COUNTDOWN END #}
                 <div class="row">
                   <div class="col-lg-4 col-md-5 position-relative my-auto py-2">
                     <img id="user-avatar-img" class="img border-radius-lg w-100 position-relative z-index-2 max-width-200" src="{% if request.user.avatar %}{{ request.user.avatar.url }}?v={{ cache_buster }}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
@@ -54,12 +103,8 @@
                   <div class="col-lg-8 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 py-2">
                     {# Display Name Section #}
                     <div id="name-display" class="mb-2">
-                        <p class="form-label mb-0">Name</p>
-                        <h4 class="mb-0">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
-                        <!-- If your project uses custom template filters for form styling, you might need to load them here -->
-                        <span id="edit-name-btn" class="cursor-pointer text-info">Edit Name
-                            <i class="fas fa-arrow-right text-sm ms-1"></i>
-                        </span>
+                        <p class="form-label mb-0 fs-5 fw-bold">Name</p>
+                        <p id="edit-name-btn" class="mb-0 cursor-pointer text-decoration-underline" title="Click to edit name">{{ request.user.first_name }} {{ request.user.last_name }}</p>
                     </div>
 
                     {# Edit Name Form Section #}
@@ -68,34 +113,31 @@
                             {% csrf_token %}
                             <input type="hidden" name="action" value="update_name" />
                             <div class="mb-3">
-                                <label for="{{ profile_form.first_name.id_for_label }}" class="form-label">First Name</label>
+                                <label for="{{ profile_form.first_name.id_for_label }}" class="form-label fs-5 fw-bold">First Name</label>
                                 <input type="text" class="form-control" id="{{ profile_form.first_name.id_for_label }}" name="first_name" value="{{ request.user.first_name|default:'' }}" placeholder="Enter your first name">
                             </div>
                             <div class="mb-3">
-                                <label for="{{ profile_form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                                <label for="{{ profile_form.last_name.id_for_label }}" class="form-label fs-5 fw-bold">Last Name</label>
                                 <input type="text" class="form-control" id="{{ profile_form.last_name.id_for_label }}" name="last_name" value="{{ request.user.last_name|default:'' }}" placeholder="Enter your last name">
                             </div>
                             <input type="submit" class="btn btn-success mt-3" value="Save Name">
                             <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-name-edit-btn">Cancel</button>
                         </form>
                     </div>
-
+                    <br>
                     {# Display Username Section #}
                     <div id="username-display" class="mb-2">
-                        <p class="form-label mb-0">Username</p>
-                        <h4 class="mb-0">@{{ request.user.username }}</h4>
-                        <span id="edit-username-btn" class="cursor-pointer text-info">Edit Username
-                            <i class="fas fa-arrow-right text-sm ms-1"></i>
-                        </span>
+                        <p class="form-label mb-0 fs-5 fw-bold">Username</p>
+                        <p id="edit-username-btn" class="mb-0 cursor-pointer text-decoration-underline" title="Click to edit username">@{{ request.user.username }}</p>
                     </div>
-
+                    <br>
                     {# Edit Username Form Section #}
                     <div id="username-edit-form-container" class="mt-3 d-none">
                         <form id="edit-username-form" method="post" action="">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="update_username" />
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
+                                <label for="username" class="form-label fs-5 fw-bold">Username</label>
                                 <input type="text" class="form-control" id="username" name="username" value="{{ request.user.username|default:'' }}" placeholder="Enter your username">
                             </div>
                             <input type="submit" class="btn btn-success mt-3" value="Save Username">
@@ -106,8 +148,8 @@
                     <div class="d-flex justify-content-between align-items-center mb-4">
                       <div>
                         {# Email Label #}
-                        <p class="form-label mb-0">Email</p>
-                        <h4 class="mb-0">
+                        <p class="form-label mb-0 fs-5 fw-bold">Email</p>
+                        <p class="mb-0">
                           {% if request.user.email %}
                             {{ request.user.email }}
                           {% else %}
@@ -119,30 +161,45 @@
                               {% endif %}
                             {% endif %}
                           {% endif %}
-                        </h4>
+                        </p>
                       </div>
                       <div class="d-flex flex-column gap-2">
-                          <div>
-                              <form action="{% url 'account_logout' %}" method="post">
-                                  {% csrf_token %}
-                                  <button type="submit" class="btn bg-gradient-danger w-auto me-2 text-nowrap mb-0">Logout</button>
-                              </form>
-                          </div>
-                          <div>
-                              <button class="btn bg-gradient-danger w-auto me-2 text-nowrap mb-0" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                <i class='fa fa-trash me-1'></i>Delete Account
-                              </button>
-                          </div>
+                          {# Logout moved to top right under Member Since #}
+                          {# Removed Delete Account Button #}
                       </div>
                     </div>
-                    <div id="bio">
-                        <p class="form-label mb-0">Bio</p>
-                        <p class="text-lg mb-0">
+
+                    {# Display Website Section #}
+                    <div id="website-display" class="mb-2">
+                        <p class="form-label mb-0 fs-5 fw-bold">Website</p>
+                        <p id="edit-website-btn" class="mb-0 cursor-pointer text-decoration-underline" title="Click to edit website">
+                            {% if request.user.website %}
+                                {{ request.user.website }}
+                            {% else %}
+                                Not set
+                            {% endif %}
+                        </p>
+                    </div>
+                    <br>
+                    {# Edit Website Form Section #}
+                    <div id="website-edit-form-container" class="mt-3 d-none">
+                        <form id="edit-website-form" method="post" action="">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="update_website" />
+                            <div class="mb-3 w-40"> {# w-40 div #}
+                                <label for="website" class="form-label fs-5 fw-bold">Website URL</label>
+                                <input type="url" class="form-control" id="website" name="website" value="{{ request.user.website|default:'' }}" placeholder="e.g., https://www.example.com">
+                            </div>
+                            <input type="submit" class="btn btn-success mt-3" value="Save Website">
+                            <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-website-edit-btn">Cancel</button>
+                        </form>
+                    </div>
+
+                    <div id="bio" style="position: relative; z-index: 6;">
+                        <p class="form-label mb-0 fs-5 fw-bold">Bio</p>
+                        <div id="edit-btn" class="cursor-pointer text-decoration-underline" title="Click to edit bio" style="position: relative; z-index: 7;">
                           {{ bio | safe }}
-                       <br><span id="edit-btn" class="cursor-pointer text-info icon-move-right">Edit Bio
-                        <i class="fas fa-arrow-right text-sm ms-1"></i>
-                      </span>
-                    </p>
+                        </div>
                     </div>
                       <div class="row quill-container d-none">
                           <div id="toolbar-container">
@@ -166,8 +223,12 @@
                           <div id="editor-container">
                               {{ bio | safe }}
                           </div>
-                            <form id="edit-bio">{% csrf_token %}
-                            <input type="submit" class="btn btn-dark mt-3" value="Save">
+                            <form id="edit-bio" method="post" action="">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="edit_bio" />
+                                <input type="hidden" name="bio" id="bio-content" />
+                                <input type="submit" class="btn btn-success mt-3" value="Save">
+                                <button type="button" class="btn btn-danger mt-3 ms-2" id="cancel-bio-edit-btn">Cancel</button>
                             </form>
                         </div>
                   </div>
@@ -187,7 +248,7 @@
             <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.35)" />
             <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.25)" />
             <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.20)" />
-            <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)" />
+            <use xlink="http://www.w3.org/1999/xlink" href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)" />
             <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0.95" />
           </g>
         </svg>
@@ -254,7 +315,7 @@
     </div>
     <div class="modal-footer justify-content-end">
       <button type="button" class="btn bg-gradient-dark mb-0" data-bs-dismiss="modal" id="cancel-username-change">Cancel</button>
-      <button type="button" class="btn bg-gradient-danger mb-0" id="confirm-username-change">Confirm & Logout</button>
+      <button type="button" class="btn bg-gradient-danger mb-0" id="confirm-username-change">Confirm &amp; Logout</button>
     </div>
   </div>
 </div>
@@ -275,7 +336,7 @@
                 const editNameBtn = document.getElementById('edit-name-btn');
                 const cancelNameEditBtn = document.getElementById('cancel-name-edit-btn');
                 const editNameForm = document.getElementById('edit-name-form');
-                
+
                 // Username edit functionality
                 const usernameDisplay = document.getElementById('username-display');
                 const usernameEditFormContainer = document.getElementById('username-edit-form-container');
@@ -286,7 +347,15 @@
                 const usernameChangeModal = new bootstrap.Modal(document.getElementById('usernameChangeModal'));
                 const cancelUsernameChange = document.getElementById('cancel-username-change');
                 const confirmUsernameChange = document.getElementById('confirm-username-change');
-                
+
+                // Website edit functionality
+                const websiteDisplay = document.getElementById('website-display');
+                const websiteEditFormContainer = document.getElementById('website-edit-form-container');
+                const editWebsiteBtn = document.getElementById('edit-website-btn');
+                const cancelWebsiteEditBtn = document.getElementById('cancel-website-edit-btn');
+                const editWebsiteForm = document.getElementById('edit-website-form');
+                const websiteInput = document.getElementById('website');
+
                 let originalUsername = '{{ request.user.username }}';
                 let pendingFormData = null;
 
@@ -324,9 +393,9 @@
                 if (editUsernameForm && usernameInput) {
                     editUsernameForm.addEventListener('submit', function(e) {
                         e.preventDefault();
-                        
+
                         const currentUsername = usernameInput.value.trim();
-                        
+
                         // Store form data for later submission
                         pendingFormData = new FormData(editUsernameForm);
                         // Show warning modal
@@ -349,13 +418,13 @@
                         if (pendingFormData) {
                             // Disable the button to prevent double submission and provide feedback
                             confirmUsernameChange.disabled = true;
-                            confirmUsernameChange.textContent = 'Processing...'; 
-                            
+                            confirmUsernameChange.textContent = 'Processing...';
+
                             // Submit the form with username change
                             const form = document.createElement('form');
                             form.method = 'POST';
                             form.action = editUsernameForm.action;
-                            
+
                             // Add all form data including CSRF token
                             for (let [key, value] of pendingFormData.entries()) {
                                 const input = document.createElement('input');
@@ -364,9 +433,26 @@
                                 input.value = value;
                                 form.appendChild(input);
                             }
-                            
+
                             document.body.appendChild(form);
                             form.submit();
+                        }
+                    });
+                }
+
+                // Website edit handlers
+                if (editWebsiteBtn && websiteDisplay && websiteEditFormContainer && cancelWebsiteEditBtn) {
+                    editWebsiteBtn.addEventListener('click', function() {
+                        websiteDisplay.classList.add('d-none');
+                        websiteEditFormContainer.classList.remove('d-none');
+                    });
+
+                    cancelWebsiteEditBtn.addEventListener('click', function() {
+                        websiteEditFormContainer.classList.add('d-none');
+                        websiteDisplay.classList.remove('d-none');
+                        // Optionally reset the website input to its original value if needed
+                        if (websiteInput) {
+                            websiteInput.value = '{{ request.user.website|default:'' }}';
                         }
                     });
                 }
@@ -376,15 +462,45 @@
                     document.getElementById('upload-avatar-form').submit();
                 });
 
-                // Bio edit functionality (from existing code)
+                // Bio edit functionality
                 const bioDisplay = document.getElementById('bio');
                 const quillContainer = document.querySelector('.quill-container');
                 const editBioBtn = document.getElementById('edit-btn');
+                const editBioForm = document.getElementById('edit-bio');
+                const cancelBioEditBtn = document.getElementById('cancel-bio-edit-btn');
+                const bioContentInput = document.getElementById('bio-content');
+                let quill = null;
 
                 if (editBioBtn && bioDisplay && quillContainer) {
                     editBioBtn.addEventListener('click', function() {
                         bioDisplay.classList.add('d-none');
                         quillContainer.classList.remove('d-none');
+                        
+                        // Initialize Quill editor if not already done
+                        if (!quill) {
+                            quill = new Quill('#editor-container', {
+                                modules: {
+                                    toolbar: '#toolbar-container'
+                                },
+                                theme: 'snow'
+                            });
+                        }
+                    });
+                }
+
+                if (cancelBioEditBtn && bioDisplay && quillContainer) {
+                    cancelBioEditBtn.addEventListener('click', function() {
+                        quillContainer.classList.add('d-none');
+                        bioDisplay.classList.remove('d-none');
+                    });
+                }
+
+                if (editBioForm && bioContentInput) {
+                    editBioForm.addEventListener('submit', function(e) {
+                        if (quill) {
+                            // Get the HTML content from Quill editor
+                            bioContentInput.value = quill.root.innerHTML;
+                        }
                     });
                 }
             });

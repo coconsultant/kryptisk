@@ -30,6 +30,8 @@ from apps.notifications.models import Notification
 from apps import Utils
 from core.settings import *
 from allauth.account.models import EmailAddress
+from datetime import timedelta # Import datetime for trial calculation
+from django.utils import timezone # Import timezone for current date
 
 
 def login_view(request):
@@ -89,12 +91,29 @@ def register_user(request):
 
 
 def profile(request):
+    # Define trial duration
+    TRIAL_DURATION_DAYS = 3
+
     # GET request handler
     if request.method == 'GET':
+        # Get fresh user data from database to ensure no caching
+        User = get_user_model()
+        fresh_user = User.objects.get(pk=request.user.pk)
+        
+        # Calculate trial days left using fresh user data
+        days_left = None
+        if fresh_user.date_joined:
+            # Calculate days since registration
+            today = timezone.now().date()
+            days_since_registration = (today - fresh_user.date_joined.date()).days
+            
+            # Calculate remaining trial days
+            days_left = max(0, TRIAL_DURATION_DAYS - days_since_registration)
+        
         cache_buster = time.time_ns() # Get nanosecond precision for aggressive cache busting
         return render(request, "accounts/user-profile.html", context={
-            'bio': request.user.bio,
-            'registered_at': request.user.registered_at,
+            'bio': fresh_user.bio,
+            'days_left_on_trial': days_left, # Pass days left to the template
             'contact_us_info': {
                 'phone': SITE_OWNER_PHONE,
                 'email': SITE_OWNER_MAIL,
@@ -114,13 +133,14 @@ def profile(request):
     else:
         try:
             body = json.loads(request.body)
-        except Exception:
+        except json.JSONDecodeError:
+            body = request.POST
+        except Exception: # Fallback for other potential json errors
             body = request.POST
 
     action = body.get('action')
 
     if action == 'contact_us':
-
         subject = body.get('subject')
         email = body.get('email', request.user.email)
         message = body.get('message')
@@ -129,16 +149,10 @@ def profile(request):
         try:
             send_mail(subject, f'sender: {request.user} - {name} - {email} \nmessage: \n{message}',
                       EMAIL_SENDER, [SITE_OWNER_MAIL])
+            return JsonResponse({'message': 'message successfully sent.'}, status=200)
         except Exception as e:
-
             print(f'There is an error in sending email: {str(e)}')
-            return JsonResponse({
-                'message': 'Error sending email. Please review settings.'
-            }, status=400)
-
-        return JsonResponse({
-            'message': 'message successfully sent.'
-        }, status=200)
+            return JsonResponse({'message': 'Error sending email. Please review settings.'}, status=400)
 
     if action == 'upload_avatar':
         # Store the current avatar's FieldFile object *before* any updates
@@ -275,7 +289,35 @@ def profile(request):
             'message': form.errors
         }, status=400)
 
-    if action == 'edit_bio' or action == 'edit_social_link': # This part was already present, keeping for full context
+    if action == 'edit_bio':
+        bio_content = body.get('bio', '')
+        request.user.bio = bio_content
+        request.user.save()
+        return HttpResponseRedirect(request.path)
+
+    # NEW: Handle website update
+    if action == 'update_website':
+        website_url = body.get('website', '').strip()
+        # Set to None if an empty string is submitted to allow NULL in the database
+        request.user.website = website_url if website_url else None
+        request.user.save()
+        return HttpResponseRedirect(request.path)
+
+    # Handle username update
+    if action == 'update_username':
+        new_username = body.get('username', '').strip()
+        if new_username and new_username != request.user.username:
+            try:
+                request.user.username = new_username
+                request.user.save()
+                # Log out the user after username change
+                logout(request)
+                return HttpResponseRedirect('/login/')
+            except IntegrityError:
+                return JsonResponse({'message': 'Username already exists.'}, status=400)
+        return HttpResponseRedirect(request.path)
+
+    if action == 'edit_social_link':
         form = ProfileForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
@@ -287,6 +329,9 @@ def profile(request):
         return JsonResponse({
             'message': form.errors
         }, status=400)
+        
+    # Catch-all for any unhandled POST requests
+    return JsonResponse({'message': 'Invalid action or request not processed.'}, status=400)
 
 
 def delete_account(request):

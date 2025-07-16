@@ -1,0 +1,235 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load tz %}
+
+{% block title %} vCard QR Code {% endblock %}
+
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block body_class %} blog-author bg-gray-100 {% endblock %}
+
+{% block content %}
+
+  {% include 'includes/navigation.html' %}
+
+  <!-- START vCard QR Section -->
+  <header class="header-2">
+    <div class="page-header min-vh-75 relative" style="background-image:url('{% static 'assets/img/added-images/analytics.png' %}')">
+      <span class="mask bg-gradient-dark"></span>
+      <div class="container pt-4">
+        <div class="row">
+          <div class="col-xl-8 col-lg-10 col-md-11 mx-auto">
+            <div class="card mt-4 bg-white shadow-lg">
+              <div class="card-body p-4">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-lg-4 col-md-5 position-relative my-auto py-2">
+                    {% if current_user.is_authenticated %}
+                      <div class="text-center">
+                        <img src="{% url 'generate_vcard_qr_image' user_id=current_user.id %}" alt="vCard QR Code" class="img border-radius-lg w-100 position-relative z-index-2 max-width-200" style="max-width: 300px;">
+                      </div>
+                      <br><br>
+                      <div class="text-center">
+                        <p>
+                          Scan this QR code to add your contact information to a smartphone.
+                        </p>
+                      </div>
+                    {% else %}
+                      <div class="text-center">
+                        <p>Please log in to generate your vCard QR code.</p>
+                        <a href="{% url 'login' %}" class="btn btn-primary">Log In</a>
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="col-lg-8 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 py-2">
+                    {% if current_user.is_authenticated %}
+                      <!-- Display current vCard content with toggles -->
+                      {% if current_user.vcard_include_name and current_user.first_name or current_user.last_name %}
+                      <div class="mb-2 d-flex justify-content-between align-items-center">
+                        <div>
+                          <p class="form-label mb-0 fs-5 fw-bold">Name</p>
+                          <p class="mb-0">{{ current_user.first_name }} {{ current_user.last_name }}</p>
+                        </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_name" name="vcard_include_name" {% if current_user.vcard_include_name %}checked{% endif %} data-field="name">
+                          <label class="form-check-label" for="vcard_include_name">Include</label>
+                        </div>
+                      </div>
+                      <br>
+                      {% else %}
+                      <div class="mb-2 d-flex justify-content-between align-items-center">
+                        <div>
+                          <p class="form-label mb-0 fs-5 fw-bold">Name</p>
+                          <p class="mb-0 text-muted">Not set</p>
+                        </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_name" name="vcard_include_name" {% if current_user.vcard_include_name %}checked{% endif %} data-field="name">
+                          <label class="form-check-label" for="vcard_include_name">Include</label>
+                        </div>
+                      </div>
+                      <br>
+                      {% endif %}
+                      
+                      {% if current_user.vcard_include_email %}
+                      <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                          <p class="form-label mb-0 fs-5 fw-bold">Email</p>
+                          <p class="mb-0">
+                            {% if current_user.email %}
+                              {{ current_user.email }}
+                            {% else %}
+                              {% if current_user.socialaccount_set.first %}
+                                {% if current_user.socialaccount_set.first.provider == 'github' %}
+                                  Authenticated with Github
+                                {% elif current_user.socialaccount_set.first.provider == 'twitter' %}
+                                  Authenticated with Twitter
+                                {% endif %}
+                              {% endif %}
+                            {% endif %}
+                          </p>
+                        </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_email" name="vcard_include_email" {% if current_user.vcard_include_email %}checked{% endif %} data-field="email">
+                          <label class="form-check-label" for="vcard_include_email">Include</label>
+                        </div>
+                      </div>
+                      {% else %}
+                      <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                          <p class="form-label mb-0 fs-5 fw-bold">Email</p>
+                          <p class="mb-0">
+                            {% if current_user.email %}
+                              {{ current_user.email }}
+                            {% else %}
+                              {% if current_user.socialaccount_set.first %}
+                                {% if current_user.socialaccount_set.first.provider == 'github' %}
+                                  Authenticated with Github
+                                {% elif current_user.socialaccount_set.first.provider == 'twitter' %}
+                                  Authenticated with Twitter
+                                {% endif %}
+                              {% endif %}
+                            {% endif %}
+                          </p>
+                        </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_email" name="vcard_include_email" {% if current_user.vcard_include_email %}checked{% endif %} data-field="email">
+                          <label class="form-check-label" for="vcard_include_email">Include</label>
+                        </div>
+                      </div>
+                      {% endif %}
+                      
+                      {% if current_user.website %}
+                      <div class="mb-2 d-flex justify-content-between align-items-center">
+                        <div>
+                          <p class="form-label mb-0 fs-5 fw-bold">Website</p>
+                          <p class="mb-0">
+                            {% if current_user.vcard_include_website %}
+                              <a href="{{ current_user.website }}" target="_blank">{{ current_user.website }}</a>
+                            {% else %}
+                              <span class="text-muted">{{ current_user.website }}</span>
+                            {% endif %}
+                          </p>
+                        </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_website" name="vcard_include_website" {% if current_user.vcard_include_website %}checked{% endif %} data-field="website">
+                          <label class="form-check-label" for="vcard_include_website">Include</label>
+                        </div>
+                      </div>
+                      <br>
+                      {% endif %}
+                      
+                      {% if current_user.vcard_include_bio %}
+                      <div id="bio" class="d-flex justify-content-between align-items-start">
+                        <div>
+                          <p class="form-label mb-0 fs-5 fw-bold">Bio</p>
+                          <p class="mb-0">
+                            {{ current_user.bio|default:"N/A"|safe }}
+                          </p>
+                        </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_bio" name="vcard_include_bio" {% if current_user.vcard_include_bio %}checked{% endif %} data-field="bio">
+                          <label class="form-check-label" for="vcard_include_bio">Include</label>
+                        </div>
+                      </div>
+                      {% else %}
+                      <div id="bio" class="d-flex justify-content-between align-items-start">
+                        <div>
+                          <p class="form-label mb-0 fs-5 fw-bold">Bio</p>
+                          <p class="mb-0">
+                            {{ current_user.bio|default:"N/A"|safe }}
+                          </p>
+                        </div>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_bio" name="vcard_include_bio" {% if current_user.vcard_include_bio %}checked{% endif %} data-field="bio">
+                          <label class="form-check-label" for="vcard_include_bio">Include</label>
+                        </div>
+                      </div>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="position-absolute w-100 z-index-1 bottom-0">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+          <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+          </defs>
+          <g class="moving-waves">
+            <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.40" />
+            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.35)" />
+            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.25)" />
+            <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.20)" />
+            <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)" />
+            <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0.95" />
+          </g>
+        </svg>
+      </div>
+    </div>
+  </header>
+  <!-- END vCard QR Section -->
+
+  {% include 'includes/footer-5.html' %}
+
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggles = document.querySelectorAll('.vcard-toggle');
+    
+    toggles.forEach(toggle => {
+        toggle.addEventListener('change', function() {
+            const formData = new FormData();
+            formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+            formData.append('action', 'update_vcard_preferences');
+            
+            // Get all toggle states
+            toggles.forEach(t => {
+                if (t.checked) {
+                    formData.append(t.name, 'on');
+                }
+            });
+            
+            fetch('', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    // Reload the page to update the QR code and display
+                    window.location.reload();
+                }
+            }).catch(error => {
+                console.error('Error updating preferences:', error);
+                // Revert the toggle if there was an error
+                this.checked = !this.checked;
+            });
+        });
+    });
+});
+</script>
+{% endblock javascripts %}
