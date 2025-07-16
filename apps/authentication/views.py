@@ -102,10 +102,10 @@ def profile(request):
         
         # Calculate trial days left using fresh user data
         days_left = None
-        if fresh_user.registered_at:
+        if fresh_user.date_joined:
             # Calculate days since registration
             today = timezone.now().date()
-            days_since_registration = (today - fresh_user.registered_at).days
+            days_since_registration = (today - fresh_user.date_joined.date()).days
             
             # Calculate remaining trial days
             days_left = max(0, TRIAL_DURATION_DAYS - days_since_registration)
@@ -113,7 +113,6 @@ def profile(request):
         cache_buster = time.time_ns() # Get nanosecond precision for aggressive cache busting
         return render(request, "accounts/user-profile.html", context={
             'bio': fresh_user.bio,
-            'registered_at': fresh_user.registered_at,
             'days_left_on_trial': days_left, # Pass days left to the template
             'contact_us_info': {
                 'phone': SITE_OWNER_PHONE,
