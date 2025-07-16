@@ -12,6 +12,7 @@ class CustomUser(AbstractUser):
     social_twitter = models.URLField(blank=True, null=True, default=None)
     social_facebook = models.URLField(blank=True, null=True, default=None)
     social_instagram = models.URLField(blank=True, null=True, default=None)
+    website = models.URLField(blank=True, null=True, default=None)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     subscribed = models.BooleanField(default=False) # New field for subscription status
 

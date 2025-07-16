@@ -71,8 +71,10 @@ def generate_vcard_qr_image(request, user_id):
         f"FN:{user.first_name if user.first_name else ''} {user.last_name if user.last_name else ''}\n"
         f"EMAIL;TYPE=INTERNET:{user.email if user.email else ''}\n"
         f"NOTE:{clean_bio}\n"
-        "END:VCARD"
     )
+    if user.website:
+        vcard_data += f"URL:{user.website}\n"
+    vcard_data += "END:VCARD"
 
     qr = qrcode.QRCode(
         version=1,
