@@ -101,15 +101,8 @@ def profile(request):
         today = timezone.now().date()
         days_since_registration = (today - request.user.registered_at).days
         
-        # Calculate remaining trial days (can be negative)
-        days_left = TRIAL_DURATION_DAYS - days_since_registration
-        
-        # Debug: print the calculation for troubleshooting
-        print(f"Debug - User: {request.user.username}, Registered: {request.user.registered_at}, Today: {today}, Days since: {days_since_registration}, Days left: {days_left}")
-        
-        # Ensure days_left doesn't go below zero if trial expired
-        if days_left < 0:
-            days_left = 0
+        # Calculate remaining trial days
+        days_left = max(0, TRIAL_DURATION_DAYS - days_since_registration)
 
     # GET request handler
     if request.method == 'GET':
