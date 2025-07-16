@@ -94,6 +94,10 @@ def profile(request):
     # Define trial duration
     TRIAL_DURATION_DAYS = 3
 
+    # Refresh user from database to ensure we have latest data
+    if request.user.is_authenticated:
+        request.user.refresh_from_db()
+    
     # Calculate trial days left
     days_left = None
     if request.user.is_authenticated and request.user.registered_at:
