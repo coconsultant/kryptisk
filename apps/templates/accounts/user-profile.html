@@ -25,19 +25,22 @@
           <div class="col-xl-8 col-lg-10 col-md-11 mx-auto">
             <div class="card mt-4 bg-white shadow-lg">
               <div class="card-body p-4">
-                {# TRIAL COUNTDOWN START #}
+                {# MEMBER SINCE AND TRIAL COUNTDOWN START #}
                 {% if request.user.is_authenticated %}
-                  {% if not request.user.subscribed %}
-                    <div class="text-end text-sm text-bold mb-3" style="position: absolute; top: 1rem; right: 1rem; z-index: 10;">
-                      {% if days_left_on_trial is not None and days_left_on_trial > 0 %}
-                        Free trial ends in {{ days_left_on_trial }} day{{ days_left_on_trial|pluralize }}.
-                      {% else %}
-                        Please Subscribe.
-                      {% endif %}
-                    </div>
-                  {% endif %}
+                  <div class="text-end text-sm text-bold mb-3" style="position: absolute; top: 1rem; right: 1rem; z-index: 10;">
+                    <div class="mb-1">Member Since {{ registered_at|date:"m/d/Y" }}</div>
+                    {% if not request.user.subscribed %}
+                      <div>
+                        {% if days_left_on_trial is not None and days_left_on_trial > 0 %}
+                          Free trial ends in {{ days_left_on_trial }} day{{ days_left_on_trial|pluralize }}.
+                        {% else %}
+                          Please Subscribe.
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                  </div>
                 {% endif %}
-                {# TRIAL COUNTDOWN END #}
+                {# MEMBER SINCE AND TRIAL COUNTDOWN END #}
                 <div class="row">
                   <div class="col-lg-4 col-md-5 position-relative my-auto py-2">
                     <img id="user-avatar-img" class="img border-radius-lg w-100 position-relative z-index-2 max-width-200" src="{% if request.user.avatar %}{{ request.user.avatar.url }}?v={{ cache_buster }}{% else %}{% static 'assets/img/added-images/default.png' %}{% endif %}" alt="avatar">
