@@ -42,7 +42,7 @@ def vcard_qr_page(request):
         # Calculate days left on trial (placeholder logic - adjust based on your user model)
         from datetime import datetime, timedelta
         trial_end_date = request.user.date_joined + timedelta(days=30)  # Assuming 30-day trial
-        days_left = (trial_end_date - datetime.now().date()).days
+        days_left = (trial_end_date.date() - datetime.now().date()).days
         context['days_left_on_trial'] = max(0, days_left)
     
     return render(request, 'qrcode_generator/vcard-qr.html', context)
