@@ -64,13 +64,15 @@ def generate_vcard_qr_image(request, user_id):
     clean_bio = strip_tags(user.bio) if user.bio else ''
 
     # Construct vCard data (vCard 3.0 format)
+    # Debugging: Temporarily add website info to NOTE field to check its value
+    debug_website_info = f"Website: {user.website if user.website else 'NOT SET'}"
     vcard_data = (
         "BEGIN:VCARD\n"
         "VERSION:3.0\n"
         f"N:{user.last_name if user.last_name else ''};{user.first_name if user.first_name else ''};;;\n"
         f"FN:{user.first_name if user.first_name else ''} {user.last_name if user.last_name else ''}\n"
         f"EMAIL;TYPE=INTERNET:{user.email if user.email else ''}\n"
-        f"NOTE:{clean_bio}\n"
+        f"NOTE:{clean_bio} ({debug_website_info})\n"
     )
     if user.website:
         vcard_data += f"URL:{user.website}\n"
