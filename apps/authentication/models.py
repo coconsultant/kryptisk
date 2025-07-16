@@ -15,6 +15,12 @@ class CustomUser(AbstractUser):
     website = models.URLField(blank=True, null=True, default=None)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     subscribed = models.BooleanField(default=False) # New field for subscription status
+    
+    # vCard toggle preferences
+    vcard_include_name = models.BooleanField(default=True)
+    vcard_include_email = models.BooleanField(default=True)
+    vcard_include_website = models.BooleanField(default=True)
+    vcard_include_bio = models.BooleanField(default=True)
 
 
 class TrackedEmail(models.Model):
