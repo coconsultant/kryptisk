@@ -39,11 +39,15 @@ def vcard_qr_page(request):
     
     # Add trial information if user is authenticated
     if request.user.is_authenticated:
-        # Calculate days left on trial (placeholder logic - adjust based on your user model)
-        from datetime import datetime, timedelta
-        trial_end_date = request.user.date_joined + timedelta(days=30)  # Assuming 30-day trial
-        days_left = (trial_end_date.date() - datetime.now().date()).days
-        context['days_left_on_trial'] = max(0, days_left)
+        # Calculate days left on trial
+        from datetime import timedelta
+        from django.utils import timezone
+        
+        TRIAL_DURATION_DAYS = 3
+        today = timezone.now().date()
+        days_since_registration = (today - request.user.date_joined.date()).days
+        days_left = max(0, TRIAL_DURATION_DAYS - days_since_registration)
+        context['days_left_on_trial'] = days_left
     
     return render(request, 'qrcode_generator/vcard-qr.html', context)
 
