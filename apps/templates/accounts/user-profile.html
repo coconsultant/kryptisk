@@ -77,11 +77,7 @@
                     {# Display Name Section #}
                     <div id="name-display" class="mb-2">
                         <p class="form-label mb-0 fs-5 fw-bold">Name</p>
-                        <p class="mb-0">{{ request.user.first_name }} {{ request.user.last_name }}</p>
-                        <!-- If your project uses custom template filters for form styling, you might need to load them here -->
-                        <span id="edit-name-btn" class="cursor-pointer text-info">Edit Name
-                            <i class="fas fa-arrow-right text-sm ms-1"></i>
-                        </span>
+                        <p id="edit-name-btn" class="mb-0 cursor-pointer text-decoration-underline" title="Click to edit name">{{ request.user.first_name }} {{ request.user.last_name }}</p>
                     </div>
 
                     {# Edit Name Form Section #}
@@ -105,10 +101,7 @@
                     {# Display Username Section #}
                     <div id="username-display" class="mb-2">
                         <p class="form-label mb-0 fs-5 fw-bold">Username</p>
-                        <p class="mb-0">@{{ request.user.username }}</p>
-                        <span id="edit-username-btn" class="cursor-pointer text-info">Edit Username
-                            <i class="fas fa-arrow-right text-sm ms-1"></i>
-                        </span>
+                        <p id="edit-username-btn" class="mb-0 cursor-pointer text-decoration-underline" title="Click to edit username">@{{ request.user.username }}</p>
                     </div>
                     <br>
                     {# Edit Username Form Section #}
@@ -152,16 +145,13 @@
                     {# Display Website Section #}
                     <div id="website-display" class="mb-2">
                         <p class="form-label mb-0 fs-5 fw-bold">Website</p>
-                        <p class="mb-0">
+                        <p id="edit-website-btn" class="mb-0 cursor-pointer text-decoration-underline" title="Click to edit website">
                             {% if request.user.website %}
-                                <a href="{{ request.user.website }}" target="_blank">{{ request.user.website }}</a>
+                                {{ request.user.website }}
                             {% else %}
                                 Not set
                             {% endif %}
                         </p>
-                        <span id="edit-website-btn" class="cursor-pointer text-info">Edit Website
-                            <i class="fas fa-arrow-right text-sm ms-1"></i>
-                        </span>
                     </div>
                     <br>
                     {# Edit Website Form Section #}
@@ -180,12 +170,9 @@
 
                     <div id="bio" style="position: relative; z-index: 6;">
                         <p class="form-label mb-0 fs-5 fw-bold">Bio</p>
-                        <p class="mb-0">
+                        <div id="edit-btn" class="cursor-pointer text-decoration-underline" title="Click to edit bio" style="position: relative; z-index: 7;">
                           {{ bio | safe }}
-                       <br><span id="edit-btn" class="cursor-pointer text-info icon-move-right" style="position: relative; z-index: 7;">Edit Bio
-                        <i class="fas fa-arrow-right text-sm ms-1"></i>
-                      </span>
-                    </p>
+                        </div>
                     </div>
                       <div class="row quill-container d-none">
                           <div id="toolbar-container">
