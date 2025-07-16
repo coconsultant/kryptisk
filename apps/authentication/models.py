@@ -9,7 +9,6 @@ from django.conf import settings
 
 class CustomUser(AbstractUser):
     bio = models.TextField(default='This is my bio.')
-    registered_at = models.DateField(auto_now_add=True)
     social_twitter = models.URLField(blank=True, null=True, default=None)
     social_facebook = models.URLField(blank=True, null=True, default=None)
     social_instagram = models.URLField(blank=True, null=True, default=None)
