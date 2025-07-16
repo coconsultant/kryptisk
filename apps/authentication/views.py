@@ -110,10 +110,13 @@ def profile(request):
 
     # GET request handler
     if request.method == 'GET':
+        # Get fresh user data from database to ensure no caching
+        User = get_user_model()
+        fresh_user = User.objects.get(pk=request.user.pk)
         cache_buster = time.time_ns() # Get nanosecond precision for aggressive cache busting
         return render(request, "accounts/user-profile.html", context={
-            'bio': request.user.bio,
-            'registered_at': request.user.registered_at,
+            'bio': fresh_user.bio,
+            'registered_at': fresh_user.registered_at,
             'days_left_on_trial': days_left, # Pass days left to the template
             'contact_us_info': {
                 'phone': SITE_OWNER_PHONE,
