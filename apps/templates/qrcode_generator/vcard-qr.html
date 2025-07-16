@@ -119,25 +119,17 @@
                       </div>
                       {% endif %}
                       
-                      {% if current_user.vcard_include_website and current_user.website %}
+                      {% if current_user.website %}
                       <div class="mb-2 d-flex justify-content-between align-items-center">
                         <div>
                           <p class="form-label mb-0">Website</p>
                           <h4 class="mb-0">
-                            <a href="{{ current_user.website }}" target="_blank">{{ current_user.website }}</a>
+                            {% if current_user.vcard_include_website %}
+                              <a href="{{ current_user.website }}" target="_blank">{{ current_user.website }}</a>
+                            {% else %}
+                              <span class="text-muted">{{ current_user.website }}</span>
+                            {% endif %}
                           </h4>
-                        </div>
-                        <div class="form-check form-switch">
-                          <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_website" name="vcard_include_website" {% if current_user.vcard_include_website %}checked{% endif %} data-field="website">
-                          <label class="form-check-label" for="vcard_include_website">Include</label>
-                        </div>
-                      </div>
-                      <br>
-                      {% else %}
-                      <div class="mb-2 d-flex justify-content-between align-items-center">
-                        <div>
-                          <p class="form-label mb-0">Website</p>
-                          <h4 class="mb-0 text-muted">{% if current_user.website %}{{ current_user.website }}{% else %}Not set{% endif %}</h4>
                         </div>
                         <div class="form-check form-switch">
                           <input class="form-check-input vcard-toggle" type="checkbox" id="vcard_include_website" name="vcard_include_website" {% if current_user.vcard_include_website %}checked{% endif %} data-field="website">
