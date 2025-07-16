@@ -303,6 +303,20 @@ def profile(request):
         request.user.save()
         return HttpResponseRedirect(request.path)
 
+    # Handle username update
+    if action == 'update_username':
+        new_username = body.get('username', '').strip()
+        if new_username and new_username != request.user.username:
+            try:
+                request.user.username = new_username
+                request.user.save()
+                # Log out the user after username change
+                logout(request)
+                return HttpResponseRedirect('/login/')
+            except IntegrityError:
+                return JsonResponse({'message': 'Username already exists.'}, status=400)
+        return HttpResponseRedirect(request.path)
+
     if action == 'edit_social_link':
         form = ProfileForm(request.POST, request.FILES, instance=request.user)
 
