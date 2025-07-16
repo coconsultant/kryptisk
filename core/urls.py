@@ -15,6 +15,7 @@ urlpatterns = [
 
     # ADD NEW Routes HERE
     path('notifications/', include('apps.notifications.urls')),
+    path('qrcode/', include('apps.qrcode_generator.urls')),
 
     # Leave `Home.Urls` as last the last line
     path("", include("apps.home.urls"))
